@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @scan_config.name %>
+</p>
+
+<p>
+  <b>Comment:</b>
+  <%= @scan_config.comment %>
+</p>
+
+<p>
+  <b>Families grow:</b>
+  <%= @scan_config.families_grow %>
+</p>
+
+<p>
+  <b>Rules grow:</b>
+  <%= @scan_config.rules_grow %>
+</p>
+
+<p>
+  <b>In use:</b>
+  <%= @scan_config.in_use %>
+</p>
+
+
+<%= link_to 'Edit', edit_scan_config_path(@scan_config) %> |
+<%= link_to 'Back', scan_configs_path %>

@@ -1,0 +1,47 @@
+<%= link_to 'New Task', new_task_path %>
+<hr />
+
+<h2>Tasks</h2>
+<table cellspacing="7" cellpadding="3">
+  <tr>
+    <th>Name<br />Comment</th>
+    <th>Status</th>
+    <th>Scan Config</th>
+    <th>Scan Target</th>
+    <th>Reports</th>
+    <th>Threat</th>
+    <th>Trend</th>
+    <th>Actions</th>
+  </tr>
+
+<% @tasks.each do |task| %>
+  <tr>
+    <td>
+			<%= task.name %>
+			<br />
+			(<%= truncate(task.comment, :length => 15) %>)
+			<hr />
+			<%= OpenvasCli::VasTask.get_by_id(task.id).inspect %>
+		</td>
+    <td><%= task.status %></td>
+    <td><%= task.config_name %></td>
+    <td><%= task.target_name %></td>
+		<td>&nbsp;&nbsp;</td>
+		<td>&nbsp;&nbsp;</td>
+		<td>&nbsp;&nbsp;</td>
+		<td>
+			<% if ['New','Done'].include? task.status %>
+					<%= link_to 'start', root_path %>
+					pause stop
+			<% else %>
+					start
+			    <%= link_to 'pause', root_path %>
+			    <%= link_to 'stop', root_path %>
+			<% end %>
+	    <%= link_to 'details', task_path(task.id) %>
+	    <%= link_to 'edit', edit_task_path(task.id) %>
+	    <%= link_to 'delete', task_path(task.id), :confirm => 'Are you sure?', :method => :delete %>
+		</td>
+  </tr>
+<% end %>
+</table>

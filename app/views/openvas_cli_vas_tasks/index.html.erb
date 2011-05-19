@@ -1,0 +1,39 @@
+<h1>Tasks</h1>
+
+<%= link_to 'new Task', new_openvas_cli_vas_task_path %>
+
+<table cellpadding="5" cellspacing="5">
+  <tr>
+    <th>Task</th>
+    <th>Status</th>
+    <th>Reports</th>
+    <th>Threat</th>
+    <th>Trend</th>
+    <th>Actions</th>
+  </tr>
+
+<% @tasks.each do |task| %>
+  <tr>
+		<td>
+			<%= task.name %>
+			<br />
+			(<%= task.comment %>)
+		</td>
+		<td><%= task.status %></td>
+		<td>
+			<%= task.progress.inspect %>
+			<%#= OpenvasCli::VasReport.get_by_id(task.last_report_id).results %>
+		</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+    <td>
+			<%= link_to 'start', root_path %>
+	    <%= link_to 'pause', root_path %>
+	    <%= link_to 'stop', root_path %>
+	    <%= link_to 'delete', task, :confirm => 'Are you sure?', :method => :delete %>
+	    <%= link_to 'details', task %>
+	    <%= link_to 'edit', edit_openvas_cli_vas_task_path(task) %>
+		</td>
+  </tr>
+<% end %>
+</table>

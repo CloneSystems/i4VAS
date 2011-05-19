@@ -1,0 +1,31 @@
+<h1>Listing scan_configs</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Comment</th>
+    <th>Families grow</th>
+    <th>Rules grow</th>
+    <th>In use</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @scan_configs.each do |scan_config| %>
+  <tr>
+    <td><%= scan_config.name %></td>
+    <td><%= scan_config.comment %></td>
+    <td><%= scan_config.families_grow %></td>
+    <td><%= scan_config.rules_grow %></td>
+    <td><%= scan_config.in_use %></td>
+    <td><%= link_to 'Show', scan_config %></td>
+    <td><%= link_to 'Edit', edit_scan_config_path(scan_config) %></td>
+    <td><%= link_to 'Destroy', scan_config, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Scan config', new_scan_config_path %>

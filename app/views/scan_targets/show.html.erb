@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @scan_target.name %>
+</p>
+
+<p>
+  <b>Comment:</b>
+  <%= @scan_target.comment %>
+</p>
+
+<p>
+  <b>Hosts:</b>
+  <%= @scan_target.hosts %>
+</p>
+
+<p>
+  <b>Port range:</b>
+  <%= @scan_target.port_range %>
+</p>
+
+<p>
+  <b>In use:</b>
+  <%= @scan_target.in_use %>
+</p>
+
+
+<%= link_to 'Edit', edit_scan_target_path(@scan_target) %> |
+<%= link_to 'Back', scan_targets_path %>
