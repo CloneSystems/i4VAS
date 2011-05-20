@@ -5,6 +5,41 @@ class TasksController < ApplicationController
     @tasks = Task.all
   end
 
+  # GET /start_task/1
+  def start_task
+    @task = Task.find_as_vastask(params[:id])
+    @task.start
+    redirect_to(tasks_url)
+  end
+
+  # GET /pause_task/1
+  def pause_task
+    @task = Task.find_as_vastask(params[:id])
+    @task.pause
+    redirect_to(tasks_url)
+  end
+
+  # GET /resume_paused_task/1
+  def resume_paused_task
+    @task = Task.find_as_vastask(params[:id])
+    @task.resume_paused
+    redirect_to(tasks_url)
+  end
+
+  # GET /stop_task/1
+  def stop_task
+    @task = Task.find_as_vastask(params[:id])
+    @task.stop
+    redirect_to(tasks_url)
+  end
+
+  # GET /resume_stopped_task/1
+  def resume_stopped_task
+    @task = Task.find_as_vastask(params[:id])
+    @task.resume_stopped
+    redirect_to(tasks_url)
+  end
+
   # GET /tasks/1
   def show
     @task = Task.find(params[:id])

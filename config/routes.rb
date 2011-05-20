@@ -5,9 +5,14 @@ Greenbone::Application.routes.draw do
   resources :scan_configs
 
   resources :tasks
+  get 'start_task/:id'          => 'tasks#start_task',          :as => 'start_task'
+  get 'pause_task/:id'          => 'tasks#pause_task',          :as => 'pause_task'
+  get 'resume_paused_task/:id'  => 'tasks#resume_paused_task',  :as => 'resume_paused_task'
+  get 'stop_task/:id'           => 'tasks#stop_task',           :as => 'stop_task'
+  get 'resume_stopped_task/:id' => 'tasks#resume_stopped_task', :as => 'resume_stopped_task'
+  root :to => 'tasks#index'
 
   resources :openvas_cli_vas_tasks
-  root :to => 'openvas_cli_vas_tasks#index'
   
   get 'home' => 'home#index'
 

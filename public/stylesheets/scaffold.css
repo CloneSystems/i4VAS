@@ -6,6 +6,27 @@ body, p, ol, ul, td {
   line-height: 18px;
 }
 
+.table {
+	display: table;
+}
+
+.row {
+	display: table-row;
+}
+
+.cell {
+	display: table-cell;
+	width: 33%;
+	border-bottom: 1px solid black;
+}
+
+.disabled_link { color: #858585; }
+
+.actions a { color: #000; }
+.actions a:visited { color: #666; }
+.actions a:hover { color: #fff; background-color: #fff; }
+.actions img { border: 0;}
+
 pre {
   background-color: #eee;
   padding: 10px;

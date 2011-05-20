@@ -1,9 +1,22 @@
 <%= link_to 'New Task', new_task_path %>
 <hr />
 
-<h2>Tasks</h2>
+<h2><%= link_to 'Tasks', root_path %></h2>
+
+<!-- <div class="table">
+	<div class="row">
+		<div class="cell">
+			<p>cell 1</p>
+		</div>
+		<div class="cell">
+			<p>cell 2</p>
+		</div>
+	</div>
+</div> -->
+
 <table cellspacing="7" cellpadding="3">
   <tr>
+    <th>Actions</th>
     <th>Name<br />Comment</th>
     <th>Status</th>
     <th>Scan Config</th>
@@ -11,37 +24,63 @@
     <th>Reports</th>
     <th>Threat</th>
     <th>Trend</th>
-    <th>Actions</th>
   </tr>
 
 <% @tasks.each do |task| %>
   <tr>
+		<td>
+			<div class="actions">
+				<% if ['New','Done'].include? task.status %>
+						<%= link_to image_tag("start.png"), start_task_path(task.id), :title => 'Start Task' %>
+				    <%= image_tag("resume_inactive.png") %>
+				    <%= image_tag("stop_inactive.png") %>
+				    <%= link_to image_tag("delete.png"), task_path(task.id), :title => 'Delete Task', :confirm => 'Are you sure?', :method => :delete %>
+				<% elsif ['Stopped'].include? task.status %>
+						<%= link_to image_tag("start.png"), start_task_path(task.id), :title => 'Start Task' %>
+				    <%= link_to image_tag("resume.png"), resume_stopped_task_path(task.id), :title => 'Resume Task' %>
+				    <%= image_tag("stop_inactive.png") %>
+				    <%= link_to image_tag("delete.png"), task_path(task.id), :title => 'Delete Task', :confirm => 'Are you sure?', :method => :delete %>
+				<% elsif ['Paused'].include? task.status %>
+    				<%= image_tag("start_inactive.png") %>
+				    <%= link_to image_tag("resume.png"), resume_paused_task_path(task.id), :title => 'Resume Task' %>
+				    <%= link_to image_tag("stop.png"), stop_task_path(task.id), :title => 'Stop Task' %>
+				    <%= link_to image_tag("delete.png"), task_path(task.id), :title => 'Delete Task', :confirm => 'Are you sure?', :method => :delete %>
+				<% elsif ['Running'].include? task.status %>
+    				<%= image_tag("start_inactive.png") %>
+				    <%= link_to image_tag("pause.png"), pause_task_path(task.id), :title => 'Pause Task' %>
+				    <%= link_to image_tag("stop.png"), stop_task_path(task.id), :title => 'Stop Task' %>
+		    		<%= image_tag("delete_inactive.png") %>
+				<%# elsif ['Requested', 'Stop Requested'].include? task.status %>
+				<% else %>
+		    		<%= image_tag("start_inactive.png") %>
+				    <%= image_tag("resume_inactive.png") %>
+				    <%= image_tag("stop_inactive.png") %>
+		    		<%= image_tag("delete_inactive.png") %>
+				<% end %>
+		    <%= link_to image_tag("details.png"), task_path(task.id), :title => 'Task Details' %>
+		    <%= link_to image_tag("edit.png"), edit_task_path(task.id), :title => 'Edit Task' %>
+			</div>
+		</td>
     <td>
 			<%= task.name %>
-			<br />
-			(<%= truncate(task.comment, :length => 15) %>)
-			<hr />
-			<%= OpenvasCli::VasTask.get_by_id(task.id).inspect %>
+			<% unless task.comment.blank? %>
+					<br />
+					(<%= truncate(task.comment, :length => 15) %>)
+			<% end %>
+			<%#= OpenvasCli::VasTask.get_by_id(task.id).inspect %>
 		</td>
-    <td><%= task.status %></td>
+    <td>
+			<% if ['New','Done'].include?(task.status) || task.status =~ /Requested/ %>
+					<%= task.status %>
+			<% else %>
+					<%= task.status %> at <%= task.overall_progress %>%
+			<% end %>
+		</td>
     <td><%= task.config_name %></td>
     <td><%= task.target_name %></td>
 		<td>&nbsp;&nbsp;</td>
 		<td>&nbsp;&nbsp;</td>
-		<td>&nbsp;&nbsp;</td>
-		<td>
-			<% if ['New','Done'].include? task.status %>
-					<%= link_to 'start', root_path %>
-					pause stop
-			<% else %>
-					start
-			    <%= link_to 'pause', root_path %>
-			    <%= link_to 'stop', root_path %>
-			<% end %>
-	    <%= link_to 'details', task_path(task.id) %>
-	    <%= link_to 'edit', edit_task_path(task.id) %>
-	    <%= link_to 'delete', task_path(task.id), :confirm => 'Are you sure?', :method => :delete %>
-		</td>
+		<td><%= task.trend %></td>
   </tr>
 <% end %>
 </table>
