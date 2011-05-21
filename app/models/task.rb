@@ -1,5 +1,6 @@
 class Task
 
+  # include Cls
   include BasicModel
 
   # note: since we are not using ActiveRecord for persistence, but ActiveModel instead, 
@@ -8,11 +9,11 @@ class Task
   #       ... i.e. use false for new/create actions, and true for edit/update actions:
   attr_accessor :persisted
 
-  attr_accessor :id, :name, :comment, :overall_progress, :status, :trend,
+  attr_accessor :id, :name, :comment, :overall_progress, :status, :trend, :threat,
                 :config_id, :config_name, :target_id, :target_name,
-                :times_run, 
-                :first_report_id, :first_report_date, 
-                :last_report_id, :last_report_date
+                :times_run,
+                :first_report_id, :first_report_date,
+                :last_report_id, :last_report_date, :last_report_result_count
 
   validates :comment, :length => { :maximum => 400 }
   validates :name, :presence => true, :length => { :maximum => 80 }
@@ -99,6 +100,24 @@ class Task
     true
   end
 
+  def threat
+		# threat: High, Medium, Low, Log, Debug ... where Log,Debug are shown as None
+		return '' if @last_report_result_count[:low] + @last_report_result_count[:medium] + @last_report_result_count[:high] == 0
+		max = nil
+		threat = ''
+		low = @last_report_result_count[:low]
+		max = low
+		threat = 'Low'
+		medium = @last_report_result_count[:medium]
+		max = medium if medium >= max
+		threat = 'Medium' if medium >= max
+		high = @last_report_result_count[:high]
+		max = high if high >= max
+		threat = 'High' if high >= max
+		threat = 'None' if threat == 0
+		threat
+  end
+
   private
 
   def self.dup_vastask_to_self(vt)
@@ -110,6 +129,7 @@ class Task
               :times_run => vt.times_run,
               :first_report_id => vt.first_report_id, :first_report_date => vt.first_report_date,
               :last_report_id => vt.last_report_id, :last_report_date => vt.last_report_date,
+              :last_report_result_count => vt.result_count,
               :config_id => vt.config_id, :target_id => vt.target_id,
               :config_name => cfg.name, :target_name => trg.name
             })

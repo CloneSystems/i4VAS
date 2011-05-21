@@ -2,6 +2,7 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
+    # logger.info "\n\nspud=#{Task.new.spud.inspect}\n\n"
     @tasks = Task.all
   end
 

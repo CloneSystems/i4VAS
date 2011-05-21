@@ -1,5 +1,7 @@
 Greenbone::Application.routes.draw do
 
+  resources :reports
+
   resources :scan_targets
 
   resources :scan_configs

@@ -1,7 +1,6 @@
 module Cls
 
-  def self.spud
-    puts "\n\n*** spud ***\n\n"
+  def spud
     "spudder"
   end
 

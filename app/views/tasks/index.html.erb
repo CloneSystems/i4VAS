@@ -19,13 +19,15 @@
     <th>Actions</th>
     <th>Name</th>
     <th>Status</th>
-    <!-- <th>Scan Config</th>
-    <th>Scan Target</th> -->
+    <th>Scan Config</th>
+    <th>Scan Target</th>
     <th colspan="3">Reports</th>
     <th>Threat</th>
     <th>Trend</th>
   </tr>
 	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
 		<th>&nbsp;</th>
 		<th>&nbsp;</th>
 		<th>&nbsp;</th>
@@ -85,55 +87,30 @@
 					<%= task.status %> at <%= task.overall_progress %>%
 			<% end %>
 		</td>
-    <!-- <td><%#= task.config_name %></td>
-    <td><%#= task.target_name %></td> -->
-		<% lr = OpenvasCli::VasReport.get_by_id(task.last_report_id) %>
+    <td><%= task.config_name %></td>
+    <td><%= task.target_name %></td>
     <td><%= task.times_run %></td>
     <td>
-			<%# openvas datetime as string: "Thu May 19 21:09:19 2011" %>
-			<% frd = DateTime.strptime(task.first_report_date, "%a %b %d %H:%M:%S %Y") unless task.first_report_date.blank? %>
-			<%= frd.strftime("%b %d %Y") unless task.first_report_date.blank? %>
+			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
+			<%# frd = DateTime.strptime(task.first_report_date, "%a %b %d %H:%M:%S %Y") unless task.first_report_date.blank? %>
+			<% frd = Time.parse(task.first_report_date) unless task.first_report_date.blank? %>
+	    <%= link_to(frd.strftime("%b %d %Y"), edit_task_path(task.id), :title => 'view Report') unless task.first_report_date.blank? %>
 		</td>
     <td>
-			<%# openvas datetime as string: "Thu May 19 21:09:19 2011" %>
-			<% lrd = DateTime.strptime(task.last_report_date, "%a %b %d %H:%M:%S %Y") unless task.last_report_date.blank? %>
+			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
+			<%# lrd = DateTime.strptime(task.last_report_date, "%a %b %d %H:%M:%S %Y") unless task.last_report_date.blank? %>
+			<% lrd = Time.parse(task.last_report_date) unless task.last_report_date.blank? %>
 			<%= lrd.strftime("%b %d %Y") unless task.last_report_date.blank? %>
 		</td>
-		<td>
-			<%# threat: High, Medium, Low, Log, Debug ... where Log,Debug are shown as None %>
-			<%
-			max = nil
-			threat = ''
-			unless lr.blank?
-				low = lr.result_count[:low][:total]
-				max = low
-				threat = 'Low'
-				medium = lr.result_count[:medium][:total]
-				max = medium if medium >= max
-				threat = 'Medium' if medium >= max
-				high = lr.result_count[:high][:total]
-				max = high if high >= max
-				threat = 'High' if high >= max
-				threat = 'None' if threat == 0
-			end
-			%>
-			<%= image_tag("#{threat.downcase}_big.png", :title => "threat is #{threat}") unless threat.blank? %>
-		</td>
-		<td>
-			<% case %>
-				<%# trend: up, down, more, less, same %>
-				<% when ['same'].include?(task.trend) %>
-						<%= image_tag("trend_nochange.png", :title => 'No change in Threat since last report') %>
-				<% else %>
-						<%= task.trend %>
-			<% end %>
-		</td>
+		<td><%# threat: High, Medium, Low, Log, Debug (Log,Debug = None) %><%= task.threat %></td>
+		<td><%# trend: up, down, more, less, same %><%= task.trend %></td>
   </tr>
+	<tr><td colspan="10"><pre><%=task.to_yaml%></pre></td></tr>
+	<tr><td colspan="10"><pre><%=OpenvasCli::VasReport.get_by_id(task.last_report_id).to_yaml%></pre></td></tr> 
 	<!-- 
-	<tr><td colspan="8"><pre><%#=OpenvasCli::VasTask.get_by_id(task.id).to_yaml%></pre></td></tr>
-	<tr><td colspan="8"><pre><%#=lr.result_count.inspect unless lr.blank? %></pre></td></tr>
-	<tr><td colspan="8"><pre><%#=lr.to_yaml%></pre></td></tr> 
+	<tr><td colspan="10"><pre><%=OpenvasCli::VasTask.get_by_id(task.id).to_yaml%></pre></td></tr>
+	<tr><td colspan="10"><pre><%#=OpenvasCli::VasReport.get_by_id(task.last_report_id).to_yaml%></pre></td></tr> 
 	-->
-	<tr><td colspan="8"><hr /></td></tr>
+	<tr><td colspan="10"><hr /></td></tr>
 <% end %>
 </table>

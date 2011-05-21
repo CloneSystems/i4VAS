@@ -36,8 +36,6 @@ logger.info "\n\n"
     # }
 
     @tasks = OpenvasCli::VasTask.get_all
-end
-
   end
 
 end
