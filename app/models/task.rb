@@ -8,13 +8,17 @@ class Task
   #       ... i.e. use false for new/create actions, and true for edit/update actions:
   attr_accessor :persisted
 
-  attr_accessor :id, :name, :comment, :status, :trend, :config_id, :config_name, :target_id, :target_name, :overall_progress
+  attr_accessor :id, :name, :comment, :overall_progress, :status, :trend,
+                :config_id, :config_name, :target_id, :target_name,
+                :times_run, 
+                :first_report_id, :first_report_date, 
+                :last_report_id, :last_report_date
 
   validates :comment, :length => { :maximum => 400 }
   validates :name, :presence => true, :length => { :maximum => 80 }
   # {:name=>["can't be blank"]}
   # - Name can't be blank
-  # ... openvas error:
+  # ... for openvas error: (note: almost all of them are command_failure)
   # {:command_failure=>
   # ["
   # Command Failed: Too few parameters\n
@@ -35,26 +39,14 @@ class Task
   def self.all
     tasks = []
     OpenvasCli::VasTask.get_all.each do |vt|
-      cfg = OpenvasCli::VasConfig.get_by_id(vt.config_id)
-      trg = OpenvasCli::VasTarget.get_by_id(vt.target_id)
-      progress = vt.progress
-      tasks << Task.new({ :id => vt.id, :name => vt.name, :comment => vt.comment, :status => vt.status,
-                          :trend => vt.trend, :overall_progress => progress.overall,
-                          :config_id => vt.config_id, :target_id => vt.target_id,
-                          :config_name => cfg.name, :target_name => trg.name
-                       })
+      tasks << dup_vastask_to_self(vt)
     end
     tasks
   end
 
   def self.find(id)
     vt = OpenvasCli::VasTask.get_by_id(id)
-    cfg = OpenvasCli::VasConfig.get_by_id(vt.config_id)
-    trg = OpenvasCli::VasTarget.get_by_id(vt.target_id)
-    Task.new({:id => vt.id, :name => vt.name, :comment => vt.comment, 
-              :config_id => vt.config_id, :target_id => vt.target_id,
-              :config_name => cfg.name, :target_name => trg.name
-            })
+    dup_vastask_to_self(vt)
   end
 
   def self.find_as_vastask(id)
@@ -105,6 +97,22 @@ class Task
 
   def delete_record
     true
+  end
+
+  private
+
+  def self.dup_vastask_to_self(vt)
+    cfg = OpenvasCli::VasConfig.get_by_id(vt.config_id)
+    trg = OpenvasCli::VasTarget.get_by_id(vt.target_id)
+    progress = vt.progress
+    Task.new({:id => vt.id, :name => vt.name, :comment => vt.comment, :status => vt.status,
+              :trend => vt.trend, :overall_progress => progress.overall,
+              :times_run => vt.times_run,
+              :first_report_id => vt.first_report_id, :first_report_date => vt.first_report_date,
+              :last_report_id => vt.last_report_id, :last_report_date => vt.last_report_date,
+              :config_id => vt.config_id, :target_id => vt.target_id,
+              :config_name => cfg.name, :target_name => trg.name
+            })
   end
 
 end
