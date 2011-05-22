@@ -94,21 +94,22 @@
 			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
 			<%# frd = DateTime.strptime(task.first_report_date, "%a %b %d %H:%M:%S %Y") unless task.first_report_date.blank? %>
 			<% frd = Time.parse(task.first_report_date) unless task.first_report_date.blank? %>
-	    <%= link_to(frd.strftime("%b %d %Y"), edit_task_path(task.id), :title => 'view Report') unless task.first_report_date.blank? %>
+	    <%= link_to(frd.strftime("%b %d %Y"), report_path(task.first_report), :title => 'view First Report') unless task.first_report_date.blank? %>
 		</td>
     <td>
 			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
 			<%# lrd = DateTime.strptime(task.last_report_date, "%a %b %d %H:%M:%S %Y") unless task.last_report_date.blank? %>
 			<% lrd = Time.parse(task.last_report_date) unless task.last_report_date.blank? %>
-			<%= lrd.strftime("%b %d %Y") unless task.last_report_date.blank? %>
+			<%#= lrd.strftime("%b %d %Y") unless task.last_report_date.blank? %>
+	    <%= link_to(lrd.strftime("%b %d %Y"), report_path(task.last_report), :title => 'view Last Report') unless task.last_report_date.blank? %>
 		</td>
 		<td><%# threat: High, Medium, Low, Log, Debug (Log,Debug = None) %><%= task.threat %></td>
 		<td><%# trend: up, down, more, less, same %><%= task.trend %></td>
   </tr>
-	<tr><td colspan="10"><pre><%=task.to_yaml%></pre></td></tr>
-	<tr><td colspan="10"><pre><%=OpenvasCli::VasReport.get_by_id(task.last_report_id).to_yaml%></pre></td></tr> 
 	<!-- 
-	<tr><td colspan="10"><pre><%=OpenvasCli::VasTask.get_by_id(task.id).to_yaml%></pre></td></tr>
+	<tr><td colspan="10"><pre><%#=task.to_yaml%></pre></td></tr>
+	<tr><td colspan="10"><pre><%#=task.first_report.to_yaml%></pre></td></tr> 
+	<tr><td colspan="10"><pre><%#=OpenvasCli::VasTask.get_by_id(task.id).to_yaml%></pre></td></tr>
 	<tr><td colspan="10"><pre><%#=OpenvasCli::VasReport.get_by_id(task.last_report_id).to_yaml%></pre></td></tr> 
 	-->
 	<tr><td colspan="10"><hr /></td></tr>

@@ -39,7 +39,10 @@ class Task
 
   def self.all
     tasks = []
-    OpenvasCli::VasTask.get_all.each do |vt|
+    ovt = OpenvasCli::VasTask
+    # resp = ovt.connection.send_receive("<?xml version=\"1.0\"?>\n<get_version/>\n")
+    # Rails.logger.info "\n\n resp=#{resp.inspect}\n\n"
+    ovt.get_all.each do |vt|
       tasks << dup_vastask_to_self(vt)
     end
     tasks
@@ -118,20 +121,28 @@ class Task
 		threat
   end
 
+  def first_report
+    OpenvasCli::VasReport.get_by_id(@first_report_id)
+  end
+
+  def last_report
+    OpenvasCli::VasReport.get_by_id(@last_report_id)
+  end
+
   private
 
   def self.dup_vastask_to_self(vt)
-    cfg = OpenvasCli::VasConfig.get_by_id(vt.config_id)
-    trg = OpenvasCli::VasTarget.get_by_id(vt.target_id)
-    progress = vt.progress
+    # cfg = OpenvasCli::VasConfig.get_by_id(vt.config_id)
+    # trg = OpenvasCli::VasTarget.get_by_id(vt.target_id)
     Task.new({:id => vt.id, :name => vt.name, :comment => vt.comment, :status => vt.status,
-              :trend => vt.trend, :overall_progress => progress.overall,
+              :trend => vt.trend, :overall_progress => vt.progress.overall,
               :times_run => vt.times_run,
               :first_report_id => vt.first_report_id, :first_report_date => vt.first_report_date,
               :last_report_id => vt.last_report_id, :last_report_date => vt.last_report_date,
               :last_report_result_count => vt.result_count,
               :config_id => vt.config_id, :target_id => vt.target_id,
-              :config_name => cfg.name, :target_name => trg.name
+              :config_name => vt.config_name, :target_name => vt.target_name
+              # :config_name => cfg.name, :target_name => trg.name
             })
   end
 

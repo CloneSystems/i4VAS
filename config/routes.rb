@@ -1,11 +1,5 @@
 Greenbone::Application.routes.draw do
 
-  resources :reports
-
-  resources :scan_targets
-
-  resources :scan_configs
-
   resources :tasks
   get 'start_task/:id'          => 'tasks#start_task',          :as => 'start_task'
   get 'pause_task/:id'          => 'tasks#pause_task',          :as => 'pause_task'
@@ -14,8 +8,14 @@ Greenbone::Application.routes.draw do
   get 'resume_stopped_task/:id' => 'tasks#resume_stopped_task', :as => 'resume_stopped_task'
   root :to => 'tasks#index'
 
+  resources :reports
+
+  resources :scan_targets
+
+  resources :scan_configs
+
   resources :openvas_cli_vas_tasks
-  
+
   get 'home' => 'home#index'
 
 end

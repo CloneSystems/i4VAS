@@ -1,2 +1,5 @@
-class Report < ActiveRecord::Base
+class Report
+
+  include BasicModel
+
 end

@@ -1,35 +1,26 @@
 <p id="notice"><%= notice %></p>
-
 <p>
-  <b>Task:</b>
-  <%= @report.task_id %>
-</p>
-
-<p>
-  <b>Task name:</b>
+  <b>Result of Task:</b>
   <%= @report.task_name %>
 </p>
-
-<p>
-  <b>Status:</b>
-  <%= @report.status %>
-</p>
-
 <p>
   <b>Started at:</b>
   <%= @report.started_at %>
 </p>
-
 <p>
   <b>Ended at:</b>
   <%= @report.ended_at %>
 </p>
-
+<p>
+  <b>Status:</b>
+  <%= @report.status %>
+</p>
 <p>
   <b>Result count:</b>
-  <%= @report.result_count %>
+  <%= @report.result_count.inspect %>
 </p>
+<%= link_to 'back', tasks_path %>
 
-
-<%= link_to 'Edit', edit_report_path(@report) %> |
-<%= link_to 'Back', reports_path %>
+<p>
+<pre><%= @report.to_yaml%></pre>
+</p>
