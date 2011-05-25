@@ -37,11 +37,11 @@ class Task
     @persisted || false
   end
 
-  def self.all
+  def self.all(user)
+resp = user.connection.sendrecv("<?xml version=\"1.0\"?>\n<get_version/>\n")
+Rails.logger.info "\n\n resp=#{resp.inspect}\n\n"
     tasks = []
     ovt = OpenvasCli::VasTask
-    # resp = ovt.connection.send_receive("<?xml version=\"1.0\"?>\n<get_version/>\n")
-    # Rails.logger.info "\n\n resp=#{resp.inspect}\n\n"
     ovt.get_all.each do |vt|
       tasks << dup_vastask_to_self(vt)
     end

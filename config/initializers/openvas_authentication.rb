@@ -1,0 +1,44 @@
+Warden::Strategies.add(:openvas_authentication_strategy) do
+
+  def valid?
+    true
+  end
+
+  def authenticate!
+    return fail!('') if params[:controller].blank?
+    return fail!('') unless params[:controller] == "devise/sessions"
+    # user is trying to sign in so let's authenticate them:
+    if params[:user]
+      return fail!('') if params[:user][:username].blank?
+      return fail!('') if params[:user][:password].blank?
+      connection = openvas_authenticate(params[:user][:username], params[:user][:password])
+      if connection.logged_in?
+        user = User.find_by_username(params[:user][:username])
+        if user.blank?
+          user = User.new(:username=>params[:user][:username], :password=>params[:user][:password])
+        else
+          # note: user's password in openvas may have changed:
+          user.password = params[:user][:password]
+        end
+        user.save(:validate=>false)
+        # note: Devise encrypts this user's password in the database, but we may need the password 
+        #       again in this user's session to authenticate with openvas as we send commands
+        #       ... so let's cache it (***there has to be a more secure way***)
+        Rails.cache.delete(user.username)
+        Rails.cache.write(user.username, user.password)
+        success!(user)
+      else
+        fail!(:invalid) # fail!('Invalid Sign In.')
+      end 
+    else
+      fail!('')
+    end
+  end
+
+  def openvas_authenticate(user, password)
+    return false if user.blank? or password.blank?
+    connection = OpenVas::Connection.new("host"=>'192.168.1.2',"port"=>'9390',"user"=>user,"password"=>password)
+    return connection
+  end
+
+end

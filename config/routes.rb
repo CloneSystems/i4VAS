@@ -1,5 +1,7 @@
 Greenbone::Application.routes.draw do
 
+  devise_for :users
+
   resources :tasks
   get 'start_task/:id'          => 'tasks#start_task',          :as => 'start_task'
   get 'pause_task/:id'          => 'tasks#pause_task',          :as => 'pause_task'

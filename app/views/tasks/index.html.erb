@@ -1,4 +1,8 @@
 <%= link_to 'New Task', new_task_path %>
+ | 
+user: <%= current_user.username %>
+ | 
+<%= link_to "sign out", destroy_user_session_path %>
 <hr />
 
 <h2><%= link_to 'Tasks', root_path %></h2>

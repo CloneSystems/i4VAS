@@ -1,7 +1,18 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
-#   Mayor.create(:name => 'Daley', :city => cities.first)
+# coding: utf-8
+
+# See https://github.com/rails/rails/blob/59f7780a3454a14054d1d33d9b6e31192ab2e58b/activemodel/lib/active_model/mass_assignment_security/sanitizer.rb
+# Allow mass assignment in seeds.rb
+module ActiveModel
+  module MassAssignmentSecurity
+    module Sanitizer
+      def sanitize(attributes)
+        attributes
+      end
+    end
+  end
+end
+
+User.delete_all
+
+@user1 = User.create! :username => 'molly', :password => 'mollydog', :email => 'who@cares.com'
+@user2 = User.create! :username => 'spud',  :password => 'spudder',  :email => 'spud@spud.com'

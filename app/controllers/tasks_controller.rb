@@ -1,9 +1,10 @@
 class TasksController < ApplicationController
 
+  before_filter :get_openvas_connection
+
   # GET /tasks
   def index
-    # logger.info "\n\nspud=#{Task.new.spud.inspect}\n\n"
-    @tasks = Task.all
+    @tasks = Task.all current_user
   end
 
   # GET /start_task/1
