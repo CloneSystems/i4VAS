@@ -1,6 +1,5 @@
 class Task
 
-  # include Cls
   include BasicModel
 
   # note: since we are not using ActiveRecord for persistence, but ActiveModel instead, 
@@ -10,42 +9,66 @@ class Task
   attr_accessor :persisted
 
   attr_accessor :id, :name, :comment, :overall_progress, :status, :trend, :threat,
-                :config_id, :config_name, :target_id, :target_name,
-                :times_run,
+                :config_id, :config_name, :target_id, :target_name, :times_run,
                 :first_report_id, :first_report_date,
-                :last_report_id, :last_report_date, :last_report_result_count
+                :last_report_id, :last_report_date,
+                :last_report_debug, :last_report_high, :last_report_low, :last_report_log, :last_report_medium
 
   validates :comment, :length => { :maximum => 400 }
   validates :name, :presence => true, :length => { :maximum => 80 }
-  # {:name=>["can't be blank"]}
-  # - Name can't be blank
-  # ... for openvas error: (note: almost all of them are command_failure)
-  # {:command_failure=>
-  # ["
-  # Command Failed: Too few parameters\n
-  # Command Status: 400\n
-  # Command: <?xml version=\"1.0\"?>\n
-  # <modify_task task_id=\"d9cc368c-2011-4871-be47-737e6b07a1e7\">\n 
-  # <name></name>\n 
-  # <comment></comment>\n
-  # </modify_task>\n\n
-  # Response: <?xml version=\"1.0\"?>\n
-  #   <modify_task_response status=\"400\" status_text=\"Too few parameters\"/>\n
-  # "]}
 
   def persisted?
     @persisted || false
   end
 
-  def self.all(user)
-resp = user.connection.sendrecv("<?xml version=\"1.0\"?>\n<get_version/>\n")
-Rails.logger.info "\n\n resp=#{resp.inspect}\n\n"
-    tasks = []
-    ovt = OpenvasCli::VasTask
-    ovt.get_all.each do |vt|
-      tasks << dup_vastask_to_self(vt)
+  def self.from_xml_node(node)
+    t = Task.new
+    t.id                  = extract_value_from("@id", node)
+    t.name                = extract_value_from("name", node)
+    t.comment             = extract_value_from("comment", node)
+    t.status              = extract_value_from("status", node)
+    t.overall_progress    = extract_value_from("progress", node)
+    # if node.at_xpath("progress")
+    #   t.progress = VasTaskProgress.from_xml_node(node.at_xpath("progress"))
+    # end
+    t.times_run           = extract_value_from("report_count/finished", node).to_i
+    t.trend               = extract_value_from("trend", node)
+    t.last_report_id      = extract_value_from("last_report/report/@id", node)
+    t.last_report_date    = extract_value_from("last_report/report/timestamp", node)
+    t.last_report_debug   = extract_value_from("last_report/report/result_count/debug", node).to_i
+    t.last_report_high    = extract_value_from("last_report/report/result_count/hole", node).to_i
+    t.last_report_low     = extract_value_from("last_report/report/result_count/info", node).to_i
+    t.last_report_log     = extract_value_from("last_report/report/result_count/log", node).to_i
+    t.last_report_medium  = extract_value_from("last_report/report/result_count/warning", node).to_i
+    t.first_report_id     = extract_value_from("first_report/report/@id", node)
+    t.first_report_date   = extract_value_from("first_report/report/timestamp", node)
+    t.config_id           = extract_value_from("config/@id", node)
+    t.config_name         = extract_value_from("config/name", node)
+    t.target_id           = extract_value_from("target/@id", node)
+    t.target_name         = extract_value_from("target/name", node)
+    # node.xpath("reports/report").each { |xr|
+    #   t.reports << VasReport.new({
+    #     :id => extract_value_from("@id", xr),
+    #     :started_at => extract_value_from("timestamp", xr)
+    #   })
+    # }
+    # t.reset_changes
+    t
+  end
+
+  def self.all(user, options = {})
+    params = {:apply_overrides => 0, :sort_field => "name"}
+    params[:task_id] = options[:id] if options[:id]
+    params[:details] = 1
+    cmd = Nokogiri::XML::Builder.new { |xml| xml.get_tasks(params) }
+    tasks = user.openvas_connection.sendrecv(cmd.doc)
+    ret = []
+    begin
+      tasks.xpath('//task').each { |t| ret << from_xml_node(t) }
+    rescue
+      raise XMLParsingError
     end
-    tasks
+    ret
   end
 
   def self.find(id)
@@ -105,35 +128,25 @@ Rails.logger.info "\n\n resp=#{resp.inspect}\n\n"
 
   def threat
 		# threat: High, Medium, Low, Log, Debug ... where Log,Debug are shown as None
-		return '' if @last_report_result_count[:low] + @last_report_result_count[:medium] + @last_report_result_count[:high] == 0
+		return '' if (@last_report_low + @last_report_medium + @last_report_high) == 0
 		max = nil
 		threat = ''
-		low = @last_report_result_count[:low]
+		low = @last_report_low
 		max = low
 		threat = 'Low'
-		medium = @last_report_result_count[:medium]
+		medium = @last_report_medium
 		max = medium if medium >= max
 		threat = 'Medium' if medium >= max
-		high = @last_report_result_count[:high]
+		high = @last_report_high
 		max = high if high >= max
 		threat = 'High' if high >= max
 		threat = 'None' if threat == 0
 		threat
   end
 
-  def first_report
-    OpenvasCli::VasReport.get_by_id(@first_report_id)
-  end
-
-  def last_report
-    OpenvasCli::VasReport.get_by_id(@last_report_id)
-  end
-
   private
 
   def self.dup_vastask_to_self(vt)
-    # cfg = OpenvasCli::VasConfig.get_by_id(vt.config_id)
-    # trg = OpenvasCli::VasTarget.get_by_id(vt.target_id)
     Task.new({:id => vt.id, :name => vt.name, :comment => vt.comment, :status => vt.status,
               :trend => vt.trend, :overall_progress => vt.progress.overall,
               :times_run => vt.times_run,
@@ -142,8 +155,32 @@ Rails.logger.info "\n\n resp=#{resp.inspect}\n\n"
               :last_report_result_count => vt.result_count,
               :config_id => vt.config_id, :target_id => vt.target_id,
               :config_name => vt.config_name, :target_name => vt.target_name
-              # :config_name => cfg.name, :target_name => trg.name
             })
+  end
+
+  # Helper method to extract a value from a Nokogiri::XML::Node object.  If the
+  # xpath provided contains an @, then the method assumes that the value resides
+  # in an attribute, otherwise it pulls the text of the last +text+ node.
+  def self.extract_value_from(x_str, n)
+    ret = ""
+    return ret if x_str.nil? || x_str.empty?
+    if x_str =~ /@/
+      ret = n.at_xpath(x_str).value  if n.at_xpath(x_str)
+    else
+      tn =  n.at_xpath(x_str)
+      if tn
+        if tn.children.count > 0
+          tn.children.each { |tnc|
+            if tnc.text?
+              ret = tnc.text
+            end
+          }
+        else
+          ret = tn.text
+        end
+      end
+    end
+    ret
   end
 
 end

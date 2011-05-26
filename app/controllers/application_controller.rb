@@ -20,8 +20,8 @@ class ApplicationController < ActionController::Base
     redirect_to(destroy_user_session_url) if current_user.blank?
     password = Rails.cache.read(current_user.username)
     redirect_to(destroy_user_session_url) if password.blank?
-    connection = OpenVas::Connection.new("host"=>'192.168.1.2',"port"=>'9390',"user"=>current_user.username,"password"=>password)
-    current_user.connection = connection
+    oc = OpenVas::Connection.new("host"=>APP_CONFIG[:openvas_omp_host],"port"=>APP_CONFIG[:openvas_omp_port],"user"=>current_user.username,"password"=>password)
+    current_user.openvas_connection = oc
   end
 
 end

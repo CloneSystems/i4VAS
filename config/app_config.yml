@@ -1,0 +1,10 @@
+development:
+  domain: localhost:3000
+  openvas_omp_host: '192.168.1.2'
+  openvas_omp_port: '9390'
+
+test:
+  domain: test.host
+
+production:
+  domain: example.com

@@ -1,15 +1,15 @@
 class User < ActiveRecord::Base
 
-  devise :database_authenticatable, :trackable, :timeoutable, :validatable
+  devise :database_authenticatable, :trackable, :timeoutable
 
   attr_accessible :username, :email, :password, :password_confirmation
 
-  def connection=(conn)
-    @connection ||= conn
+  def openvas_connection=(conn)
+    @openvas_connection ||= conn
   end
 
-  def connection
-    @connection
+  def openvas_connection
+    @openvas_connection
   end
 
 end

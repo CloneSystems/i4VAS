@@ -39,32 +39,32 @@ module OpenVas
   	#  ov=VasConnection.new(host=>'localhost', port=>'9390', user=>'user', password=>'pass')
   	def initialize(p={})
   		if p.has_key?("host")
-  			@host=p["host"]
+  			@host = p["host"]
   		else
-  			@host="localhost"
+  			@host = "localhost"
   		end
   		if p.has_key?("port")
-  			@port=p["port"]
+  			@port = p["port"]
   		else
-  			@port=9390
+  			@port = 9390
   		end
   		if p.has_key?("user")
-  			@user=p["user"]
+  			@user = p["user"]
   		else
-  			@user="openvas"
+  			@user = "openvas"
   		end
   		if p.has_key?("password")
-  			@password=p["password"]
+  			@password = p["password"]
   		else
-  			@password="openvas"
+  			@password = "openvas"
   		end
   		if p.has_key?("bufsize")
-  			@bufsize=p["bufsize"]
+  			@bufsize = p["bufsize"]
   		else
-  			@bufsize=16384
+  			@bufsize = 16384
   		end
   		@areq=''
-  		@read_timeout = 3 # seconds
+  		@read_timeout = 30 # seconds
       connect()
       login()
   	end

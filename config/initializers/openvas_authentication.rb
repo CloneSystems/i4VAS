@@ -15,12 +15,16 @@ Warden::Strategies.add(:openvas_authentication_strategy) do
       if connection.logged_in?
         user = User.find_by_username(params[:user][:username])
         if user.blank?
-          user = User.new(:username=>params[:user][:username], :password=>params[:user][:password])
+          begin
+            user = User.create!(:username=>params[:user][:username], :password=>params[:user][:password])
+          rescue
+            return fail!(:invalid)
+          end
         else
           # note: user's password in openvas may have changed:
           user.password = params[:user][:password]
+          user.save(:validate=>false)
         end
-        user.save(:validate=>false)
         # note: Devise encrypts this user's password in the database, but we may need the password 
         #       again in this user's session to authenticate with openvas as we send commands
         #       ... so let's cache it (***there has to be a more secure way***)
@@ -37,8 +41,8 @@ Warden::Strategies.add(:openvas_authentication_strategy) do
 
   def openvas_authenticate(user, password)
     return false if user.blank? or password.blank?
-    connection = OpenVas::Connection.new("host"=>'192.168.1.2',"port"=>'9390',"user"=>user,"password"=>password)
-    return connection
+    oc = OpenVas::Connection.new("host"=>APP_CONFIG[:openvas_omp_host],"port"=>APP_CONFIG[:openvas_omp_port],"user"=>user,"password"=>password)
+    return oc
   end
 
 end

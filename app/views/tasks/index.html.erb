@@ -1,10 +1,3 @@
-<%= link_to 'New Task', new_task_path %>
- | 
-user: <%= current_user.username %>
- | 
-<%= link_to "sign out", destroy_user_session_path %>
-<hr />
-
 <h2><%= link_to 'Tasks', root_path %></h2>
 
 <!-- <div class="table">
@@ -73,12 +66,12 @@ user: <%= current_user.username %>
 				    <%= image_tag("stop_inactive.png") %>
 		    		<%= image_tag("delete_inactive.png") %>
 				<% end %>
-		    <%= link_to image_tag("details.png"), task_path(task.id), :title => 'Task Details' %>
-		    <%= link_to image_tag("edit.png"), edit_task_path(task.id), :title => 'Edit Task' %>
+		    <%#= link_to image_tag("details.png"), task_path(task.id), :title => 'Task Details' %>
+		    <%#= link_to image_tag("edit.png"), edit_task_path(task.id), :title => 'Edit Task' %>
 			</div>
 		</td>
     <td>
-			<%= task.name %>
+			<%= link_to task.name, edit_task_path(task.id), :title => 'Edit Task' %>
 			<% unless task.comment.blank? %>
 					<br />
 					<%= truncate(task.comment, :length => 15) %>
@@ -98,14 +91,14 @@ user: <%= current_user.username %>
 			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
 			<%# frd = DateTime.strptime(task.first_report_date, "%a %b %d %H:%M:%S %Y") unless task.first_report_date.blank? %>
 			<% frd = Time.parse(task.first_report_date) unless task.first_report_date.blank? %>
-	    <%= link_to(frd.strftime("%b %d %Y"), report_path(task.first_report), :title => 'view First Report') unless task.first_report_date.blank? %>
+	    <%= link_to(frd.strftime("%b %d %Y"), report_path(task.first_report_id), :title => 'view First Report') unless task.first_report_date.blank? %>
 		</td>
     <td>
 			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
 			<%# lrd = DateTime.strptime(task.last_report_date, "%a %b %d %H:%M:%S %Y") unless task.last_report_date.blank? %>
 			<% lrd = Time.parse(task.last_report_date) unless task.last_report_date.blank? %>
 			<%#= lrd.strftime("%b %d %Y") unless task.last_report_date.blank? %>
-	    <%= link_to(lrd.strftime("%b %d %Y"), report_path(task.last_report), :title => 'view Last Report') unless task.last_report_date.blank? %>
+	    <%= link_to(lrd.strftime("%b %d %Y"), report_path(task.last_report_id), :title => 'view Last Report') unless task.last_report_date.blank? %>
 		</td>
 		<td><%# threat: High, Medium, Low, Log, Debug (Log,Debug = None) %><%= task.threat %></td>
 		<td><%# trend: up, down, more, less, same %><%= task.trend %></td>
