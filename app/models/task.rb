@@ -78,7 +78,8 @@ class Task
   end
 
   def self.find(id, user)
-    self.all(user, :id => id).first
+    t = self.all(user, :id => id).first
+    t = t.id == id ? t : nil
   end
 
   def self.find_as_vastask(id)
@@ -88,9 +89,7 @@ class Task
 
   def save(user)
     if valid?
-      # vt = Task.find_as_vastask(self.id) # for update action
-      vt = Task.find(self.id, user)
-      # vt = OpenvasCli::VasTask.new if vt.blank? # for create action
+      vt = Task.find(self.id, user) # for update action
       vt = Task.new if vt.blank? # for create action
       vt.name = self.name
       vt.comment = self.comment
@@ -149,7 +148,7 @@ class Task
     }
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
-      @id = extract_value_from("/create_task_response/@id", resp) unless @id
+      @id = Task.extract_value_from("/create_task_response/@id", resp) unless @id
       # reset_changes
       true
     rescue Exception => e
