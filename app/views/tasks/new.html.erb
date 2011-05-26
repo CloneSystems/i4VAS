@@ -21,11 +21,11 @@
   </div>
   <div class="field">
     Scan Config<br />
-		<%= collection_select(:task, :config_id, ScanConfig.selections, :id, :name) %>
+		<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name) %>
   </div>
   <div class="field">
     Scan Target<br />
-		<%= collection_select(:task, :target_id, ScanTarget.selections, :id, :name) %>
+		<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name) %>
   </div>
 	<br />
   <div class="actions">

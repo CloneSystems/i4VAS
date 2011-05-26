@@ -2,6 +2,8 @@ class ScanTarget
 
   include BasicModel
 
+  extend Openvas_Helper
+
   attr_accessor :persisted
 
   attr_accessor :id, :name, :comment, :hosts, :port_range, :in_use
@@ -12,19 +14,47 @@ class ScanTarget
     @persisted || false
   end
 
-  def self.all
-    []
-  end
-
   def self.find(args)
   end
 
-  def self.selections
+  def self.selections(user)
     targets = []
-    OpenvasCli::VasTarget.get_all.each do |t|
-      targets << ScanTarget.new({ :id => t.id, :name => t.name })
+    # OpenvasCli::VasTarget.get_all.each do |t|
+    #   targets << ScanTarget.new({ :id => t.id, :name => t.name })
+    # end
+    targets = self.all(user)
+  end
+
+  def self.all(user, options = {})
+    params = {:tasks => 1}
+    params[:target_id] = options[:id] if options[:id]
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_targets(params) }
+    ret = []
+    begin
+      targets = user.openvas_connection.sendrecv(req.doc)
+      targets.xpath('//target').each { |t|
+        targ                       = ScanTarget.new
+        targ.id                    = extract_value_from("@id", t)
+        targ.name                  = extract_value_from("name", t)
+        # host_string                = extract_value_from("hosts", t)
+        # all_hosts = host_string.split(/,/)
+        # all_hosts.each { |hst| hst.strip! }
+        # targ.hosts                 = all_hosts
+        # targ.comment               = extract_value_from("comment", t)
+        # targ.port_range            = extract_value_from("port_range", t)
+        # targ.in_use                = extract_value_from("in_use", t).to_i > 0
+        # targ.credential_keys[:ssh] = extract_value_from("ssh_lsc_credential/@id", t)
+        # targ.credential_keys[:smb] = extract_value_from("smb_lsc_credential/@id", t)
+        # t.xpath('tasks/task').each { |task|
+        #   targ.task_keys << extract_value_from("@id", task)
+        # }
+        # targ.reset_changes
+        ret << targ
+      }
+    rescue Exception => e
+      raise e
     end
-    targets
+    ret
   end
 
   def save

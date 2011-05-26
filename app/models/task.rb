@@ -2,6 +2,8 @@ class Task
 
   include BasicModel
 
+  extend Openvas_Helper
+
   # note: since we are not using ActiveRecord for persistence, but ActiveModel instead, 
   #       we need to manually manipulate the return value for "persisted?" so that in 
   #       the views "form_for" will set the correct route and post/put action 
@@ -19,6 +21,10 @@ class Task
 
   def persisted?
     @persisted || false
+  end
+
+  def new_record?
+    @id == nil || @id.empty?
   end
 
   def self.from_xml_node(node)
@@ -71,9 +77,8 @@ class Task
     ret
   end
 
-  def self.find(id)
-    vt = OpenvasCli::VasTask.get_by_id(id)
-    dup_vastask_to_self(vt)
+  def self.find(id, user)
+    self.all(user, :id => id).first
   end
 
   def self.find_as_vastask(id)
@@ -81,10 +86,12 @@ class Task
     OpenvasCli::VasTask.get_by_id(id)
   end
 
-  def save
+  def save(user)
     if valid?
-      vt = Task.find_as_vastask(self.id) # for update action
-      vt = OpenvasCli::VasTask.new if vt.blank? # for create action
+      # vt = Task.find_as_vastask(self.id) # for update action
+      vt = Task.find(self.id, user)
+      # vt = OpenvasCli::VasTask.new if vt.blank? # for create action
+      vt = Task.new if vt.blank? # for create action
       vt.name = self.name
       vt.comment = self.comment
       # note: openvas doesn't allow updates to config_id and target_id, only name and comment:
@@ -92,7 +99,7 @@ class Task
         vt.config_id = self.config_id
         vt.target_id = self.target_id
       end
-      vt.create_or_update
+      vt.create_or_update(user)
       vt.errors.each do |attribute, msg|
         self.errors.add(:openvas, "<br />" + msg)
       end
@@ -103,23 +110,52 @@ class Task
     end
   end
 
-  def update_attributes(attrs={})
+  def update_attributes(user, attrs={})
     attrs.each { |key, value|
       send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
     }
-    save
+    save(user)
   end
 
   def destroy
     delete_record
   end
 
-  def self.get_by_id(id)
-    get_all(:id => id).first
-  end
-
-  def create_or_update
-    true
+  def create_or_update(user)
+    # if schedule && schedule.changed?
+    #   return unless schedule.save
+    #   schedule_id = schedule.id
+    # end
+    # if config && config.changed?
+    #   return unless config.save
+    #   config_id = config.id
+    # end
+    req = Nokogiri::XML::Builder.new { |xml|
+      if @id
+        xml.modify_task(:task_id => @id) {
+          xml.name    { xml.text(@name) }
+          xml.comment { xml.text(@comment) }
+          # xml.schedule(:id => @schedule_id)  if schedule_id && !schedule_id.blank? && schedule_id_changed?
+        }
+      else
+        xml.create_task {
+          xml.name    { xml.text(@name) }    if @name
+          xml.comment { xml.text(@comment) } if @comment
+          xml.config(:id => @config_id)
+          xml.target(:id => @target_id)
+          # xml.schedule(:id => @schedule_id)  if @schedule_id && !@schedule_id.blank?
+        }
+      end
+    }
+    begin
+      resp = user.openvas_connection.sendrecv(req.doc)
+      @id = extract_value_from("/create_task_response/@id", resp) unless @id
+      # reset_changes
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
   end
 
   def delete_record
@@ -156,31 +192,6 @@ class Task
               :config_id => vt.config_id, :target_id => vt.target_id,
               :config_name => vt.config_name, :target_name => vt.target_name
             })
-  end
-
-  # Helper method to extract a value from a Nokogiri::XML::Node object.  If the
-  # xpath provided contains an @, then the method assumes that the value resides
-  # in an attribute, otherwise it pulls the text of the last +text+ node.
-  def self.extract_value_from(x_str, n)
-    ret = ""
-    return ret if x_str.nil? || x_str.empty?
-    if x_str =~ /@/
-      ret = n.at_xpath(x_str).value  if n.at_xpath(x_str)
-    else
-      tn =  n.at_xpath(x_str)
-      if tn
-        if tn.children.count > 0
-          tn.children.each { |tnc|
-            if tnc.text?
-              ret = tnc.text
-            end
-          }
-        else
-          ret = tn.text
-        end
-      end
-    end
-    ret
   end
 
 end

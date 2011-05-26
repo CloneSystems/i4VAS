@@ -2,6 +2,8 @@ class ScanConfig
 
   include BasicModel
 
+  extend Openvas_Helper
+
   attr_accessor :persisted
 
   attr_accessor :id, :name, :comment, :families_grow, :rules_grow, :in_use
@@ -12,19 +14,52 @@ class ScanConfig
     @persisted || false
   end
 
-  def self.all
-    []
-  end
-
   def self.find(args)
   end
 
-  def self.selections
+  def self.selections(user)
     configs = []
-    OpenvasCli::VasConfig.get_all.each do |c|
-      configs << ScanConfig.new({ :id => c.id, :name => c.name }) unless c.name == 'empty'
+    configs = self.all(user)
+  end
+
+  def self.all(user, options = {})
+    params = {:sort_field  => "name"}
+    if options[:show_details] && options[:show_details] == true
+      params.merge!({:families => "1", :preferences => "1"})
+    end    
+    params[:config_id] = options[:id] if options[:id]
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_configs(params) }
+    ret = []
+    begin
+      resp = user.openvas_connection.sendrecv(req.doc)
+      resp.xpath("/get_configs_response/config").each { |xml|
+        next if extract_value_from("name", xml) == 'empty'
+        cfg               = ScanConfig.new
+        cfg.id            = extract_value_from("@id", xml)
+        cfg.name          = extract_value_from("name", xml)
+        # cfg.comment       = extract_value_from("comment", xml)
+        # cfg.families_grow = extract_value_from("family_count/growing", xml).to_i > 0
+        # cfg.rules_grow    = extract_value_from("nvt_count/growing", xml).to_i > 0
+        # cfg.in_use        = extract_value_from("in_use", xml).to_i > 0
+        # xml.xpath("tasks/task").each { |t| cfg.tasks << VasTask.from_xml_node(t) }
+        # xml.xpath("families/family").each { |f| cfg.families << VasNVTFamily.from_xml_node(f) }
+        # xml.xpath("preferences/preference").each { |p| 
+        #   p = VasPreference.from_xml_node(p) 
+        #   p.config_id = cfg.id
+        #   p.reset_changes
+        #   cfg.preferences << p
+        # }
+        # cfg.reset_changes
+        ret << cfg
+      }
+    rescue Exception => e
+      raise e
     end
-    configs
+    ret
+  end
+
+  def self.find(id, user)
+    self.all(user, :id => id).first
   end
 
   def save
@@ -40,10 +75,6 @@ class ScanConfig
 
   def destroy
     delete_record
-  end
-
-  def self.get_by_id(id)
-    get_all(:id => id).first
   end
 
   def create_or_update

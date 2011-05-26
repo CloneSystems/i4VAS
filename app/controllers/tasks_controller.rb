@@ -1,10 +1,12 @@
 class TasksController < ApplicationController
 
-  before_filter :get_openvas_connection
+  before_filter :openvas_connect_and_login
+
+  after_filter :openvas_logout
 
   # GET /tasks
   def index
-    @tasks = Task.all current_user
+    @tasks = Task.all(current_user)
   end
 
   # GET /start_task/1
@@ -44,7 +46,7 @@ class TasksController < ApplicationController
 
   # GET /tasks/1
   def show
-    @task = Task.find(params[:id])
+    @task = Task.find(params[:id], current_user)
   end
 
   # GET /tasks/new
@@ -57,7 +59,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(params[:task])
     @task.persisted = false
-    if @task.save
+    if @task.save(current_user)
       redirect_to(@task, :notice => 'Task was successfully created.')
     else
       render :action => "new"
@@ -66,15 +68,15 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
-    @task = Task.find(params[:id])
+    @task = Task.find(params[:id], current_user)
     @task.persisted = true
   end
 
   # PUT /tasks/1
   def update
-    @task = Task.find(params[:id])
+    @task = Task.find(params[:id], current_user)
     @task.persisted = true
-    if @task.update_attributes(params[:task])
+    if @task.update_attributes(current_user, params[:task])
       redirect_to(@task, :notice => 'Task was successfully updated.')
     else
       render :action => "edit"

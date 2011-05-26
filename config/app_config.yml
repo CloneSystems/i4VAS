@@ -7,4 +7,6 @@ test:
   domain: test.host
 
 production:
-  domain: example.com
+  domain: greenbone.heroku.com
+  openvas_omp_host: '199.187.124.38'
+  openvas_omp_port: '9390'
