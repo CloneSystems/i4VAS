@@ -79,12 +79,7 @@ class Task
 
   def self.find(id, user)
     t = self.all(user, :id => id).first
-    t = t.id == id ? t : nil
-  end
-
-  def self.find_as_vastask(id)
-    return nil if id.blank?
-    OpenvasCli::VasTask.get_by_id(id)
+    t = t.id == id ? t : nil # ensure "first" task has the desired id
   end
 
   def save(user)
@@ -193,6 +188,21 @@ class Task
 
   def stop(user)
     req = Nokogiri::XML::Builder.new { |xml| xml.stop_task(:task_id => @id) }
+    user.openvas_connection.sendrecv(req.doc)
+  end
+
+  def pause(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.pause_task(:task_id => @id) }
+    user.openvas_connection.sendrecv(req.doc)
+  end
+
+  def resume_paused(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.resume_paused_task(:task_id => @id) }
+    user.openvas_connection.sendrecv(req.doc)
+  end
+
+  def resume_stopped(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.resume_stopped_task(:task_id => @id) }
     user.openvas_connection.sendrecv(req.doc)
   end
 

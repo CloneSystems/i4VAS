@@ -93,16 +93,14 @@
 			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
 			<%# frd = DateTime.strptime(task.first_report_date, "%a %b %d %H:%M:%S %Y") unless task.first_report_date.blank? %>
 			<% frd = Time.parse(task.first_report_date) unless task.first_report_date.blank? %>
-	    <%#= link_to(frd.strftime("%b %d %Y"), report_path(task.first_report_id), :title => 'view First Report') unless task.first_report_date.blank? %>
-	    <%= frd.strftime("%b %d %Y") unless task.first_report_date.blank? %>
+	    <%= link_to(frd.strftime("%b %d %Y"), report_path(task.first_report_id), :title => 'view First Report') unless task.first_report_date.blank? %>
 		</td>
     <td>
 			<%# openvas returns datetime as a string formatted like: "Thu May 19 21:09:19 2011" %>
 			<%# lrd = DateTime.strptime(task.last_report_date, "%a %b %d %H:%M:%S %Y") unless task.last_report_date.blank? %>
 			<% lrd = Time.parse(task.last_report_date) unless task.last_report_date.blank? %>
 			<%#= lrd.strftime("%b %d %Y") unless task.last_report_date.blank? %>
-	    <%#= link_to(lrd.strftime("%b %d %Y"), report_path(task.last_report_id), :title => 'view Last Report') unless task.last_report_date.blank? %>
-	    <%= lrd.strftime("%b %d %Y") unless task.last_report_date.blank? %>
+	    <%= link_to(lrd.strftime("%b %d %Y"), report_path(task.last_report_id), :title => 'view Last Report') unless task.last_report_date.blank? %>
 		</td>
 		<td><%# threat: High, Medium, Low, Log, Debug (Log,Debug = None) %><%= task.threat %></td>
 		<td><%# trend: up, down, more, less, same %><%= task.trend %></td>

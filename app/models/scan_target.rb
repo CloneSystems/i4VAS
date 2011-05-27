@@ -19,9 +19,6 @@ class ScanTarget
 
   def self.selections(user)
     targets = []
-    # OpenvasCli::VasTarget.get_all.each do |t|
-    #   targets << ScanTarget.new({ :id => t.id, :name => t.name })
-    # end
     targets = self.all(user)
   end
 
