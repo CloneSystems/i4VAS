@@ -14,17 +14,19 @@ class ReportsController < ApplicationController
 
   # GET /view_report/1
   def view_report
+    fmt = 'html' if params[:fmt].blank?
     @report = Report.find(params[:id], current_user)
     formats = Report.formats(current_user)
-    html_fmt_id = ''
+    format_id = format = ''
     formats.each do |f|
-      if f.name.downcase == 'html'
-        html_fmt_id = f.id
+      if f.name.downcase == fmt
+        format_id = f.id
+        format = f.name
         break
       end
     end
-    @html = Report.find_by_id_and_format(params[:id], html_fmt_id, current_user)
-    render :layout => false
+    report = Report.find_by_id_and_format(params[:id], format_id, current_user)
+    render :text => report, :layout => false
   end
 
   protected

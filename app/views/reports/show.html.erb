@@ -20,20 +20,18 @@
   <%= @report.result_count.inspect %>
 </p>
 
+<hr />
 <% if @report.status.downcase == 'done' %>
 	<p><%= link_to 'view HTML Report', view_report_path(@report.id), :target=>'_blank' %></p>
+	<p><%= link_to 'view PDF Report', view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></p>
 <% end %>
 
-<hr />
-<%#= raw(@html) %>
-<hr />
-
-<p>
+<!-- <p>
 <pre>
 <b>Report Formats:</b>
-<%= @formats.to_yaml%>
+<%#= @formats.to_yaml%>
 </pre>
 </p>
 <p>
 <pre><%#= @report.to_yaml%></pre>
-</p>
+</p> -->
