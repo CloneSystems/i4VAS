@@ -8,8 +8,11 @@ class ReportsController < ApplicationController
 
   # GET /reports/1
   def show
-    # @report = OpenvasCli::VasReport.get_by_id(params[:id])
     @report = Report.find(params[:id], current_user)
+    @formats =Report.formats(current_user)
+    html_fmt_id = "b993b6f5-f9fb-4e6e-9c94-dd46c00e058d"
+    # @html = Report.find_by_id_and_format(params[:id], html_fmt_id, current_user)
+    @html = "*** report here ***"
   end
 
   protected

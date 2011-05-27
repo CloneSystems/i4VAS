@@ -1,3 +1,5 @@
+require 'base64'
+
 class Report
 
   include BasicModel
@@ -10,6 +12,34 @@ class Report
   attr_accessor :started_at
   attr_accessor :ended_at
   attr_accessor :status # overall status only
+
+
+class ReportFormat
+  attr_accessor :id, :name
+end
+
+  def self.formats(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_report_formats }
+    formats = user.openvas_connection.sendrecv(req.doc)
+    ret = []
+    formats.xpath('/get_report_formats_response/report_format').each { |r|
+      fmt            = ReportFormat.new
+      fmt.id         = extract_value_from("@id", r)
+      fmt.name       = extract_value_from("name", r)
+      ret << fmt
+    }
+    ret
+  end
+
+  def self.find_by_id_and_format(id, format_id, user)
+    params = {}
+    params[:report_id] = id if id
+    params[:format_id] = format_id if format_id
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_reports(params) }
+    rep = user.openvas_connection.sendrecv(req.doc)
+    r = Base64.decode64 rep.xpath('//get_reports_response/report').text
+    r
+  end
 
   def self.find(id, user)
     r = self.all(user, :id => id).first

@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<%= link_to 'tasks', tasks_path %>
 <p>
   <b>Result of Task:</b>
   <%= @report.task_name %>
@@ -19,8 +19,17 @@
   <b>Result count:</b>
   <%= @report.result_count.inspect %>
 </p>
-<%= link_to 'tasks', tasks_path %>
 
+<hr />
+<%= raw(@html) %>
+<hr />
+
+<p>
+<pre>
+<b>Report Formats:</b>
+<%= @formats.to_yaml%>
+</pre>
+</p>
 <p>
 <pre><%= @report.to_yaml%></pre>
 </p>
