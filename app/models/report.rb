@@ -37,6 +37,7 @@ end
     params[:format_id] = format_id if format_id
     req = Nokogiri::XML::Builder.new { |xml| xml.get_reports(params) }
     rep = user.openvas_connection.sendrecv(req.doc)
+puts "\n\n ***rep=#{rep.inspect}\n\n****************************************************************************"
     r = Base64.decode64 rep.xpath('//get_reports_response/report').text
     r
   end

@@ -23,7 +23,7 @@
 <hr />
 <% if @report.status.downcase == 'done' %>
 	<p><%= link_to 'view HTML Report', view_report_path(@report.id), :target=>'_blank' %></p>
-	<p><%#= link_to 'view PDF Report', view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></p>
+	<p><%= link_to 'view PDF Report', view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></p>
 <% end %>
 
 <!-- <p>
