@@ -15,6 +15,7 @@ class ReportsController < ApplicationController
   # GET /view_report/1
   def view_report
     fmt = 'html' if params[:fmt].blank?
+    fmt = params[:fmt] unless params[:fmt].blank?
     @report = Report.find(params[:id], current_user)
     formats = Report.formats(current_user)
     format_id = format = ''
@@ -25,6 +26,7 @@ class ReportsController < ApplicationController
         break
       end
     end
+puts "\n\n fmt=#{fmt.inspect}\nformat_id=#{format_id.inspect}\n format=#{format.inspect}\n\n"
     report = Report.find_by_id_and_format(params[:id], format_id, current_user)
     render :text => report, :layout => false
   end
