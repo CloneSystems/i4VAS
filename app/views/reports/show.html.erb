@@ -20,8 +20,12 @@
   <%= @report.result_count.inspect %>
 </p>
 
+<% if @report.status.downcase == 'done' %>
+	<p><%= link_to 'view HTML Report', view_report_path(@report.id), :target=>'_blank' %></p>
+<% end %>
+
 <hr />
-<%= raw(@html) %>
+<%#= raw(@html) %>
 <hr />
 
 <p>

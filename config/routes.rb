@@ -11,6 +11,7 @@ Greenbone::Application.routes.draw do
   root :to => 'tasks#index'
 
   resources :reports
+  get 'view_report/:id' => 'reports#view_report', :as => 'view_report'
 
   resources :scan_targets
 
