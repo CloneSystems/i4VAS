@@ -28,7 +28,12 @@ class ReportsController < ApplicationController
     end
 puts "\n\n fmt=#{fmt.inspect}\nformat_id=#{format_id.inspect}\n format=#{format.inspect}\n\n"
     report = Report.find_by_id_and_format(params[:id], format_id, current_user)
-    render :text => report, :layout => false
+    if fmt.downcase == 'pdf'
+puts "\n\n***send pdf***\n\n"
+      send_data report, :type => 'application/pdf', :file_name => "report_#{params[:id]}.pdf", :disposition => 'inline'
+    else
+      render :text => report, :layout => false
+    end
   end
 
   protected
