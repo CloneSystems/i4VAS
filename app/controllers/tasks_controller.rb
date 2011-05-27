@@ -11,7 +11,6 @@ class TasksController < ApplicationController
 
   # GET /start_task/1
   def start_task
-    # @task = Task.find_as_vastask(params[:id])
     @task = Task.find(params[:id], current_user)
     @task.start(current_user)
     redirect_to(tasks_url)
@@ -33,7 +32,6 @@ class TasksController < ApplicationController
 
   # GET /stop_task/1
   def stop_task
-    # @task = Task.find_as_vastask(params[:id])
     @task = Task.find(params[:id], current_user)
     @task.stop(current_user)
     redirect_to(tasks_url)
