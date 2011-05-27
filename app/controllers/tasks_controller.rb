@@ -85,8 +85,8 @@ class TasksController < ApplicationController
 
   # DELETE /tasks/1
   def destroy
-    @task = Task.find_as_vastask(params[:id])
-    @task.delete_record
+    @task = Task.find(params[:id], current_user)
+    @task.delete_record(current_user)
     redirect_to(tasks_url)
   end
 

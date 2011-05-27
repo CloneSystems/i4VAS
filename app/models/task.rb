@@ -157,8 +157,15 @@ class Task
     end
   end
 
-  def delete_record
-    true
+  def delete_record(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.delete_task(:task_id => @id) }
+    begin
+      user.openvas_connection.sendrecv(req.doc)
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
   end
 
   def threat
