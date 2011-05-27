@@ -78,8 +78,10 @@
 			<% end %>
 		</td>
     <td>
-			<% if ['New','Done'].include?(task.status) || task.status =~ /Requested/ %>
+			<% if ['New','Done'].include?(task.status) %>
 					<%= task.status %>
+			<% elsif task.status =~ /Requested/ %>
+					<span style="color:red"><%= task.status %></span>
 			<% else %>
 					<%= task.status %> at <%= task.overall_progress %>%
 			<% end %>

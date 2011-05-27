@@ -186,6 +186,16 @@ class Task
 		threat
   end
 
+  def start(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.resume_or_start_task(:task_id => @id) }
+    user.openvas_connection.sendrecv(req.doc)
+  end
+
+  def stop(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.stop_task(:task_id => @id) }
+    user.openvas_connection.sendrecv(req.doc)
+  end
+
   private
 
   def self.dup_vastask_to_self(vt)
