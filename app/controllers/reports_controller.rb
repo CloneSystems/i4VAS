@@ -30,7 +30,7 @@ class ReportsController < ApplicationController
     if fmt.downcase == 'pdf'
       send_data report, :type => 'application/pdf', :file_name => "report_#{params[:id]}.pdf", :disposition => 'inline'
     elsif fmt.downcase == 'html'
-      # chop off the top the @html.content: from body tag up ... we have our own css layout for viewing:
+      # chop off the top the report starting just before the body tag (keep body tag as it has styling):
       b = report.index('<body ', 0)
       @html_body = report[b..report.length] unless b.nil?
       @html_body = report if b.nil?

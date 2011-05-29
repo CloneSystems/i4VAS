@@ -98,21 +98,36 @@ end
       rep.id         = extract_value_from("@id", r)
       rep.task_id    = extract_value_from("task/@id", r)
       rep.task_name  = extract_value_from("task/name", r)
+      rep.task_name  = extract_value_from("task/name", r)
       rep.status     = extract_value_from("scan_run_status", r)
       rep.started_at = Time.parse(extract_value_from("scan_start", r))
       rep.ended_at = Time.parse(extract_value_from("scan_end", r))
-      rep.result_count[:total]             = extract_value_from("result_count/full", r).to_i
-      rep.result_count[:filtered]          = extract_value_from("result_count/filtered", r).to_i
-      rep.result_count[:debug][:total]     = extract_value_from("result_count/debug/full", r).to_i
-      rep.result_count[:debug][:filtered]  = extract_value_from("result_count/debug/filtered", r).to_i
-      rep.result_count[:high][:total]      = extract_value_from("result_count/hole/full", r).to_i
-      rep.result_count[:high][:filtered]   = extract_value_from("result_count/hole/filtered", r).to_i
-      rep.result_count[:low][:total]       = extract_value_from("result_count/info/full", r).to_i
-      rep.result_count[:low][:filtered]    = extract_value_from("result_count/info/filtered", r).to_i
-      rep.result_count[:log][:total]       = extract_value_from("result_count/log/full", r).to_i
-      rep.result_count[:log][:filtered]    = extract_value_from("result_count/log/filtered", r).to_i
-      rep.result_count[:medium][:total]    = extract_value_from("result_count/warning/full", r).to_i
-      rep.result_count[:medium][:filtered] = extract_value_from("result_count/warning/filtered", r).to_i
+      # note: original code:
+      # rep.result_count[:total]             = extract_value_from("result_count/full", r).to_i
+      # rep.result_count[:filtered]          = extract_value_from("result_count/filtered", r).to_i
+      # rep.result_count[:debug][:total]     = extract_value_from("result_count/debug/full", r).to_i
+      # rep.result_count[:debug][:filtered]  = extract_value_from("result_count/debug/filtered", r).to_i
+      # rep.result_count[:high][:total]      = extract_value_from("result_count/hole/full", r).to_i
+      # rep.result_count[:high][:filtered]   = extract_value_from("result_count/hole/filtered", r).to_i
+      # rep.result_count[:low][:total]       = extract_value_from("result_count/info/full", r).to_i
+      # rep.result_count[:low][:filtered]    = extract_value_from("result_count/info/filtered", r).to_i
+      # rep.result_count[:log][:total]       = extract_value_from("result_count/log/full", r).to_i
+      # rep.result_count[:log][:filtered]    = extract_value_from("result_count/log/filtered", r).to_i
+      # rep.result_count[:medium][:total]    = extract_value_from("result_count/warning/full", r).to_i
+      # rep.result_count[:medium][:filtered] = extract_value_from("result_count/warning/filtered", r).to_i
+
+      rep.result_count_total[:total]  = extract_value_from("result_count/full", r).to_i
+      rep.result_count_total[:debug]  = extract_value_from("result_count/debug/full", r).to_i
+      rep.result_count_total[:high]   = extract_value_from("result_count/hole/full", r).to_i
+      rep.result_count_total[:low]    = extract_value_from("result_count/info/full", r).to_i
+      rep.result_count_total[:log]    = extract_value_from("result_count/log/full", r).to_i
+      rep.result_count_total[:medium] = extract_value_from("result_count/warning/full", r).to_i
+      rep.result_count_filtered[:total]   = extract_value_from("result_count/filtered", r).to_i
+      rep.result_count_filtered[:debug]   = extract_value_from("result_count/debug/filtered", r).to_i
+      rep.result_count_filtered[:high]    = extract_value_from("result_count/hole/filtered", r).to_i
+      rep.result_count_filtered[:low]     = extract_value_from("result_count/info/filtered", r).to_i
+      rep.result_count_filtered[:log]     = extract_value_from("result_count/log/filtered", r).to_i
+      rep.result_count_filtered[:medium]  = extract_value_from("result_count/warning/filtered", r).to_i
       # r.xpath("./results/result").each { |result|
       #   rep.results << VasResult.parse_result_node(result)
       # }
@@ -149,6 +164,20 @@ end
                        }
     end
     @result_count
+  end
+
+  def result_count_total
+    unless @result_count_total
+      @result_count_total = {:total=>0, :debug=>0, :log=>0, :low=>0, :medium=>0, :high=>0}
+    end
+    @result_count_total
+  end
+
+  def result_count_filtered
+    unless @result_count_filtered
+      @result_count_filtered = {:total=>0, :debug=>0, :log=>0, :low=>0, :medium=>0, :high=>0}
+    end
+    @result_count_filtered
   end
 
 end

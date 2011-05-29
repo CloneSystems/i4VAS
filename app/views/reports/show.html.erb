@@ -16,15 +16,32 @@
   <%= @report.status %>
 </p>
 <p>
-  <b>Result count:</b>
-  <%= @report.result_count.inspect %>
+	<table cellspacing="2" cellpadding="4">
+	  <tr style="text-align:left; vertical-align:bottom">
+	    <th>&nbsp;</th>
+	    <th>High</th>
+	    <th>Medium</th>
+	    <th>Low</th>
+	    <th>Log</th>
+	    <th>False Pos</th>
+	    <th>Total</th>
+	    <th colspan="2">Reports</th>
+	  </tr>
+	  <tr>
+			<td>Full report:</td>
+			<td><%= @report.result_count_total[:high] %></td>
+			<td><%= @report.result_count_total[:medium] %></td>
+			<td><%= @report.result_count_total[:low] %></td>
+			<td><%= @report.result_count_total[:log] %></td>
+			<td><%= @report.result_count_total[:debug] %></td>
+			<td><%= @report.result_count_total[:total] %></td>
+			<% if @report.status.downcase == 'done' %>
+				<td><%= link_to 'HTML', view_report_path(@report.id), :target=>'_blank' %></td>
+				<td><%= link_to 'PDF', view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></td>
+			<% end %>
+		</tr>
+	</table>
 </p>
-
-<hr />
-<% if @report.status.downcase == 'done' %>
-	<p><%= link_to 'view HTML Report', view_report_path(@report.id), :target=>'_blank' %></p>
-	<p><%= link_to 'view PDF Report', view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></p>
-<% end %>
 
 <!-- <p>
 <pre>
