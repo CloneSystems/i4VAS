@@ -2,6 +2,8 @@ development:
   domain: localhost:3000
   openvas_omp_host: '192.168.1.2'
   openvas_omp_port: '9390'
+  openvas_oap_host: '192.168.1.2'
+  openvas_oap_port: '9393'
 
 test:
   domain: test.host
@@ -10,3 +12,5 @@ production:
   domain: greenbone.heroku.com
   openvas_omp_host: '199.187.124.38'
   openvas_omp_port: '9390'
+  openvas_oap_host: '199.187.124.38'
+  openvas_oap_port: '9393'

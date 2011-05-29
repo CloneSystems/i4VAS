@@ -26,11 +26,15 @@ class ReportsController < ApplicationController
         break
       end
     end
-puts "\n\n fmt=#{fmt.inspect}\nformat_id=#{format_id.inspect}\n format=#{format.inspect}\n\n"
     report = Report.find_by_id_and_format(params[:id], format_id, current_user)
     if fmt.downcase == 'pdf'
-puts "\n\n***send pdf***\n\n"
       send_data report, :type => 'application/pdf', :file_name => "report_#{params[:id]}.pdf", :disposition => 'inline'
+    elsif fmt.downcase == 'html'
+      # chop off the top the @html.content: from body tag up ... we have our own css layout for viewing:
+      b = report.index('<body ', 0)
+      @html_body = report[b..report.length] unless b.nil?
+      @html_body = report if b.nil?
+      render :layout => false
     else
       render :text => report, :layout => false
     end

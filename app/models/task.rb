@@ -27,6 +27,13 @@ class Task
     @id == nil || @id.empty?
   end
 
+  def self.version(connection)
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_version }
+    resp = connection.sendrecv(req.doc)
+    ret = Task.extract_value_from("/get_version_response/version", resp)
+    ret
+  end
+
   def self.from_xml_node(node)
     t = Task.new
     t.id                  = extract_value_from("@id", node)

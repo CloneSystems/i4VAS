@@ -36,16 +36,21 @@ end
     params[:report_id] = id if id
     params[:format_id] = format_id if format_id
     req = Nokogiri::XML::Builder.new { |xml| xml.get_reports(params) }
-puts "\n\n ***req=#{req.inspect}\n\n****************************************************************************"
     rep = user.openvas_connection.sendrecv(req.doc)
-puts "\n\n ***rep=#{rep.inspect}\n\n****************************************************************************"
-    r = Base64.decode64 rep.xpath('//get_reports_response/report').text
+    r = Base64.decode64(rep.xpath('//get_reports_response/report').text)
     r
   end
 
   def self.find(id, user)
+    return nil if id.blank? || user.blank?
     r = self.all(user, :id => id).first
-    r = r.id == id ? r : nil # ensure "first" report has the desired id
+    return nil if r.blank?
+    # ensure "first" report has the desired id
+    if r.id.to_s == id.to_s
+      return r
+    else
+      return nil
+    end
   end
 
   # pulls report details based off of the options passed.  By default, pulls all reports.

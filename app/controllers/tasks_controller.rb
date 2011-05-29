@@ -7,6 +7,8 @@ class TasksController < ApplicationController
   # GET /tasks
   def index
     @tasks = Task.all(current_user)
+    conn = openvas_connect_and_login(true)
+    @version = Task.version(conn)
   end
 
   # GET /start_task/1
