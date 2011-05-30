@@ -23,7 +23,11 @@
 	    <td><%= scan_target.port_range %></td>
 	    <td><%= scan_target.in_use %></td>
 	    <%#= link_to 'edit', edit_scan_target_path(scan_target.id) %>
-	    <td><%= link_to 'delete', scan_target_path(scan_target.id), :confirm => 'Are you sure?', :method => :delete %></td>
+			<% if scan_target.in_use > 0 %>
+  				<td style="color:#c0c0c0">delete</td>
+			<% else %>
+	    		<td><%= link_to 'delete', scan_target_path(scan_target.id), :confirm => 'Are you sure?', :method => :delete %></td>
+			<% end %>
 	  </tr>
 	<% end %>
 </table>
