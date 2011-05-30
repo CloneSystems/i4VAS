@@ -8,7 +8,12 @@ class ApplicationController < ActionController::Base
 
   before_filter :authenticate_user!
 
+
   private
+
+  def redirect_to_root
+    redirect_to(root_url)
+  end
 
   def openvas_connect_and_login(oap=false)
     redirect_to(destroy_user_session_url) if current_user.blank?

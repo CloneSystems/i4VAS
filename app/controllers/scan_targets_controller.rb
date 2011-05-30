@@ -1,5 +1,7 @@
 class ScanTargetsController < ApplicationController
 
+  before_filter :redirect_to_root, :only => [:edit, :update]
+
   before_filter :openvas_connect_and_login
 
   after_filter :openvas_logout
@@ -22,8 +24,9 @@ class ScanTargetsController < ApplicationController
   # POST /scan_targets
   def create
     @scan_target = ScanTarget.new(params[:scan_target])
-    if @scan_target.save
-      redirect_to(@scan_target, :notice => 'Scan target was successfully created.')
+    @scan_target.persisted = false
+    if @scan_target.save(current_user)
+      redirect_to(@scan_target, :notice => 'Scan Target was successfully created.')
     else
       render :action => "new"
     end
@@ -31,24 +34,24 @@ class ScanTargetsController < ApplicationController
 
   # GET /scan_targets/1/edit
   def edit
-    @scan_target = ScanTarget.find(params[:id], current_user)
-    @scan_target.persisted = true
+    # @scan_target = ScanTarget.find(params[:id], current_user)
+    # @scan_target.persisted = true
   end
 
   # PUT /scan_targets/1
   def update
-    @scan_target = ScanTarget.find(params[:id])
-    if @scan_target.update_attributes(params[:scan_target])
-      redirect_to(@scan_target, :notice => 'Scan target was successfully updated.')
-    else
-      render :action => "edit"
-    end
+    # @scan_target = ScanTarget.find(params[:id])
+    # if @scan_target.update_attributes(params[:scan_target])
+    #   redirect_to(@scan_target, :notice => 'Scan target was successfully updated.')
+    # else
+    #   render :action => "edit"
+    # end
   end
 
   # DELETE /scan_targets/1
   def destroy
-    @scan_target = ScanTarget.find(params[:id])
-    @scan_target.destroy
+    @scan_target = ScanTarget.find(params[:id], current_user)
+    @scan_target.delete_record(current_user)
     redirect_to(scan_targets_url)
   end
 

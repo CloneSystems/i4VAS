@@ -4,6 +4,7 @@
     <th>Name</th>
     <th>Comment</th>
     <th>Hosts</th>
+		<th>IPs</th>
     <th>Ports</th>
     <th>In use</th>
     <th></th>
@@ -18,10 +19,11 @@
 						<%= host %><br />
 				<% end %>
 			</td>
+			<td><%= scan_target.max_hosts %></td>
 	    <td><%= scan_target.port_range %></td>
 	    <td><%= scan_target.in_use %></td>
 	    <%#= link_to 'edit', edit_scan_target_path(scan_target.id) %>
-	    <td><%= link_to 'delete', scan_target, :confirm => 'Are you sure?', :method => :delete %></td>
+	    <td><%= link_to 'delete', scan_target_path(scan_target.id), :confirm => 'Are you sure?', :method => :delete %></td>
 	  </tr>
 	<% end %>
 </table>

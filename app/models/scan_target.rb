@@ -6,7 +6,7 @@ class ScanTarget
 
   attr_accessor :persisted
 
-  attr_accessor :id, :name, :comment, :hosts, :port_range, :in_use
+  attr_accessor :id, :name, :comment, :hosts, :port_range, :in_use, :max_hosts
 
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :hosts, :presence => true, :length => { :maximum => 200 }
@@ -37,6 +37,7 @@ class ScanTarget
         targ                       = ScanTarget.new
         targ.id                    = extract_value_from("@id", t)
         targ.name                  = extract_value_from("name", t)
+        targ.max_hosts             = extract_value_from("max_hosts", t)
         host_string                = extract_value_from("hosts", t)
         all_hosts = host_string.split(/,/)
         all_hosts.each { |hst| hst.strip! }
@@ -71,8 +72,22 @@ class ScanTarget
     end
   end
 
-  def save
-    valid? ? true : false
+  def save(user)
+    if valid?
+      st = ScanTarget.new
+      st.name         = self.name
+      st.comment      = self.comment
+      st.hosts_string = self.hosts
+      st.port_range   = self.port_range
+      st.create_or_update(user)
+      st.errors.each do |attribute, msg|
+        self.errors.add(:openvas, "<br />" + msg)
+      end
+      return false unless self.errors.blank?
+      return true
+    else
+      return false
+    end
   end
 
   def update_attributes(attrs={})
@@ -87,16 +102,44 @@ class ScanTarget
     delete_record
   end
 
-  def self.get_by_id(id)
-    get_all(:id => id).first
+  def hosts_string
+    hosts.join(", ")
   end
 
-  def create_or_update
-    true
+  def hosts_string=(val)
+    self.hosts = val.split(/, ?/)
   end
 
-  def delete_record
-    true
+  def create_or_update(user)
+    req = Nokogiri::XML::Builder.new { |xml|
+      xml.create_target {
+        xml.name       { xml.text(@name) }
+        xml.comment    { xml.text(@comment) } unless @comment
+        xml.hosts      { xml.text(hosts_string) }
+        # xml.ssh_lsc_credential(:id => credentials[:ssh].id) if credentials[:ssh]
+        # xml.smb_lsc_credential(:id => credentials[:smb].id) if credentials[:smb]
+        xml.port_range { xml.text(@port_range) } unless @port_range.blank?
+      }
+    }
+    begin
+      resp = user.openvas_connection.sendrecv(req.doc)
+      @id = ScanTarget.extract_value_from("/create_target_response/@id", resp)
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
+  end
+
+  def delete_record(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.delete_target(:target_id => @id) }
+    begin
+      user.openvas_connection.sendrecv(req.doc)
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
   end
 
 end

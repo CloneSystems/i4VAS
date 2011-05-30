@@ -1,10 +1,17 @@
 class ReportsController < ApplicationController
 
-  before_filter :redirect_to_tasks, :except => [:show, :view_report]
+  before_filter :redirect_to_root, :except => [:show, :view_report]
 
   before_filter :openvas_connect_and_login
 
   after_filter :openvas_logout
+
+  def index; end
+  def new; end
+  def create; end
+  def edit; end
+  def update; end
+  def destroy; end
 
   # GET /reports/1
   def show
@@ -38,12 +45,6 @@ class ReportsController < ApplicationController
     else
       render :text => report, :layout => false
     end
-  end
-
-  protected
-
-  def redirect_to_tasks
-    redirect_to(tasks_url)
   end
 
 end

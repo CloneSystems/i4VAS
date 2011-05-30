@@ -13,7 +13,9 @@
 	<div id="nav_wrapper">
 		<% if user_signed_in? %>
 			<div class="nav">
-				<%= link_to "sign out", destroy_user_session_path %>
+				<%= link_to 'Home', root_path %>
+				 | 
+				<%= link_to "Sign Out", destroy_user_session_path %>
 				 | 
 				<% Time.zone = 'Eastern Time (US & Canada)' %>
 				timeout at: 
