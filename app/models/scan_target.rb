@@ -73,6 +73,7 @@ class ScanTarget
   end
 
   def save(user)
+    # note modify(edit/update) is not implemented in OMP 2.0
     if valid?
       st = ScanTarget.new
       st.name         = self.name
@@ -111,10 +112,11 @@ class ScanTarget
   end
 
   def create_or_update(user)
+    # note modify(edit/update) is not implemented in OMP 2.0
     req = Nokogiri::XML::Builder.new { |xml|
       xml.create_target {
         xml.name       { xml.text(@name) }
-        xml.comment    { xml.text(@comment) } unless @comment
+        xml.comment    { xml.text(@comment) } unless @comment.blank?
         xml.hosts      { xml.text(hosts_string) }
         # xml.ssh_lsc_credential(:id => credentials[:ssh].id) if credentials[:ssh]
         # xml.smb_lsc_credential(:id => credentials[:smb].id) if credentials[:smb]
