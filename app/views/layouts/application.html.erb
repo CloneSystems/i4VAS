@@ -9,21 +9,61 @@
   <%= yield(:head) %>
 </head>
 <body>
-  <div id="container">
-		<div style="text-align: right">
-			<% if user_signed_in? %>
-					<%= link_to 'new Task', new_task_path %>
-					 | 
-					user: <%= current_user.username %>
-					 | 
-					<%= link_to "sign out", destroy_user_session_path %>
-			<% end %>
-		</div>
-    <% flash.each do |name, msg| %>
-      <%= content_tag :div, msg, :id => "flash_#{name}" %>
-    <% end %>
-    <%= content_tag :h1, yield(:title) if show_title? %>
-    <%= yield %>
-  </div>
+<div id="container">
+	<div id="nav_wrapper">
+		<% if user_signed_in? %>
+			<div class="nav">
+				<%= link_to "sign out", destroy_user_session_path %>
+				 | 
+				<% Time.zone = 'Eastern Time (US & Canada)' %>
+				timeout at: 
+				<%= current_user.class.timeout_in.ago.in_time_zone.strftime("%a %b %d, %Y %H:%M:%S %Z") %>
+				<%#= current_user.class.inspect %>
+				&larr; <span class="nav_text">user:</span> <%= current_user.username %>
+			</div>
+			<div class="nav">
+				<%= link_to 'Tasks', tasks_path %>
+				 | 
+				<%= link_to 'New Task', new_task_path %>
+				 | 
+				Notes
+				 | 
+				Overrides
+				&larr; <span class="nav_text">scan management</span>
+			</div>
+			<div class="nav">
+				Scan Configs
+				 | 
+				<%= link_to 'Targets', scan_targets_path %>
+				 | 
+				Credentials
+				 | 
+				Agents
+				 | 
+				Escalators
+				 | 
+				Schedules
+				 | 
+				Report Formats
+				 | 
+				Slaves
+				&larr; <span class="nav_text">configuration</span>
+			</div>
+			<div class="nav">
+				Users
+				 | 
+				NVT Feed
+				 | 
+				Settings
+				&larr; <span class="nav_text">administration</span>
+			</div>
+		<% end %>
+	</div>
+	<% flash.each do |name, msg| %>
+	  <%= content_tag :div, msg, :id => "flash_#{name}" %>
+	<% end %>
+	<%= content_tag :h1, yield(:title) if show_title? %>
+	<%= yield %>
+</div>
 </body>
 </html>

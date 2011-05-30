@@ -43,11 +43,11 @@ end
 
   def self.find(id, user)
     return nil if id.blank? || user.blank?
-    r = self.all(user, :id => id).first
-    return nil if r.blank?
-    # ensure "first" report has the desired id
-    if r.id.to_s == id.to_s
-      return r
+    f = self.all(user, :id => id).first
+    return nil if f.blank?
+    # ensure "first" has the desired id:
+    if f.id.to_s == id.to_s
+      return f
     else
       return nil
     end

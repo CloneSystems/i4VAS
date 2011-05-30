@@ -1,4 +1,4 @@
-<h1>New task</h1>
+<h1>new Task</h1>
 
 <%= form_for @task, :as => :task, :url => tasks_path do |f| %>
   <% if @task.errors.any? %>
@@ -32,5 +32,3 @@
     <%= f.submit %>
   </div>
 <% end %>
-<br />
-<%= link_to 'tasks', tasks_path %>

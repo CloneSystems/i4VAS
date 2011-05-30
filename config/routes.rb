@@ -17,8 +17,4 @@ Greenbone::Application.routes.draw do
 
   resources :scan_configs
 
-  resources :openvas_cli_vas_tasks
-
-  get 'home' => 'home#index'
-
 end

@@ -85,8 +85,15 @@ class Task
   end
 
   def self.find(id, user)
-    t = self.all(user, :id => id).first
-    t = t.id == id ? t : nil # ensure "first" task has the desired id
+    return nil if id.blank? || user.blank?
+    f = self.all(user, :id => id).first
+    return nil if f.blank?
+    # ensure "first" has the desired id:
+    if f.id.to_s == id.to_s
+      return f
+    else
+      return nil
+    end
   end
 
   def save(user)
@@ -116,10 +123,6 @@ class Task
       send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
     }
     save(user)
-  end
-
-  def destroy
-    delete_record
   end
 
   def create_or_update(user)
@@ -157,6 +160,10 @@ class Task
       errors[:command_failure] << e.message
       nil
     end
+  end
+
+  def destroy
+    delete_record
   end
 
   def delete_record(user)

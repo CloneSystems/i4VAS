@@ -1,31 +1,29 @@
-<h1>Listing scan_targets</h1>
-
-<table>
-  <tr>
+<h1>Scan Targets</h1>
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
     <th>Name</th>
     <th>Comment</th>
     <th>Hosts</th>
-    <th>Port range</th>
+    <th>Ports</th>
     <th>In use</th>
     <th></th>
     <th></th>
-    <th></th>
   </tr>
-
-<% @scan_targets.each do |scan_target| %>
-  <tr>
-    <td><%= scan_target.name %></td>
-    <td><%= scan_target.comment %></td>
-    <td><%= scan_target.hosts %></td>
-    <td><%= scan_target.port_range %></td>
-    <td><%= scan_target.in_use %></td>
-    <td><%= link_to 'Show', scan_target %></td>
-    <td><%= link_to 'Edit', edit_scan_target_path(scan_target) %></td>
-    <td><%= link_to 'Destroy', scan_target, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
+	<% @scan_targets.each do |scan_target| %>
+	  <tr>
+	    <td><%= scan_target.name %></td>
+	    <td><%= scan_target.comment %></td>
+	    <td>
+				<% scan_target.hosts.each do |host| %>
+						<%= host %><br />
+				<% end %>
+			</td>
+	    <td><%= scan_target.port_range %></td>
+	    <td><%= scan_target.in_use %></td>
+	    <%#= link_to 'edit', edit_scan_target_path(scan_target.id) %>
+	    <td><%= link_to 'delete', scan_target, :confirm => 'Are you sure?', :method => :delete %></td>
+	  </tr>
+	<% end %>
 </table>
-
 <br />
-
-<%= link_to 'New Scan target', new_scan_target_path %>
+<%= link_to 'new Target', new_scan_target_path %>

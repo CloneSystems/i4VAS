@@ -4,11 +4,24 @@ body {
   font-size: 14px;
 }
 
+#nav_wrapper {
+  background-color: beige;
+}
+
+.nav {
+	text-align: right;
+}
+
+.nav_text {
+	color: #c0c0c0;
+}
+
 a img {
   border: none;
 }
 
 a {
+	text-decoration: none;
   color: #0000FF;
 }
 
@@ -22,7 +35,7 @@ a {
   width: 75%;
   margin: 0 auto;
   background-color: #FFF;
-  padding: 20px 40px;
+  padding: 0px 20px 40px 40px;
   border: solid 1px black;
   margin-top: 20px;
 }
