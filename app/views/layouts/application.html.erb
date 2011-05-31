@@ -12,6 +12,7 @@
 <div id="container">
 	<div id="nav_wrapper">
 		<% if user_signed_in? %>
+			<div class="logo"><h1>OpenVAS</h1></div>
 			<div class="nav">
 				<%= link_to 'Home', root_path %>
 				 | 
@@ -22,8 +23,7 @@
 				<%= current_user.class.timeout_in.ago.in_time_zone.strftime("%a %b %d, %Y %H:%M:%S %Z") %>
 				<%#= current_user.class.inspect %>
 				&larr; <span class="nav_text">user:</span> <%= current_user.username %>
-			</div>
-			<div class="nav">
+				<hr />
 				<%= link_to 'Tasks', tasks_path %>
 				 | 
 				<%= link_to 'New Task', new_task_path %>
@@ -32,8 +32,7 @@
 				 | 
 				Overrides
 				&larr; <span class="nav_text">scan management</span>
-			</div>
-			<div class="nav">
+				<hr />
 				Scan Configs
 				 | 
 				<%= link_to 'Targets', scan_targets_path %>
@@ -44,14 +43,13 @@
 				 | 
 				Escalators
 				 | 
-				Schedules
+				<%= link_to "Schedules", schedules_path %>
 				 | 
 				Report Formats
 				 | 
 				Slaves
 				&larr; <span class="nav_text">configuration</span>
-			</div>
-			<div class="nav">
+				<hr />
 				Users
 				 | 
 				NVT Feed
@@ -61,11 +59,14 @@
 			</div>
 		<% end %>
 	</div>
-	<% flash.each do |name, msg| %>
-	  <%= content_tag :div, msg, :id => "flash_#{name}" %>
-	<% end %>
-	<%= content_tag :h1, yield(:title) if show_title? %>
-	<%= yield %>
+	<div class="clear"></div>
+	<div>
+		<% flash.each do |name, msg| %>
+		  <%= content_tag :div, msg, :id => "flash_#{name}" %>
+		<% end %>
+		<%= content_tag :h1, yield(:title) if show_title? %>
+		<%= yield %>
+	</div>
 </div>
 </body>
 </html>

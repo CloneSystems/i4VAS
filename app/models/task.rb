@@ -86,7 +86,8 @@ class Task
 
   def self.find(id, user)
     return nil if id.blank? || user.blank?
-    f = self.all(user, :id => id).first
+    f = self.all(user, {:id=>id, :tasks=>1}).first
+    # f = self.all(user, :id => id).first
     return nil if f.blank?
     # ensure "first" has the desired id:
     if f.id.to_s == id.to_s

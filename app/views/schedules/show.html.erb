@@ -1,0 +1,36 @@
+<% title "Schedule" %>
+
+<p>
+  <strong>Name:</strong>
+  <%= @schedule.name %>
+</p>
+<p>
+  <strong>Comment:</strong>
+  <%= @schedule.comment %>
+</p>
+<p>
+  <strong>First Time:</strong>
+  <%= @schedule.first_time %>
+</p>
+<p>
+  <strong>Period Amount:</strong>
+  <%= @schedule.period_amount %>
+</p>
+<p>
+  <strong>Period Unit:</strong>
+  <%= @schedule.period_unit %>
+</p>
+<p>
+  <strong>Duration Amount:</strong>
+  <%= @schedule.duration_amount %>
+</p>
+<p>
+  <strong>Duration Unit:</strong>
+  <%= @schedule.duration_unit %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_schedule_path(@schedule) %> |
+  <%= link_to "Destroy", @schedule, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", schedules_path %>
+</p>

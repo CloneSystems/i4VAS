@@ -27,7 +27,7 @@ class ScanTarget
   end
 
   def self.all(user, options = {})
-    params = {:tasks => 1}
+    params = {}
     params[:target_id] = options[:id] if options[:id]
     req = Nokogiri::XML::Builder.new { |xml| xml.get_targets(params) }
     ret = []
@@ -62,7 +62,7 @@ class ScanTarget
 
   def self.find(id, user)
     return nil if id.blank? || user.blank?
-    f = self.all(user, :id => id).first
+    f = self.all(user, :id=>id).first
     return nil if f.blank?
     # ensure "first" has the desired id:
     if f.id.to_s == id.to_s

@@ -7,9 +7,9 @@ class TasksController < ApplicationController
   # GET /tasks
   def index
     @tasks = Task.all(current_user)
-    conn = current_user.openvas_connection
-    # conn = openvas_connect_and_login(true)
-    @version = Task.version(conn)
+    # conn = current_user.openvas_connection # for OMP version
+    # # conn = openvas_connect_and_login(true) # for OAP version
+    # @version = Task.version(conn)
   end
 
   # GET /start_task/1
@@ -80,7 +80,8 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id], current_user)
     @task.persisted = true
     if @task.update_attributes(current_user, params[:task])
-      redirect_to(@task, :notice => 'Task was successfully updated.')
+      # redirect_to(@task, :notice => 'Task was successfully updated.')
+      redirect_to(tasks_url, :notice => 'Task was successfully updated.')
     else
       render :action => "edit"
     end

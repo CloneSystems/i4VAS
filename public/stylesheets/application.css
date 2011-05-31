@@ -5,15 +5,30 @@ body {
 }
 
 #nav_wrapper {
-  background-color: beige;
+  font-size: 11px;
+}
+
+.logo {
+	float: left;
+	text-align: left;
+}
+
+.logo h1 {
+	margin-top: 5px;
+  font-size: 50px;
+	color: #6495ED;
+	font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
 .nav {
+	float: right;
 	text-align: right;
+  background-color: #F5F5DC;
 }
 
 .nav_text {
 	color: #c0c0c0;
+	padding-right: 2px;
 }
 
 a img {
@@ -37,7 +52,7 @@ a {
   background-color: #FFF;
   padding: 0px 20px 40px 40px;
   border: solid 1px black;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 #flash_notice, #flash_error, #flash_alert {

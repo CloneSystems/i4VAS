@@ -12,8 +12,6 @@
 	<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name, {}, {:disabled => true}) %>
 </p>
 <p>
-  <b>Scan Target:</b>
+ <b>Scan Target:</b>
 	<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name, {}, {:disabled => true}) %>
-	</p>
-<%= link_to 'edit', edit_task_path(@task.id) %> |
-<%= link_to 'back', tasks_path %>
+</p>

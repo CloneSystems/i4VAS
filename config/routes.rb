@@ -17,4 +17,6 @@ Greenbone::Application.routes.draw do
 
   resources :scan_configs
 
+  resources :schedules
+
 end

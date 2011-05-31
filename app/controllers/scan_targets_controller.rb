@@ -26,7 +26,8 @@ class ScanTargetsController < ApplicationController
     @scan_target = ScanTarget.new(params[:scan_target])
     @scan_target.persisted = false
     if @scan_target.save(current_user)
-      redirect_to(@scan_target, :notice => 'Scan Target was successfully created.')
+      # redirect_to(@scan_target, :notice => 'Scan Target was successfully created.')
+      redirect_to(scan_targets_url, :notice => 'Scan Target was successfully created.')
     else
       render :action => "new"
     end
