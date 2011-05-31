@@ -1,5 +1,3 @@
-<% title "Schedule" %>
-
 <p>
   <strong>Name:</strong>
   <%= @schedule.name %>
@@ -13,24 +11,18 @@
   <%= @schedule.first_time %>
 </p>
 <p>
-  <strong>Period Amount:</strong>
-  <%= @schedule.period_amount %>
+  <strong>Next Run:</strong>
+  <%= @schedule.next_time %>
 </p>
 <p>
-  <strong>Period Unit:</strong>
-  <%= @schedule.period_unit %>
+  <strong>Period:</strong>
+  <%= @schedule.period %>
 </p>
 <p>
-  <strong>Duration Amount:</strong>
-  <%= @schedule.duration_amount %>
+  <strong>Duration:</strong>
+  <%= @schedule.duration %>
 </p>
 <p>
-  <strong>Duration Unit:</strong>
-  <%= @schedule.duration_unit %>
-</p>
-
-<p>
-  <%= link_to "Edit", edit_schedule_path(@schedule) %> |
-  <%= link_to "Destroy", @schedule, :confirm => 'Are you sure?', :method => :delete %> |
-  <%= link_to "View All", schedules_path %>
+  <strong>In Use:</strong>
+  <%= @schedule.in_use %>
 </p>

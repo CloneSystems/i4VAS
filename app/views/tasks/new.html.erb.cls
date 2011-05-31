@@ -1,0 +1,38 @@
+<h1>new Task</h1>
+
+<%= form_for @task, :as => :task, :url => tasks_path do |f| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+      <ul>
+      <% @task.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name, :maxlength => 80 %>
+  </div>
+  <div class="field">
+    <%= f.label :comment %><br />
+    <%= f.text_area :comment, :rows => 5, :cols => 80 %>
+  </div>
+  <div class="field">
+    Scan Config<br />
+		<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name) %>
+  </div>
+  <div class="field">
+    Scan Target<br />
+		<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name) %>
+  </div>
+  <div class="field">
+    Schedule<br />
+		<%= collection_select(:task, :schedule_id, Schedule.selections(current_user), :id, :name, :include_blank => true) %>
+  </div>
+	<br />
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

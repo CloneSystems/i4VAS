@@ -12,6 +12,7 @@ class Task
 
   attr_accessor :id, :name, :comment, :overall_progress, :status, :trend, :threat,
                 :config_id, :config_name, :target_id, :target_name, :times_run,
+                :schedule_id, :schedule_name,
                 :first_report_id, :first_report_date,
                 :last_report_id, :last_report_date,
                 :last_report_debug, :last_report_high, :last_report_low, :last_report_log, :last_report_medium
@@ -59,6 +60,8 @@ class Task
     t.config_name         = extract_value_from("config/name", node)
     t.target_id           = extract_value_from("target/@id", node)
     t.target_name         = extract_value_from("target/name", node)
+    t.schedule_id         = extract_value_from("schedule/@id", node)
+    t.schedule_name       = extract_value_from("schedule/name", node)
     # node.xpath("reports/report").each { |xr|
     #   t.reports << VasReport.new({
     #     :id => extract_value_from("@id", xr),
@@ -103,10 +106,11 @@ class Task
       vt = Task.new if vt.blank? # for create action
       vt.name = self.name
       vt.comment = self.comment
+      vt.schedule_id  = self.schedule_id
       # note: openvas doesn't allow updates to config_id and target_id, only name and comment:
       if vt.new_record?
-        vt.config_id = self.config_id
-        vt.target_id = self.target_id
+        vt.config_id    = self.config_id
+        vt.target_id    = self.target_id
       end
       vt.create_or_update(user)
       vt.errors.each do |attribute, msg|
@@ -127,6 +131,7 @@ class Task
   end
 
   def create_or_update(user)
+puts "\n\n self=#{self.inspect}\n\n"
     # if schedule && schedule.changed?
     #   return unless schedule.save
     #   schedule_id = schedule.id
@@ -140,15 +145,15 @@ class Task
         xml.modify_task(:task_id => @id) {
           xml.name    { xml.text(@name) }
           xml.comment { xml.text(@comment) }
-          # xml.schedule(:id => @schedule_id)  if schedule_id && !schedule_id.blank? && schedule_id_changed?
+          xml.schedule(:id => @schedule_id)
         }
       else
         xml.create_task {
-          xml.name    { xml.text(@name) }    if @name
-          xml.comment { xml.text(@comment) } if @comment
+          xml.name    { xml.text(@name) }
+          xml.comment { xml.text(@comment) } unless @comment.blank?
           xml.config(:id => @config_id)
           xml.target(:id => @target_id)
-          # xml.schedule(:id => @schedule_id)  if @schedule_id && !@schedule_id.blank?
+          xml.schedule(:id => @schedule_id)
         }
       end
     }

@@ -1,29 +1,31 @@
 <% title "Schedules" %>
-
-<table>
-  <tr>
+<p><%= link_to "new Schedule", new_schedule_path %></p>
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
     <th>Name</th>
     <th>Comment</th>
-    <th>First Time</th>
-    <th>Period Amount</th>
-    <th>Period Unit</th>
-    <th>Duration Amount</th>
-    <th>Duration Unit</th>
+    <th>First Run</th>
+    <th>Next Run</th>
+    <th>Period</th>
+    <th>Duration</th>
+    <th>In Use</th>
   </tr>
   <% for schedule in @schedules %>
     <tr>
       <td><%= schedule.name %></td>
       <td><%= schedule.comment %></td>
       <td><%= schedule.first_time %></td>
-      <td><%= schedule.period_amount %></td>
-      <td><%= schedule.period_unit %></td>
-      <td><%= schedule.duration_amount %></td>
-      <td><%= schedule.duration_unit %></td>
-      <td><%#= link_to "Show", schedule %></td>
-      <td><%#= link_to "Edit", edit_schedule_path(schedule) %></td>
-      <td><%#= link_to "Destroy", schedule, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= schedule.next_time %></td>
+      <td><%= schedule.period %></td>
+      <td><%= schedule.duration %></td>
+      <td><%= schedule.in_use %></td>
+      <!-- <td><%#= link_to "details", schedule_path(schedule.id) %></td>
+      <td><%#= link_to "Edit", edit_schedule_path(schedule) %></td> -->
+			<% if schedule.in_use > 0 %>
+					<td><%= image_tag("delete_inactive.png", :title => "can't delete when schedule is in use") %></td>
+  		<% else %>
+	    		<td><%= link_to image_tag("delete.png"), schedule_path(schedule.id), :title => 'delete schedule', :confirm => 'Are you sure?', :method => :delete %></td>
+		  <% end %>
     </tr>
   <% end %>
 </table>
-
-<p><%= link_to "New Schedule", new_schedule_path %></p>

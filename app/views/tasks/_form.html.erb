@@ -19,11 +19,23 @@
   </div>
   <div class="field">
     Scan Config<br />
-		<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name, {}, {:disabled => true}) %>
+		<% if @task.new_record? %>
+			<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name) %>
+		<% else %>
+			<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name, {}, {:disabled => true}) %>
+		<% end %>
   </div>
   <div class="field">
     Scan Target<br />
-		<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name, {}, {:disabled => true}) %>
+		<% if @task.new_record? %>
+			<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name) %>
+		<% else %>
+			<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name, {}, {:disabled => true}) %>
+		<% end %>
+  </div>
+  <div class="field">
+    Schedule<br />
+		<%= collection_select(:task, :schedule_id, Schedule.selections(current_user), :id, :name) %>
   </div>
 	<br />
   <div class="actions">
