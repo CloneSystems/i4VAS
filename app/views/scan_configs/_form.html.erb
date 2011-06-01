@@ -2,34 +2,20 @@
   <% if @scan_config.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@scan_config.errors.count, "error") %> prohibited this scan_config from being saved:</h2>
-
       <ul>
-      <% @scan_config.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+	      <% @scan_config.errors.full_messages.each do |msg| %>
+	        <li><%= msg %></li>
+	      <% end %>
       </ul>
     </div>
   <% end %>
-
   <div class="field">
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :maxlength => 80 %>
   </div>
   <div class="field">
     <%= f.label :comment %><br />
-    <%= f.text_area :comment %>
-  </div>
-  <div class="field">
-    <%= f.label :families_grow %><br />
-    <%= f.check_box :families_grow %>
-  </div>
-  <div class="field">
-    <%= f.label :rules_grow %><br />
-    <%= f.check_box :rules_grow %>
-  </div>
-  <div class="field">
-    <%= f.label :in_use %><br />
-    <%= f.text_field :in_use %>
+    <%= f.text_area :comment, :rows => 5, :cols => 80 %>
   </div>
   <div class="actions">
     <%= f.submit %>

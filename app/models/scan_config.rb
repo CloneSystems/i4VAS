@@ -6,15 +6,17 @@ class ScanConfig
 
   attr_accessor :persisted
 
-  attr_accessor :id, :name, :comment, :families_grow, :rules_grow, :in_use
+  attr_accessor :id, :name, :comment, :family_count, :families_grow, :nvt_count, :nvts_grow, :in_use
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :length => { :maximum => 80 }
+  validates :comment, :length => { :maximum => 400 }
 
   def persisted?
     @persisted || false
   end
 
-  def self.find(args)
+  def new_record?
+    @id == nil || @id.empty?
   end
 
   def self.selections(user)
@@ -37,10 +39,12 @@ class ScanConfig
         cfg               = ScanConfig.new
         cfg.id            = extract_value_from("@id", xml)
         cfg.name          = extract_value_from("name", xml)
-        # cfg.comment       = extract_value_from("comment", xml)
-        # cfg.families_grow = extract_value_from("family_count/growing", xml).to_i > 0
-        # cfg.rules_grow    = extract_value_from("nvt_count/growing", xml).to_i > 0
-        # cfg.in_use        = extract_value_from("in_use", xml).to_i > 0
+        cfg.comment       = extract_value_from("comment", xml)
+        cfg.family_count  = extract_value_from("family_count", xml).to_i
+        cfg.families_grow = extract_value_from("family_count/growing", xml).to_i
+        cfg.nvt_count     = extract_value_from("nvt_count", xml).to_i
+        cfg.nvts_grow     = extract_value_from("nvt_count/growing", xml).to_i
+        cfg.in_use        = extract_value_from("in_use", xml).to_i
         # xml.xpath("tasks/task").each { |t| cfg.tasks << VasTask.from_xml_node(t) }
         # xml.xpath("families/family").each { |f| cfg.families << VasNVTFamily.from_xml_node(f) }
         # xml.xpath("preferences/preference").each { |p| 
@@ -57,7 +61,15 @@ class ScanConfig
   end
 
   def self.find(id, user)
-    self.all(user, :id => id).first
+    return nil if id.blank? || user.blank?
+    f = self.all(user, :id => id).first
+    return nil if f.blank?
+    # ensure "first" has the desired id:
+    if f.id.to_s == id.to_s
+      return f
+    else
+      return nil
+    end
   end
 
   def save
