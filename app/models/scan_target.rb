@@ -51,7 +51,6 @@ class ScanTarget
         # t.xpath('tasks/task').each { |task|
         #   targ.task_keys << extract_value_from("@id", task)
         # }
-        # targ.reset_changes
         ret << targ
       }
     rescue Exception => e

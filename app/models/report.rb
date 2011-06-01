@@ -13,24 +13,6 @@ class Report
   attr_accessor :ended_at
   attr_accessor :status # overall status only
 
-
-class ReportFormat
-  attr_accessor :id, :name
-end
-
-  def self.formats(user)
-    req = Nokogiri::XML::Builder.new { |xml| xml.get_report_formats }
-    formats = user.openvas_connection.sendrecv(req.doc)
-    ret = []
-    formats.xpath('/get_report_formats_response/report_format').each { |r|
-      fmt            = ReportFormat.new
-      fmt.id         = extract_value_from("@id", r)
-      fmt.name       = extract_value_from("name", r)
-      ret << fmt
-    }
-    ret
-  end
-
   def self.find_by_id_and_format(id, format_id, user)
     params = {}
     params[:report_id] = id if id
@@ -102,20 +84,6 @@ end
       rep.status     = extract_value_from("scan_run_status", r)
       rep.started_at = Time.parse(extract_value_from("scan_start", r))
       rep.ended_at = Time.parse(extract_value_from("scan_end", r))
-      # note: original code:
-      # rep.result_count[:total]             = extract_value_from("result_count/full", r).to_i
-      # rep.result_count[:filtered]          = extract_value_from("result_count/filtered", r).to_i
-      # rep.result_count[:debug][:total]     = extract_value_from("result_count/debug/full", r).to_i
-      # rep.result_count[:debug][:filtered]  = extract_value_from("result_count/debug/filtered", r).to_i
-      # rep.result_count[:high][:total]      = extract_value_from("result_count/hole/full", r).to_i
-      # rep.result_count[:high][:filtered]   = extract_value_from("result_count/hole/filtered", r).to_i
-      # rep.result_count[:low][:total]       = extract_value_from("result_count/info/full", r).to_i
-      # rep.result_count[:low][:filtered]    = extract_value_from("result_count/info/filtered", r).to_i
-      # rep.result_count[:log][:total]       = extract_value_from("result_count/log/full", r).to_i
-      # rep.result_count[:log][:filtered]    = extract_value_from("result_count/log/filtered", r).to_i
-      # rep.result_count[:medium][:total]    = extract_value_from("result_count/warning/full", r).to_i
-      # rep.result_count[:medium][:filtered] = extract_value_from("result_count/warning/filtered", r).to_i
-
       rep.result_count_total[:total]  = extract_value_from("result_count/full", r).to_i
       rep.result_count_total[:debug]  = extract_value_from("result_count/debug/full", r).to_i
       rep.result_count_total[:high]   = extract_value_from("result_count/hole/full", r).to_i
@@ -151,19 +119,6 @@ end
       end
     end
     ret
-  end
-
-  def result_count
-    unless @result_count
-      @result_count = {:total  => 0, :filtered => 0, 
-                       :debug  => {:total => 0, :filtered => 0},
-                       :log    => {:total => 0, :filtered => 0},
-                       :low    => {:total => 0, :filtered => 0},
-                       :medium => {:total => 0, :filtered => 0},
-                       :high   => {:total => 0, :filtered => 0}
-                       }
-    end
-    @result_count
   end
 
   def result_count_total

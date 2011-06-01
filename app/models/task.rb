@@ -68,7 +68,6 @@ class Task
     #     :started_at => extract_value_from("timestamp", xr)
     #   })
     # }
-    # t.reset_changes
     t
   end
 
@@ -131,7 +130,6 @@ class Task
   end
 
   def create_or_update(user)
-puts "\n\n self=#{self.inspect}\n\n"
     # if schedule && schedule.changed?
     #   return unless schedule.save
     #   schedule_id = schedule.id
@@ -160,7 +158,6 @@ puts "\n\n self=#{self.inspect}\n\n"
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
       @id = Task.extract_value_from("/create_task_response/@id", resp) unless @id
-      # reset_changes
       true
     rescue Exception => e
       errors[:command_failure] << e.message
@@ -224,20 +221,6 @@ puts "\n\n self=#{self.inspect}\n\n"
   def resume_stopped(user)
     req = Nokogiri::XML::Builder.new { |xml| xml.resume_stopped_task(:task_id => @id) }
     user.openvas_connection.sendrecv(req.doc)
-  end
-
-  private
-
-  def self.dup_vastask_to_self(vt)
-    Task.new({:id => vt.id, :name => vt.name, :comment => vt.comment, :status => vt.status,
-              :trend => vt.trend, :overall_progress => vt.progress.overall,
-              :times_run => vt.times_run,
-              :first_report_id => vt.first_report_id, :first_report_date => vt.first_report_date,
-              :last_report_id => vt.last_report_id, :last_report_date => vt.last_report_date,
-              :last_report_result_count => vt.result_count,
-              :config_id => vt.config_id, :target_id => vt.target_id,
-              :config_name => vt.config_name, :target_name => vt.target_name
-            })
   end
 
 end

@@ -46,10 +46,8 @@ class ScanConfig
         # xml.xpath("preferences/preference").each { |p| 
         #   p = VasPreference.from_xml_node(p) 
         #   p.config_id = cfg.id
-        #   p.reset_changes
         #   cfg.preferences << p
         # }
-        # cfg.reset_changes
         ret << cfg
       }
     rescue Exception => e

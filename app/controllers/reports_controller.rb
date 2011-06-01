@@ -16,7 +16,6 @@ class ReportsController < ApplicationController
   # GET /reports/1
   def show
     @report = Report.find(params[:id], current_user)
-    @formats = Report.formats(current_user)
   end
 
   # GET /view_report/1
@@ -24,15 +23,7 @@ class ReportsController < ApplicationController
     fmt = 'html' if params[:fmt].blank?
     fmt = params[:fmt] unless params[:fmt].blank?
     @report = Report.find(params[:id], current_user)
-    formats = Report.formats(current_user)
-    format_id = format = ''
-    formats.each do |f|
-      if f.name.downcase == fmt
-        format_id = f.id
-        format = f.name
-        break
-      end
-    end
+    format_id = ReportFormat.find_id_for_name(current_user, fmt)
     report = Report.find_by_id_and_format(params[:id], format_id, current_user)
     if fmt.downcase == 'pdf'
       send_data report, :type => 'application/pdf', :file_name => "report_#{params[:id]}.pdf", :disposition => 'inline'
