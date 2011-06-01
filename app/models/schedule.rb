@@ -24,7 +24,7 @@ class Schedule
 
   def self.selections(user)
     schedules = []
-    sch = Schedule.new({:id=>'0', :name=>'--'}) # add blank selection, so we can edit schedule selection
+    sch = Schedule.new({:id=>'0', :name=>'--'}) # add blank selection, so users can edit schedule selection
     schedules << sch
     self.all(user).each do |s|
       schedules << s
