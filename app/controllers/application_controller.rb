@@ -30,8 +30,11 @@ class ApplicationController < ActionController::Base
     current_user.openvas_connection = oc.logged_in? ? oc : nil
     # note: checking to see if the current_user is an admin on every request just seems wrong, but 
     #       openvas is missing the concept of a user's role, so we check and set:
-    # set_openvas_admin_for_user
-    current_user.openvas_admin = false
+    if Rails.env.production?
+      current_user.openvas_admin = false
+    else
+      set_openvas_admin_for_user
+    end
     # FIXME perhaps we could store this in the Users table when they sign in, but there are 
     #       other openvas app's which may change the users role (such as Greenbone or openvas Client),
     #       which would not take effect until the user signs out and in again
