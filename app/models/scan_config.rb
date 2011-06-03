@@ -1,27 +1,19 @@
 class ScanConfig
 
-  include BasicModel
+  include OpenvasModel
 
-  extend Openvas_Helper
-
-  attr_accessor :persisted
-
-  attr_accessor :id, :name, :comment, :family_count, :families_grow, :nvt_count, :nvts_grow, :in_use
+  attr_accessor :name, :comment, :family_count, :families_grow, :nvt_count, :nvts_grow, :in_use
 
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :comment, :length => { :maximum => 400 }
 
-  def persisted?
-    @persisted || false
-  end
-
-  def new_record?
-    @id == nil || @id.empty?
-  end
-
   def self.selections(user)
-    configs = []
-    configs = self.all(user)
+    return nil if user.nil?
+    cfgs = []
+    self.all(user).each do |o|
+      cfgs << o unless o.name == 'empty' # ignore the 'empty'(base) scan config
+    end
+    cfgs
   end
 
   def self.all(user, options = {})
@@ -35,7 +27,7 @@ class ScanConfig
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
       resp.xpath("/get_configs_response/config").each { |xml|
-        next if extract_value_from("name", xml) == 'empty'
+        # next if extract_value_from("name", xml) == 'empty'
         cfg               = ScanConfig.new
         cfg.id            = extract_value_from("@id", xml)
         cfg.name          = extract_value_from("name", xml)
@@ -60,39 +52,11 @@ class ScanConfig
     ret
   end
 
-  def self.find(id, user)
-    return nil if id.blank? || user.blank?
-    f = self.all(user, :id => id).first
-    return nil if f.blank?
-    # ensure "first" has the desired id:
-    if f.id.to_s == id.to_s
-      return f
-    else
-      return nil
-    end
-  end
-
-  def save
-    valid? ? true : false
-  end
-
-  def update_attributes(attrs={})
+  def update_attributes(user, attrs={})
     attrs.each { |key, value|
       send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
     }
-    save
-  end
-
-  def destroy
-    delete_record
-  end
-
-  def create_or_update
-    true
-  end
-
-  def delete_record
-    true
+    save(user)
   end
 
 end

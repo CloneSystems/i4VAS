@@ -5,7 +5,7 @@ class ScanConfigsController < ApplicationController
   after_filter :openvas_logout
 
   def index
-    @scan_configs = ScanConfig.all(current_user)
+    @scan_configs = ScanConfig.all(current_user, :show_details=>true)
   end
 
   def show
@@ -28,7 +28,7 @@ class ScanConfigsController < ApplicationController
   end
 
   def edit
-    @scan_config = ScanConfig.find(params[:id])
+    @scan_config = ScanConfig.find(params[:id], current_user)
     @scan_config.persisted = true
   end
 

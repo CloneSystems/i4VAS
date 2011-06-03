@@ -12,4 +12,12 @@ class User < ActiveRecord::Base
     @openvas_connection
   end
 
+  def openvas_admin=(admin)
+    @openvas_admin ||= admin
+  end
+
+  def openvas_admin?
+    @openvas_admin
+  end
+
 end

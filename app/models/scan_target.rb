@@ -1,30 +1,13 @@
 class ScanTarget
 
-  include BasicModel
+  include OpenvasModel
 
-  extend Openvas_Helper
-
-  attr_accessor :persisted
-
-  attr_accessor :id, :name, :comment, :hosts, :port_range, :in_use, :max_hosts
+  attr_accessor :name, :comment, :hosts, :port_range, :in_use, :max_hosts
 
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :hosts, :presence => true, :length => { :maximum => 200 }
   validates :port_range, :length => { :maximum => 400 }
   validates :comment, :length => { :maximum => 400 }
-
-  def persisted?
-    @persisted || false
-  end
-
-  def new_record?
-    @id == nil || @id.empty?
-  end
-
-  def self.selections(user)
-    targets = []
-    targets = self.all(user)
-  end
 
   def self.all(user, options = {})
     params = {}
@@ -59,18 +42,6 @@ class ScanTarget
     ret
   end
 
-  def self.find(id, user)
-    return nil if id.blank? || user.blank?
-    f = self.all(user, :id=>id).first
-    return nil if f.blank?
-    # ensure "first" has the desired id:
-    if f.id.to_s == id.to_s
-      return f
-    else
-      return nil
-    end
-  end
-
   def save(user)
     # note modify(edit/update) is not implemented in OMP 2.0
     if valid?
@@ -96,10 +67,6 @@ class ScanTarget
     #   send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
     # }
     # save
-  end
-
-  def destroy
-    delete_record
   end
 
   def hosts_string

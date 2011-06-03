@@ -1,16 +1,8 @@
 class Task
 
-  include BasicModel
+  include OpenvasModel
 
-  extend Openvas_Helper
-
-  # note: since we are not using ActiveRecord for persistence, but ActiveModel instead, 
-  #       we need to manually manipulate the return value for "persisted?" so that in 
-  #       the views "form_for" will set the correct route and post/put action 
-  #       ... i.e. use false for new/create actions, and true for edit/update actions:
-  attr_accessor :persisted
-
-  attr_accessor :id, :name, :comment, :overall_progress, :status, :trend, :threat,
+  attr_accessor :name, :comment, :overall_progress, :status, :trend, :threat,
                 :config_id, :config_name, :target_id, :target_name, :times_run,
                 :schedule_id, :schedule_name,
                 :first_report_id, :first_report_date,
@@ -20,18 +12,10 @@ class Task
   validates :comment, :length => { :maximum => 400 }
   validates :name, :presence => true, :length => { :maximum => 80 }
 
-  def persisted?
-    @persisted || false
-  end
-
-  def new_record?
-    @id == nil || @id.empty?
-  end
-
   def self.version(connection)
     req = Nokogiri::XML::Builder.new { |xml| xml.get_version }
     resp = connection.sendrecv(req.doc)
-    ret = Task.extract_value_from("/get_version_response/version", resp)
+    ret = extract_value_from("/get_version_response/version", resp)
     ret
   end
 
@@ -143,7 +127,7 @@ class Task
         xml.modify_task(:task_id => @id) {
           xml.name    { xml.text(@name) }
           xml.comment { xml.text(@comment) }
-          xml.schedule(:id => @schedule_id)
+          xml.schedule(:id => @schedule_id) unless @schedule_id.blank? || @schedule_id == '0'
         }
       else
         xml.create_task {
@@ -151,7 +135,7 @@ class Task
           xml.comment { xml.text(@comment) } unless @comment.blank?
           xml.config(:id => @config_id)
           xml.target(:id => @target_id)
-          xml.schedule(:id => @schedule_id)
+          xml.schedule(:id => @schedule_id) unless @schedule_id.blank? || @schedule_id == '0'
         }
       end
     }
@@ -163,10 +147,6 @@ class Task
       errors[:command_failure] << e.message
       nil
     end
-  end
-
-  def destroy
-    delete_record
   end
 
   def delete_record(user)

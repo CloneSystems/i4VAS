@@ -1,7 +1,5 @@
 Greenbone::Application.routes.draw do
 
-  resources :report_formats
-
   devise_for :users
 
   resources :tasks
@@ -15,10 +13,15 @@ Greenbone::Application.routes.draw do
   resources :reports
   get 'view_report/:id' => 'reports#view_report', :as => 'view_report'
 
+  resources :report_formats
+
   resources :scan_targets
 
   resources :scan_configs
 
   resources :schedules
+
+  # resources :admin_settings
+  get 'settings' => 'admin_settings#index', :as => 'settings'
 
 end

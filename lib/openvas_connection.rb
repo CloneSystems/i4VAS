@@ -3,7 +3,7 @@ require 'timeout'
 require 'openssl'
 require 'nokogiri'
 
-module OpenVas
+module Openvas
 
 	class OMPError < :: RuntimeError
 		attr_accessor :req, :reason
@@ -35,8 +35,6 @@ module OpenVas
 	end
 
   class Connection
-  	# Usage:
-  	#  ov=VasConnection.new(host=>'localhost', port=>'9390', user=>'user', password=>'pass')
   	def initialize(p={})
   		if p.has_key?("host")
   			@host = p["host"]
@@ -66,7 +64,8 @@ module OpenVas
   		@areq=''
   		@read_timeout = 30 # seconds
       connect()
-      login()
+      # easier to handle invalid authentication if login is done separately:
+      # login()
   	end
 
   	# Low level method - Connect to SSL socket

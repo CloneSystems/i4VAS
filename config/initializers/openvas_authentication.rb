@@ -12,6 +12,7 @@ Warden::Strategies.add(:openvas_authentication_strategy) do
       return fail!('') if params[:user][:username].blank?
       return fail!('') if params[:user][:password].blank?
       connection = openvas_authenticate(params[:user][:username], params[:user][:password])
+      return fail!(:invalid) if connection.nil?
       if connection.logged_in?
         user = User.find_by_username(params[:user][:username])
         if user.blank?
@@ -41,7 +42,9 @@ Warden::Strategies.add(:openvas_authentication_strategy) do
 
   def openvas_authenticate(user, password)
     return false if user.blank? or password.blank?
-    oc = OpenVas::Connection.new("host"=>APP_CONFIG[:openvas_omp_host],"port"=>APP_CONFIG[:openvas_omp_port],"user"=>user,"password"=>password)
+    oc = Openvas::Connection.new("host"=>APP_CONFIG[:openvas_omp_host],"port"=>APP_CONFIG[:openvas_omp_port],"user"=>user,"password"=>password)
+    oc.login
+    oc = oc.logged_in? ? oc : nil
     return oc
   end
 

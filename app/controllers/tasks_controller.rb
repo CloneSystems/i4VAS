@@ -10,6 +10,7 @@ class TasksController < ApplicationController
     # conn = current_user.openvas_connection # for OMP version
     # # conn = openvas_connect_and_login(true) # for OAP version
     # @version = Task.version(conn)
+    #
   end
 
   # GET /start_task/1

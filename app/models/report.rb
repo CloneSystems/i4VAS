@@ -2,16 +2,9 @@ require 'base64'
 
 class Report
 
-  include BasicModel
+  include OpenvasModel
 
-  extend Openvas_Helper
-
-  attr_accessor :id
-  attr_accessor :task_id
-  attr_accessor :task_name
-  attr_accessor :started_at
-  attr_accessor :ended_at
-  attr_accessor :status # overall status only
+  attr_accessor :task_id, :task_name, :started_at, :ended_at, :status
 
   def self.find_by_id_and_format(id, format_id, user)
     params = {}
@@ -21,18 +14,6 @@ class Report
     rep = user.openvas_connection.sendrecv(req.doc)
     r = Base64.decode64(rep.xpath('//get_reports_response/report').text)
     r
-  end
-
-  def self.find(id, user)
-    return nil if id.blank? || user.blank?
-    f = self.all(user, :id => id).first
-    return nil if f.blank?
-    # ensure "first" has the desired id:
-    if f.id.to_s == id.to_s
-      return f
-    else
-      return nil
-    end
   end
 
   # pulls report details based off of the options passed.  By default, pulls all reports.

@@ -50,12 +50,15 @@
 				Slaves
 				&larr; <span class="nav_text">configuration</span>
 				<hr />
-				Users
-				 | 
-				NVT Feed
-				 | 
-				Settings
-				&larr; <span class="nav_text">administration</span>
+				<% if current_user.openvas_admin? %>
+						Users
+						 | 
+						NVT Feed
+						 | 
+						<%= link_to "Settings", settings_path %>
+						&larr; <span class="nav_text">administration</span>
+						<hr />
+				<% end %>
 			</div>
 		<% end %>
 	</div>

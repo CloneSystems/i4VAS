@@ -1,23 +1,11 @@
 class ReportFormat
 
-  include BasicModel
+  include OpenvasModel
 
-  extend Openvas_Helper
-
-  attr_accessor :persisted
-
-  attr_accessor :id, :name, :extension, :content_type, :trust, :active, :summary, :description, :parameters
+  attr_accessor :name, :extension, :content_type, :trust, :active, :summary, :description, :parameters
 
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :comment, :length => { :maximum => 400 }
-
-  def persisted?
-    @persisted || false
-  end
-
-  def new_record?
-    @id == nil || @id.empty?
-  end
 
   def self.find_id_for_name(user, format_name)
     return '' if format_name.blank?
@@ -60,22 +48,6 @@ class ReportFormat
       raise e
     end
     ret
-  end
-
-  def self.find(id, user)
-    return nil if id.blank? || user.blank?
-    f = self.all(user, :id => id).first
-    return nil if f.blank?
-    # ensure "first" has the desired id:
-    if f.id.to_s == id.to_s
-      return f
-    else
-      return nil
-    end
-  end
-
-  def destroy
-    delete_record
   end
 
   def delete_record(user)

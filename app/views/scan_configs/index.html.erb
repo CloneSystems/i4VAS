@@ -10,9 +10,12 @@
     <th>In use</th>
   </tr>
 	<% @scan_configs.each do |scan_config| %>
+		<%# next if scan_config.name.downcase == 'empty' %>
 	  <tr>
 	    <td>
 				<%= scan_config.name %>
+				<br />
+	    	<span style="font-size:10px"><%= scan_config.id %></span>
 				<br />
 	    	<span style="font-size:10px"><%= scan_config.comment %></span>
 			</td>

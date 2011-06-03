@@ -1,26 +1,14 @@
 class Schedule
 
-  include BasicModel
+  include OpenvasModel
 
-  extend Openvas_Helper
-
-  attr_accessor :persisted
-
-  attr_accessor :id, :name, :comment, :first_time
+  attr_accessor :name, :comment, :first_time
   attr_accessor :period_amount, :period_unit, :duration_amount, :duration_unit, :next_time
   attr_accessor :next_time, :in_use, :task_ids, :period, :duration
 
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :comment, :length => { :maximum => 400 }
   validates :first_time, :presence => true
-
-  def persisted?
-    @persisted || false
-  end
-
-  def new_record?
-    @id == nil || @id.empty?
-  end
 
   def self.selections(user)
     schedules = []
@@ -95,18 +83,6 @@ class Schedule
     ret
   end
 
-  def self.find(id, user)
-    return nil if id.blank? || user.blank?
-    f = self.all(user, :id => id).first
-    return nil if f.blank?
-    # ensure "first" has the desired id:
-    if f.id.to_s == id.to_s
-      return f
-    else
-      return nil
-    end
-  end
-
   def save(user)
     # note modify(edit/update) is not implemented in OMP 2.0
     if valid?
@@ -127,14 +103,6 @@ class Schedule
     else
       return false
     end
-  end
-
-  def update_attributes(attrs={})
-    # note modify(edit/update) is not implemented in OMP 2.0
-    # attrs.each { |key, value|
-    #   send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
-    # }
-    # save
   end
 
   def create_or_update(user)
@@ -178,10 +146,6 @@ class Schedule
       errors[:command_failure] << e.message
       nil
     end
-  end
-
-  def destroy
-    delete_record
   end
 
   def delete_record(user)
