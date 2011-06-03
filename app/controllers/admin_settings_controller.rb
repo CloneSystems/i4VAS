@@ -5,6 +5,7 @@ class AdminSettingsController < ApplicationController
   after_filter :openvas_logout
 
   def index
+    redirect_to(root_url) and return unless current_user.openvas_admin?
     oap = openvas_oap_connect_and_login
     if oap.blank?
       # user is not an admin
