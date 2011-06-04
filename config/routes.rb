@@ -21,7 +21,9 @@ Greenbone::Application.routes.draw do
 
   resources :schedules
 
-  # resources :admin_settings
   get 'settings' => 'admin_settings#index', :as => 'settings'
+
+  get 'feeds' => 'nvt_feeds#index', :as => 'feeds'
+  get 'sync_feed' => 'nvt_feeds#sync_feed', :as => 'sync_feed'
 
 end

@@ -1,0 +1,17 @@
+<% title "NVT Feed Management" %>
+<p><%= link_to "Synchronize with Feed now", sync_feed_path %></p>
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>Name</th>
+    <th>Version</th>
+    <th>Description</th>
+  </tr>
+  <% for nvt_feed in @nvt_feeds %>
+    <tr>
+      <td><%= nvt_feed.name %></td>
+      <td><%= nvt_feed.version %></td>
+      <td><%= nvt_feed.description %></td>
+    </tr>
+  <% end %>
+</table>
+
