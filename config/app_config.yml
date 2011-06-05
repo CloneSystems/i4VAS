@@ -1,12 +1,8 @@
 development:
   domain: localhost:3000
-# openvas_omp_host: '192.168.1.3'
-# openvas_omp_port: '9390'
-# openvas_oap_host: '192.168.1.3'
-# openvas_oap_port: '9393'
-  openvas_omp_host: '199.187.124.38'
+  openvas_omp_host: '192.168.1.3'
   openvas_omp_port: '9390'
-  openvas_oap_host: '199.187.124.38'
+  openvas_oap_host: '192.168.1.3'
   openvas_oap_port: '9393'
 
 test:
