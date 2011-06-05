@@ -1,4 +1,4 @@
-<% title "OpenVAS: Scan Configs" %>
+<% title "Scan Configs" %>
 <p><%#= link_to 'new Scan config', new_scan_config_path %></p>
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
@@ -10,23 +10,22 @@
     <th>In use</th>
   </tr>
 	<% @scan_configs.each do |scan_config| %>
-		<%# next if scan_config.name.downcase == 'empty' %>
 	  <tr>
 	    <td>
-				<%= scan_config.name %>
-				<br />
-	    	<span style="font-size:10px"><%= scan_config.id %></span>
+				<%= link_to scan_config.name, scan_config_path(scan_config.id), :title => 'details of Scan Config' %>
 				<br />
 	    	<span style="font-size:10px"><%= scan_config.comment %></span>
 			</td>
 	    <td><%= scan_config.family_count %></td>
 	    <td><%= scan_config.families_grow %></td>
-	    <td><%= scan_config.nvt_count %></td>
+	    <td><%= scan_config.nvts_count %></td>
 	    <td><%= scan_config.nvts_grow %></td>
 	    <td><%= scan_config.in_use %></td>
-	    <td><%#= link_to 'Show', scan_config %></td>
-	    <td><%#= link_to 'Edit', edit_scan_config_path(scan_config) %></td>
-	    <td><%#= link_to 'Destroy', scan_config, :confirm => 'Are you sure?', :method => :delete %></td>
+			<% unless scan_config.in_use > 0 %>
+		    <td><%= link_to 'edit', edit_scan_config_path(scan_config.id) %></td>
+		    <td><%= link_to 'delete', scan_config_path(scan_config.id), :confirm => 'Are you sure?', :method => :delete %></td>
+			<% end %>
 	  </tr>
+		<tr><td colspan="8"><hr /></td></tr>
 	<% end %>
 </table>

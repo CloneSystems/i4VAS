@@ -1,0 +1,36 @@
+<% title "Preference" %>
+
+<p>
+  <strong>Id:</strong>
+  <%= @preference.id %>
+</p>
+<p>
+  <strong>Name:</strong>
+  <%= @preference.name %>
+</p>
+<p>
+  <strong>Nvt:</strong>
+  <%= @preference.nvt_id %>
+</p>
+<p>
+  <strong>Nvt Name:</strong>
+  <%= @preference.nvt_name %>
+</p>
+<p>
+  <strong>Val Type Desc:</strong>
+  <%= @preference.val_type_desc %>
+</p>
+<p>
+  <strong>Config:</strong>
+  <%= @preference.config_id %>
+</p>
+<p>
+  <strong>Val Type:</strong>
+  <%= @preference.val_type %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_preference_path(@preference) %> |
+  <%= link_to "Destroy", @preference, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", preferences_path %>
+</p>

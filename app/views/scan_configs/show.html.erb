@@ -1,24 +1,53 @@
-<p>
-  <b>Name:</b>
-  <%= @scan_config.name %>
-</p>
-
-<p>
-  <b>Comment:</b>
-  <%= @scan_config.comment %>
-</p>
-
-<p>
-  <b>Families grow:</b>
-  <%= @scan_config.families_grow %>
-</p>
-
-<p>
-  <b>Rules grow:</b>
-  <%= @scan_config.rules_grow %>
-</p>
-
-<p>
-  <b>In use:</b>
-  <%= @scan_config.in_use %>
-</p>
+<% title "Scan Config: #{@scan_config.name}" %>
+<b>Name:</b>
+<%= @scan_config.name %>
+<br />
+<b>Comment:</b>
+<%= @scan_config.comment %>
+<br />
+<b>Families count:</b>
+<%= @scan_config.family_count %>
+<br />
+<b>Families grow:</b>
+<%= @scan_config.families_grow %>
+<br />
+<b>NVTs count:</b>
+<%= @scan_config.nvts_count %>
+<br />
+<b>NVTs grow:</b>
+<%= @scan_config.nvts_grow %>
+<br />
+<b>In use:</b>
+<%= @scan_config.in_use %>
+<br />
+<h2>Scanner Preferences</h2>
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>Name</th>
+    <th>Value</th>
+  </tr>
+	<% @scan_config.scanner_preferences.each do |pref| %>
+	  <tr>
+	    <td><%= pref.name %></td>
+	    <td><%= pref.value %></td>
+	  </tr>
+	<% end %>
+</table>
+<br />
+<h2>Network Vulnerability Test Preferences</h2>
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>NVT</th>
+    <th>Name</th>
+    <th>Value</th>
+  </tr>
+	<% @scan_config.nvt_preferences.each do |pref| %>
+	  <tr>
+	    <td><%= pref.nvt_name %></td>
+	    <td><%= pref.name %></td>
+	    <td><%= pref.value %></td>
+	  </tr>
+		<tr><td colspan="3"><hr /></td></tr>
+	<% end %>
+</table>
+<%#=debug @scan_config%>

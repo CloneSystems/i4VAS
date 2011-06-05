@@ -1,0 +1,32 @@
+<%= form_for @preference do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :id %><br />
+    <%= f.text_field :id %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :nvt_id %><br />
+    <%= f.text_field :nvt_id %>
+  </p>
+  <p>
+    <%= f.label :nvt_name %><br />
+    <%= f.text_field :nvt_name %>
+  </p>
+  <p>
+    <%= f.label :val_type_desc %><br />
+    <%= f.text_field :val_type_desc %>
+  </p>
+  <p>
+    <%= f.label :config_id %><br />
+    <%= f.text_field :config_id %>
+  </p>
+  <p>
+    <%= f.label :val_type %><br />
+    <%= f.text_field :val_type %>
+  </p>
+  <p><%= f.submit %></p>
+<% end %>

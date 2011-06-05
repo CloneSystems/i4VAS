@@ -1,0 +1,29 @@
+<% title "Preferences" %>
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Nvt</th>
+    <th>Nvt Name</th>
+    <th>Val Type Desc</th>
+    <th>Config</th>
+    <th>Val Type</th>
+  </tr>
+  <% for preference in @preferences %>
+    <tr>
+      <td><%= preference.id %></td>
+      <td><%= preference.name %></td>
+      <td><%= preference.nvt_id %></td>
+      <td><%= preference.nvt_name %></td>
+      <td><%= preference.val_type_desc %></td>
+      <td><%= preference.config_id %></td>
+      <td><%= preference.val_type %></td>
+      <td><%= link_to "Show", preference %></td>
+      <td><%= link_to "Edit", edit_preference_path(preference) %></td>
+      <td><%= link_to "Destroy", preference, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<p><%= link_to "New Preference", new_preference_path %></p>

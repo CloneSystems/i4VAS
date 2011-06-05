@@ -62,14 +62,14 @@
 	<div class="clear"></div>
 	<div>
 		<% flash.each do |name, msg| %>
-		  <%= content_tag :div, msg, :id => "flash_#{name}" %>
+		  <%= content_tag :div, msg, :id => "flash_#{name}" unless msg.blank? %>
 		<% end %>
 		<%= content_tag :h1, yield(:title) if show_title? %>
 		<%= yield %>
 	</div>
 	<footer id="page_footer"> 
-		&copy; 2011
-		<span class="footer_text">current:</span> <%= Time.now.utc.strftime("%a %b %d, %Y %I:%M:%S %P %Z") %>
+		&copy; 2011 &nbsp;&nbsp;&nbsp;
+		<%= Time.now.utc.strftime("%a %b %d, %Y %I:%M:%S %P %Z") %>
 		<% if user_signed_in? %>
 				<span class="footer_text">session timeout in <%=time_ago_in_words(session_timeout_in)%>:</span> <%= session_timeout_in %>
 		<% end %>
