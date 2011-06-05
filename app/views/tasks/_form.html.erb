@@ -34,6 +34,10 @@
 		<% end %>
   </div>
   <div class="field">
+    Escalator<br />
+		<%= collection_select(:task, :escalator_id, Escalator.selections(current_user), :id, :name) %>
+  </div>
+  <div class="field">
     Schedule<br />
 		<%= collection_select(:task, :schedule_id, Schedule.selections(current_user), :id, :name) %>
   </div>

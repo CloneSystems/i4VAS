@@ -18,6 +18,16 @@ class Escalator
     attr_accessor :data, :name
   end
 
+  def self.selections(user)
+    escalators = []
+    esc = Escalator.new({:id=>'0', :name=>'--'}) # add blank selection, so users can edit Escalator selection
+    escalators << esc
+    self.all(user).each do |e|
+      escalators << e
+    end
+    escalators
+  end
+
   def self.all(user, options = {})
     params = {}
     params[:config_id] = options[:id] if options[:id]

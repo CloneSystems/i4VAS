@@ -4,6 +4,7 @@ class Task
 
   attr_accessor :name, :comment, :overall_progress, :status, :trend, :threat,
                 :config_id, :config_name, :target_id, :target_name, :times_run,
+                :escalator_id,
                 :schedule_id, :schedule_name,
                 :first_report_id, :first_report_date,
                 :last_report_id, :last_report_date,
