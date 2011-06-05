@@ -10,7 +10,11 @@ class TasksController < ApplicationController
     # conn = current_user.openvas_connection # for OMP version
     # # conn = openvas_connect_and_login(true) # for OAP version
     # @version = Task.version(conn)
-    #
+    
+		# Time.zone = 'Eastern Time (US & Canada)'
+		# current_user.class.timeout_in.ago.in_time_zone.strftime("%a %b %d, %Y %H:%M:%S %Z")
+		timeout = Time.now.utc + current_user.class.timeout_in
+		@timeout = timeout.strftime("%a %b %d, %Y %I:%M:%S %P %Z")
   end
 
   # GET /start_task/1

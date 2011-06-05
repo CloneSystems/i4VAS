@@ -101,3 +101,22 @@ a {
 .error_messages ul {
   margin: 0;
 }
+
+footer#page_footer {
+	clear: both;
+	background-color: #E6E6E6;
+	display: block;
+	text-align: center;
+	font-size: 11px;
+	margin: 0 auto;
+	padding: 10px;
+	position: relative; 
+	bottom: 0px;
+	margin-top: 20px;
+}
+
+.footer_text {
+	color: #7A7A7A;
+	padding-left: 15px;
+	padding-right: 5px;
+}

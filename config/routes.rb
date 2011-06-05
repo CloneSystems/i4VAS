@@ -1,5 +1,7 @@
 Greenbone::Application.routes.draw do
 
+  resources :system_reports
+
   devise_for :users
 
   resources :tasks

@@ -1,0 +1,15 @@
+<% title "System Reports" %>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Title</th>
+  </tr>
+  <% for system_report in @system_reports %>
+    <tr>
+      <td><%= system_report.name %></td>
+      <td><%= system_report.title %></td>
+    </tr>
+  <% end %>
+</table>
+

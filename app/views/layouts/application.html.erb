@@ -17,11 +17,6 @@
 				<%= link_to 'Home', root_path %>
 				 | 
 				<%= link_to "Sign Out", destroy_user_session_path %>
-				 | 
-				<% Time.zone = 'Eastern Time (US & Canada)' %>
-				timeout at: 
-				<%= current_user.class.timeout_in.ago.in_time_zone.strftime("%a %b %d, %Y %H:%M:%S %Z") %>
-				<%#= current_user.class.inspect %>
 				&larr; <span class="nav_text">user:</span> <%= current_user.username %>
 				<hr />
 				<%= link_to 'Tasks', tasks_path %>
@@ -70,6 +65,11 @@
 		<%= content_tag :h1, yield(:title) if show_title? %>
 		<%= yield %>
 	</div>
+	<footer id="page_footer"> 
+		&copy; 2011
+		<span class="footer_text">current:</span> <%= Time.now.utc.strftime("%a %b %d, %Y %I:%M:%S %P %Z") %>
+		<span class="footer_text">session timeout in <%=time_ago_in_words(@timeout)%>:</span> <%= @timeout %>
+	</footer>
 </div>
 </body>
 </html>
