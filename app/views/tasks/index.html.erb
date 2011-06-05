@@ -1,17 +1,4 @@
 <h2>Tasks</h2>
-<!-- <h3>OMP version: <%#=@version%></h3> -->
-
-<!-- <div class="table">
-	<div class="row">
-		<div class="cell">
-			<p>cell 1</p>
-		</div>
-		<div class="cell">
-			<p>cell 2</p>
-		</div>
-	</div>
-</div> -->
-
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
     <th>Actions</th>
@@ -67,12 +54,10 @@
 				    <%= image_tag("stop_inactive.png") %>
 		    		<%= image_tag("delete_inactive.png") %>
 				<% end %>
-		    <%#= link_to image_tag("details.png"), task_path(task.id), :title => 'Task Details' %>
-		    <%#= link_to image_tag("edit.png"), edit_task_path(task.id), :title => 'Edit Task' %>
 			</div>
 		</td>
     <td>
-			<%= link_to task.name, edit_task_path(task.id), :title => 'Edit Task' %>
+			<%= link_to truncate(task.name, :length => 35), edit_task_path(task.id), :title => 'Edit Task' %>
 			<% unless task.comment.blank? %>
 					<br />
 					<%= truncate(task.comment, :length => 15) %>
@@ -106,12 +91,6 @@
 		<td><%# threat: High, Medium, Low, Log, Debug (Log,Debug = None) %><%= task.threat %></td>
 		<td><%# trend: up, down, more, less, same %><%= task.trend %></td>
   </tr>
-	<!-- 
-	<tr><td colspan="10"><pre><%#=task.to_yaml%></pre></td></tr>
-	<tr><td colspan="10"><pre><%#=task.first_report.to_yaml%></pre></td></tr> 
-	<tr><td colspan="10"><pre><%#=OpenvasCli::VasTask.get_by_id(task.id).to_yaml%></pre></td></tr>
-	<tr><td colspan="10"><pre><%#=OpenvasCli::VasReport.get_by_id(task.last_report_id).to_yaml%></pre></td></tr> 
-	-->
 	<tr><td colspan="10"><hr /></td></tr>
 <% end %>
 </table>
