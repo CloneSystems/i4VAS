@@ -1,0 +1,36 @@
+<% title "Escalator" %>
+
+<p>
+  <strong>Name:</strong>
+  <%= @escalator.name %>
+</p>
+<p>
+  <strong>Comment:</strong>
+  <%= @escalator.comment %>
+</p>
+<p>
+  <strong>Escalator Event:</strong>
+  <%= @escalator.escalator_event %>
+</p>
+<p>
+  <strong>Event Data:</strong>
+  <%= @escalator.event_data %>
+</p>
+<p>
+  <strong>Event Data Name:</strong>
+  <%= @escalator.event_data_name %>
+</p>
+<p>
+  <strong>Escalator Condition:</strong>
+  <%= @escalator.escalator_condition %>
+</p>
+<p>
+  <strong>Escalator Method:</strong>
+  <%= @escalator.escalator_method %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_escalator_path(@escalator) %> |
+  <%= link_to "Destroy", @escalator, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", escalators_path %>
+</p>

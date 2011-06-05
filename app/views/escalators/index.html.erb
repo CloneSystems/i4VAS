@@ -1,0 +1,35 @@
+<% title "Escalators" %>
+<%= link_to "new Escalator", new_escalator_path %>
+<br />
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>Name</th>
+    <th>Comment</th>
+    <th>Event</th>
+    <th>Condition</th>
+    <th>Method</th>
+  </tr>
+  <% for escalator in @escalators %>
+    <tr>
+      <td><%= escalator.name %></td>
+      <td><%= escalator.comment %></td>
+      <td>
+				<%= escalator.escalator_event %>
+				<br />
+				<%= escalator.event_data %>
+			</td>
+      <td><%= escalator.escalator_condition %></td>
+      <td>
+				<%= escalator.escalator_method %>
+				<br />
+			  <% for dt in escalator.method_datas %>
+						<%= dt.name %>: <%= dt.data %><br />
+			  <% end %>
+			</td>
+      <td><%#= link_to "Show", escalator %></td>
+      <td><%#= link_to "Edit", edit_escalator_path(escalator) %></td>
+      <td><%#= link_to "Destroy", escalator, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+<tr><td><%=debug escalator%></td></tr>
+  <% end %>
+</table>

@@ -1,0 +1,32 @@
+<%= form_for @escalator do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :comment %><br />
+    <%= f.text_area :comment %>
+  </p>
+  <p>
+    <%= f.label :escalator_event %><br />
+    <%= f.text_field :escalator_event %>
+  </p>
+  <p>
+    <%= f.label :event_data %><br />
+    <%= f.text_field :event_data %>
+  </p>
+  <p>
+    <%= f.label :event_data_name %><br />
+    <%= f.text_field :event_data_name %>
+  </p>
+  <p>
+    <%= f.label :escalator_condition %><br />
+    <%= f.text_field :escalator_condition %>
+  </p>
+  <p>
+    <%= f.label :escalator_method %><br />
+    <%= f.text_field :escalator_method %>
+  </p>
+  <p><%= f.submit %></p>
+<% end %>

@@ -1,9 +1,5 @@
 Greenbone::Application.routes.draw do
 
-  resources :families
-
-  resources :preferences
-
   devise_for :users
 
   resources :tasks
@@ -31,5 +27,11 @@ Greenbone::Application.routes.draw do
   get 'sync_feed' => 'nvt_feeds#sync_feed', :as => 'sync_feed'
 
   resources :system_reports
+
+  resources :families
+
+  resources :preferences
+
+  resources :escalators
 
 end
