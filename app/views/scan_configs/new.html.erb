@@ -1,2 +1,29 @@
-<% title "OpenVAS: new Scan Config" %>
-<%= render 'form' %>
+<% title "new Scan Config" %>
+<%= form_for(@scan_config) do |f| %>
+  <% if @scan_config.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@scan_config.errors.count, "error") %> prohibited this Scan Config from being saved:</h2>
+      <ul>
+	      <% @scan_config.errors.full_messages.each do |msg| %>
+	        <li><%= raw(msg) %></li>
+	      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name, :maxlength => 80 %>
+  </div>
+  <div class="field">
+    <%= f.label :comment %><br />
+    <%= f.text_area :comment, :rows => 5, :cols => 80 %>
+  </div>
+  <div class="field">
+    Base
+		<%= collection_select(:scan_config, :copy_id, ScanConfig.base_selections(current_user), :id, :name) %>
+	</div>
+	<br />
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

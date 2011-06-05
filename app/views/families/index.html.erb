@@ -1,0 +1,23 @@
+<% title "Families" %>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Nvt Count</th>
+    <th>Max Nvt Count</th>
+    <th>Growing</th>
+  </tr>
+  <% for family in @families %>
+    <tr>
+      <td><%= family.name %></td>
+      <td><%= family.nvt_count %></td>
+      <td><%= family.max_nvt_count %></td>
+      <td><%= family.growing %></td>
+      <td><%= link_to "Show", family %></td>
+      <td><%= link_to "Edit", edit_family_path(family) %></td>
+      <td><%= link_to "Destroy", family, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<p><%= link_to "New Family", new_family_path %></p>

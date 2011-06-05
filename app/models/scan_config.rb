@@ -3,7 +3,7 @@ class ScanConfig
   include OpenvasModel
 
   attr_accessor :name, :comment, :family_count, :families_grow, :nvts_count, :nvts_grow, :in_use
-  attr_accessor :tasks
+  attr_accessor :tasks, :copy_id
 
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :comment, :length => { :maximum => 400 }
@@ -22,6 +22,16 @@ class ScanConfig
 
   def families
     @families ||= []
+  end
+
+  def self.base_selections(user)
+    return nil if user.nil?
+    cfgs = []
+    self.all(user).each do |o|
+      cfgs << o if o.name.downcase == 'empty'
+      cfgs << o if o.name.downcase == 'full and fast'
+    end
+    cfgs
   end
 
   def self.selections(user)
@@ -73,7 +83,14 @@ class ScanConfig
             cfg.nvt_preferences << pref
           end
         }
-        # xml.xpath("families/family").each { |f| cfg.families << VasNVTFamily.from_xml_node(f) }
+        xml.xpath("families/family").each { |f|
+          family = Family.new
+          family.name           = extract_value_from('name', f)
+          family.nvt_count      = extract_value_from('nvt_count', f).to_i
+          family.max_nvt_count  = extract_value_from('max_nvt_count', f).to_i
+          family.growing        = extract_value_from("growing", f).to_i
+          cfg.families << family
+        }
         ret << cfg
       }
     rescue Exception => e
@@ -95,10 +112,64 @@ class ScanConfig
   end
 
   def update_attributes(user, attrs={})
-    attrs.each { |key, value|
-      send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
+    # note modify(edit/update) is not implemented in OMP 2.0
+    # attrs.each { |key, value|
+    #   send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
+    # }
+    # save(user)
+  end
+
+  def save(user)
+    # note: modify(edit/update) is not implemented in OMP 2.0
+    if valid?
+      sc = ScanConfig.new
+      sc.name         = self.name
+      sc.comment      = self.comment
+      sc.copy_id      = self.copy_id
+      sc.create_or_update(user)
+      sc.errors.each do |attribute, msg|
+        self.errors.add(:openvas, "<br />" + msg)
+      end
+      return false unless self.errors.blank?
+      return true
+    else
+      return false
+    end
+  end
+
+  def create_or_update(user)
+    # note: modify(edit/update) is not implemented in OMP 2.0
+    req = Nokogiri::XML::Builder.new { |xml|
+      xml.create_config {
+        xml.name    { xml.text(@name) }
+        xml.comment { xml.text(@comment) } unless @comment.blank?
+        xml.copy    { xml.text(@copy_id) }
+      }
     }
-    save(user)
+    begin
+      resp = user.openvas_connection.sendrecv(req.doc)
+      if ScanConfig.extract_value_from("//@status", resp) =~ /20\d/
+        @id = ScanConfig.extract_value_from("/create_config_response/@id", resp)
+        true
+      else
+        msg = ScanConfig.extract_value_from("//@status_text", resp)
+        raise msg
+      end
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
+  end
+
+  def delete_record(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.delete_config(:config_id => @id) }
+    begin
+      resp = user.openvas_connection.sendrecv(req.doc)
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
   end
 
 end

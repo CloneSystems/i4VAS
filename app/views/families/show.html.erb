@@ -1,0 +1,24 @@
+<% title "Family" %>
+
+<p>
+  <strong>Name:</strong>
+  <%= @family.name %>
+</p>
+<p>
+  <strong>Nvt Count:</strong>
+  <%= @family.nvt_count %>
+</p>
+<p>
+  <strong>Max Nvt Count:</strong>
+  <%= @family.max_nvt_count %>
+</p>
+<p>
+  <strong>Growing:</strong>
+  <%= @family.growing %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_family_path(@family) %> |
+  <%= link_to "Destroy", @family, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", families_path %>
+</p>

@@ -1,0 +1,20 @@
+<%= form_for @family do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :nvt_count %><br />
+    <%= f.text_field :nvt_count %>
+  </p>
+  <p>
+    <%= f.label :max_nvt_count %><br />
+    <%= f.text_field :max_nvt_count %>
+  </p>
+  <p>
+    <%= f.label :growing %><br />
+    <%= f.text_field :growing %>
+  </p>
+  <p><%= f.submit %></p>
+<% end %>

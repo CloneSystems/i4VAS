@@ -1,5 +1,7 @@
 Greenbone::Application.routes.draw do
 
+  resources :families
+
   resources :preferences
 
   devise_for :users

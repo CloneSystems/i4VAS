@@ -1,5 +1,6 @@
 <% title "Scan Configs" %>
-<p><%#= link_to 'new Scan config', new_scan_config_path %></p>
+<%= link_to 'new Scan config', new_scan_config_path %>
+<br />
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
     <th>Name</th>
@@ -22,8 +23,8 @@
 	    <td><%= scan_config.nvts_grow %></td>
 	    <td><%= scan_config.in_use %></td>
 			<% unless scan_config.in_use > 0 %>
-		    <td><%= link_to 'edit', edit_scan_config_path(scan_config.id) %></td>
-		    <td><%= link_to 'delete', scan_config_path(scan_config.id), :confirm => 'Are you sure?', :method => :delete %></td>
+		    <td><%#= link_to 'edit', edit_scan_config_path(scan_config.id) %></td>
+		    <td><%= link_to image_tag("delete.png"), scan_config_path(scan_config.id), :title => 'delete scan config', :confirm => 'Are you sure?', :method => :delete %></td>
 			<% end %>
 	  </tr>
 		<tr><td colspan="8"><hr /></td></tr>
