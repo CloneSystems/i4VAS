@@ -26,6 +26,8 @@
 				Notes
 				 | 
 				Overrides
+				 | 
+				<%= link_to 'System Reports', system_reports_path %>
 				&larr; <span class="nav_text">scan management</span>
 				<hr />
 				<%= link_to 'Scan Configs', scan_configs_path %>
@@ -68,7 +70,9 @@
 	<footer id="page_footer"> 
 		&copy; 2011
 		<span class="footer_text">current:</span> <%= Time.now.utc.strftime("%a %b %d, %Y %I:%M:%S %P %Z") %>
-		<span class="footer_text">session timeout in <%=time_ago_in_words(@timeout)%>:</span> <%= @timeout %>
+		<% if user_signed_in? %>
+				<span class="footer_text">session timeout in <%=time_ago_in_words(session_timeout_in)%>:</span> <%= session_timeout_in %>
+		<% end %>
 	</footer>
 </div>
 </body>

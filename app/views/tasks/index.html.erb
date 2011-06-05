@@ -115,13 +115,6 @@
 	<tr><td colspan="10"><hr /></td></tr>
 <% end %>
 </table>
-<% if current_user.openvas_admin? %>
+<% if false #current_user.openvas_admin? %>
 		OAP Version: <%= @version unless @version.blank? %>
-		<hr />
-		Settings:<br />
-		<% unless @settings.blank? %>
-				<% @settings.each do |s| %>
-						<%= "#{s.name} ... #{s.value}" %><br />
-				<% end %>
-		<% end %>
 <% end %>

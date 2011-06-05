@@ -1,13 +1,14 @@
 <% title "System Reports" %>
-
-<table>
-  <tr>
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
     <th>Name</th>
     <th>Title</th>
   </tr>
   <% for system_report in @system_reports %>
     <tr>
-      <td><%= system_report.name %></td>
+      <td>
+		    <%= link_to system_report.name, system_report_path(system_report.name), :title => "view #{system_report.title}" %>
+			</td>
       <td><%= system_report.title %></td>
     </tr>
   <% end %>
