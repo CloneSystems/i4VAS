@@ -8,6 +8,12 @@ body {
   font-size: 11px;
 }
 
+.sign_in {
+  font-size: 40px;
+	color: #6495ED;
+	font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
 .logo {
 	float: left;
 	text-align: left;
