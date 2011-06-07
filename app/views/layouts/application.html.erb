@@ -73,7 +73,7 @@
 		<%= yield %>
 	</div>
 	<footer id="page_footer"> 
-		&copy; 2011 &nbsp;&nbsp;&nbsp;
+		2011 &nbsp;&nbsp;&nbsp;
 		<%= Time.now.utc.strftime("%a %b %d, %Y %I:%M:%S %P %Z") %>
 		<% if user_signed_in? %>
 				<span class="footer_text">session timeout in <%=time_ago_in_words(session_timeout_in)%>:</span> <%= session_timeout_in %>

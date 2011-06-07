@@ -4,7 +4,7 @@ class Task
 
   attr_accessor :name, :comment, :overall_progress, :status, :trend, :threat,
                 :config_id, :config_name, :target_id, :target_name, :times_run,
-                :escalator_id,
+                :escalator_id, :escalator_name,
                 :schedule_id, :schedule_name,
                 :first_report_id, :first_report_date,
                 :last_report_id, :last_report_date,
@@ -47,6 +47,8 @@ class Task
     t.target_name         = extract_value_from("target/name", node)
     t.schedule_id         = extract_value_from("schedule/@id", node)
     t.schedule_name       = extract_value_from("schedule/name", node)
+    t.escalator_id        = extract_value_from("escalator/@id", node)
+    t.escalator_name      = extract_value_from("escalator/name", node)
     # node.xpath("reports/report").each { |xr|
     #   t.reports << VasReport.new({
     #     :id => extract_value_from("@id", xr),
@@ -91,6 +93,7 @@ class Task
       vt.name = self.name
       vt.comment = self.comment
       vt.schedule_id  = self.schedule_id
+      vt.escalator_id  = self.escalator_id
       # note: openvas doesn't allow updates to config_id and target_id, only name and comment:
       if vt.new_record?
         vt.config_id    = self.config_id
@@ -129,6 +132,7 @@ class Task
           xml.name    { xml.text(@name) }
           xml.comment { xml.text(@comment) }
           xml.schedule(:id => @schedule_id) unless @schedule_id.blank? || @schedule_id == '0'
+          xml.escalator(:id => @escalator_id)
         }
       else
         xml.create_task {
@@ -137,6 +141,7 @@ class Task
           xml.config(:id => @config_id)
           xml.target(:id => @target_id)
           xml.schedule(:id => @schedule_id) unless @schedule_id.blank? || @schedule_id == '0'
+          xml.escalator(:id => @escalator_id) unless @escalator_id.blank? || @escalator_id == '0'
         }
       end
     }

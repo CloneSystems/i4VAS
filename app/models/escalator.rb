@@ -18,6 +18,23 @@ class Escalator
     attr_accessor :data, :name
   end
 
+  class Selection
+    attr_accessor :id, :name
+  end
+
+  def self.event_selections(user)
+    events = []
+    events << Selection.new({:id=>'Done', :name=>'Done'})
+    events << Selection.new({:id=>'Delete Requested', :name=>'Delete Requested'})
+    events << Selection.new({:id=>'New', :name=>'New'})
+    events << Selection.new({:id=>'Requested', :name=>'Requested'})
+    events << Selection.new({:id=>'Running', :name=>'Running'})
+    events << Selection.new({:id=>'Stop Requested', :name=>'Stop Requested'})
+    events << Selection.new({:id=>'Stopped', :name=>'Stopped'})
+Rails.logger.info "\n\n events=#{events.inspect}\n\n"
+    events
+  end
+
   def self.selections(user)
     escalators = []
     esc = Escalator.new({:id=>'0', :name=>'--'}) # add blank selection, so users can edit Escalator selection
@@ -51,7 +68,7 @@ class Escalator
         # note: this also works --> resp.search("method/data").each do |data|
         resp.search("method > data").each do |data|
           dt = Datum.new
-          # remove the <name> element from the <data> element:
+          # remove the <name> element from the <data> element, so we can get the <data> text:
           name = data.search("name").remove
           dt.data = data.text
           dt.name = name.text

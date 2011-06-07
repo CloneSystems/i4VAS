@@ -43,6 +43,26 @@ body {
 	width: 110px;
 }
 
+.field {
+	clear: both;
+}
+
+.left {
+    height: 100%;
+    width: 10%;
+    float: left;
+}
+
+.right {
+    height: 100%;
+    width: 70%;
+    float: left;
+}
+
+.actions {
+	clear: both;
+}
+
 a img {
   border: none;
 }

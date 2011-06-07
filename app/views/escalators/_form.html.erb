@@ -1,32 +1,104 @@
 <%= form_for @escalator do |f| %>
-  <%= f.error_messages %>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :comment %><br />
-    <%= f.text_area :comment %>
-  </p>
-  <p>
-    <%= f.label :escalator_event %><br />
-    <%= f.text_field :escalator_event %>
-  </p>
-  <p>
-    <%= f.label :event_data %><br />
-    <%= f.text_field :event_data %>
-  </p>
-  <p>
-    <%= f.label :event_data_name %><br />
-    <%= f.text_field :event_data_name %>
-  </p>
-  <p>
-    <%= f.label :escalator_condition %><br />
-    <%= f.text_field :escalator_condition %>
-  </p>
-  <p>
-    <%= f.label :escalator_method %><br />
-    <%= f.text_field :escalator_method %>
-  </p>
-  <p><%= f.submit %></p>
+	<% if @escalator.errors.any? %>
+	  <div id="error_explanation">
+	    <h2><%= pluralize(@escalator.errors.count, "error") %> prohibited this escalator from being saved:</h2>
+	    <ul>
+	      <% @escalator.errors.full_messages.each do |msg| %>
+	        <li><%= raw(msg) %></li>
+	      <% end %>
+	    </ul>
+	  </div>
+	<% end %>
+	<div class="field">
+	  <div class="left"><%= f.label :name %></div>
+	  <div class="right"><%= f.text_field :name, :maxlength => 80 %></div>
+	</div>
+  <div class="field">
+    <div class="left"><%= f.label :comment %></div>
+    <div class="right"><%= f.text_area :comment, :rows => 5, :cols => 80 %></div>
+  </div>
+	<br /><br />
+  <div class="field">
+    <div class="left">Event</div>
+		<div class="right">
+			Task run status changed to
+			<%= collection_select(:escalator, :escalator_event, Escalator.event_selections(current_user), :id, :name) %>
+			<!-- <select>
+				<option value="Delete Requested">Delete Requested</option>
+				<option value="Done" selected>Done</option>
+				<option value="New">New</option>
+				<option value="Requested">Requested</option>
+				<option value="Running">Running</option>
+				<option value="Stop Requested">Stop Requested</option>
+				<option value="Stopped">Stopped</option>
+			</select> -->
+		</div>
+  </div>
+	<br /><br />
+  <div class="field">
+    <div class="left">Condition</div>
+		<div class="right">
+			<select name="escalator[threat]">
+				<option value="Always" selected>Always</option>
+				<option value="Threat level at least:high">Threat level at least High</option>
+				<option value="Threat level at least:medium">Threat level at least Medium</option>
+				<option value="Threat level at least:low">Threat level at least Low</option>
+				<option value="Threat level at least:log">Threat level at least Log</option>
+				<option value="Threat level:changed">Threat level changed</option>
+				<option value="Threat level:increased">Threat level increased</option>
+				<option value="Threat level:decreased">Threat level decreased</option>
+			</select>
+		</div>
+  </div>
+	<br /><br />
+  <div class="field">
+    <div class="left">Method</div>
+		<div class="right">
+			<select name="escalator[method]">
+				<option value="email" selected>Email</option>
+				<option value="syslog">System Logger (Syslog)</option>
+				<option value="snmp">SNMP</option>
+				<option value="httpget">HTTP Get</option>
+			</select>
+			<br /><br />
+			<fieldset>
+				<legend>if Email selected:</legend>
+				To Address
+				<input type="text" name="method_data:to_address" size="30" maxlength="301">
+				<br />
+				From Address
+				<input type="text" name="method_data:from_address" size="30" maxlength="301">
+				<br />
+			  Include report with email
+			  <select name="method_data:notice_report_format">
+					<option value="simple" selected>Simple notice</option>
+				<option value="a0704abb-2120-489f-959f-251c9f4ffebd">CPE report</option>
+				<option value="b993b6f5-f9fb-4e6e-9c94-dd46c00e058d">HTML report</option>
+				<option value="929884c6-c2c4-41e7-befb-2f6aa163b458">ITG report</option>
+				<option value="9f1ab17b-aaaa-411a-8c57-12df446f5588">LaTeX report</option>
+				<option value="f5c2a364-47d2-4700-b21d-0a7693daddab">NBE report</option>
+				<option value="19f6f1b3-7128-4433-888c-ccc764fe6ed5">TXT report</option>
+				<option value="d5da9f67-8551-4e51-807b-b6a873d70e34">XML report</option>
+				</select>
+			</fieldset>
+			<br />
+			<fieldset>
+				<legend>if HTTP Get selected:</legend>
+				URL <input type="text" name="method_data:URL" size="30" maxlength="301">
+			</fieldset>
+			<br />
+		</div>
+  </div>
+	<br /><br />
+  <div class="actions">
+    <div class="left">&nbsp;</div>
+		<div class="right">
+			<% if @escalator.new_record? %>
+	    		<%= big_button_submit_tag 'Create Escalator' %>
+			<% else %>
+	    		<%= big_button_submit_tag 'Save Escalator' %>
+			<% end %>
+  	</div>
+  </div>
+	<br /><br />
 <% end %>

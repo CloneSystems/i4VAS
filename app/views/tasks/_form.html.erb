@@ -10,43 +10,51 @@
     </div>
   <% end %>
   <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name, :maxlength => 80 %>
+    <div class="left"><%= f.label :name %></div>
+    <div class="right"><%= f.text_field :name, :maxlength => 80 %></div>
   </div>
   <div class="field">
-    <%= f.label :comment %><br />
-    <%= f.text_area :comment, :rows => 5, :cols => 80 %>
+    <div class="left"><%= f.label :comment %></div>
+    <div class="right"><%= f.text_area :comment, :rows => 5, :cols => 80 %></div>
   </div>
   <div class="field">
-    Scan Config<br />
-		<% if @task.new_record? %>
-			<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name) %>
-		<% else %>
-			<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name, {}, {:disabled => true}) %>
-		<% end %>
+    <div class="left">Scan Config</div>
+		<div class="right">
+			<% if @task.new_record? %>
+				<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name) %>
+			<% else %>
+				<%= collection_select(:task, :config_id, ScanConfig.selections(current_user), :id, :name, {}, {:disabled => true}) %>
+			<% end %>
+  	</div>
   </div>
   <div class="field">
-    Scan Target<br />
-		<% if @task.new_record? %>
-			<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name) %>
-		<% else %>
-			<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name, {}, {:disabled => true}) %>
-		<% end %>
+    <div class="left">Scan Target</div>
+		<div class="right">
+			<% if @task.new_record? %>
+				<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name) %>
+			<% else %>
+				<%= collection_select(:task, :target_id, ScanTarget.selections(current_user), :id, :name, {}, {:disabled => true}) %>
+			<% end %>
+  	</div>
   </div>
   <div class="field">
-    Escalator<br />
-		<%= collection_select(:task, :escalator_id, Escalator.selections(current_user), :id, :name) %>
+    <div class="left"><%= f.label "Escalator" %></div>
+		<div class="right"><%= collection_select(:task, :escalator_id, Escalator.selections(current_user), :id, :name) %></div>
   </div>
   <div class="field">
-    Schedule<br />
-		<%= collection_select(:task, :schedule_id, Schedule.selections(current_user), :id, :name) %>
+    <div class="left"><%= f.label "Schedule" %></div>
+		<div class="right"><%= collection_select(:task, :schedule_id, Schedule.selections(current_user), :id, :name) %></div>
   </div>
-	<br />
+	<br /><br />
   <div class="actions">
-		<% if @task.new_record? %>
-    		<%= big_button_submit_tag 'Create Task' %>
-		<% else %>
-    		<%= big_button_submit_tag 'Save Task' %>
-		<% end %>
+    <div class="left">&nbsp;</div>
+		<div class="right">
+			<% if @task.new_record? %>
+	    		<%= big_button_submit_tag 'Create Task' %>
+			<% else %>
+	    		<%= big_button_submit_tag 'Save Task' %>
+			<% end %>
+  	</div>
   </div>
+	<br /><br />
 <% end %>
