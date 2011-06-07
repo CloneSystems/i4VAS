@@ -7,7 +7,7 @@
   <% for system_report in @system_reports %>
     <tr>
       <td>
-		    <%= link_to system_report.name, system_report_path(system_report.name), :title => "view #{system_report.title}" %>
+		    <%= button_link_to system_report.name, system_report_path(system_report.name), :title => "view #{system_report.title}" %>
 			</td>
       <td><%= system_report.title %></td>
     </tr>

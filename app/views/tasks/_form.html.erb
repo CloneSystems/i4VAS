@@ -43,6 +43,10 @@
   </div>
 	<br />
   <div class="actions">
-    <%= f.submit %>
+		<% if @task.new_record? %>
+    		<%= big_button_submit_tag 'Create Task' %>
+		<% else %>
+    		<%= big_button_submit_tag 'Save Task' %>
+		<% end %>
   </div>
 <% end %>

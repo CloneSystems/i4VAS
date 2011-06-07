@@ -1,4 +1,5 @@
 <h2>Tasks</h2>
+<p><%= add_button_link_to 'new Task', new_task_path %></p>
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
     <th>Actions</th>
@@ -57,7 +58,7 @@
 			</div>
 		</td>
     <td>
-			<%= link_to truncate(task.name, :length => 35), edit_task_path(task.id), :title => 'Edit Task' %>
+			<%= edit_pill_button_link_to truncate(task.name, :length => 35), edit_task_path(task.id), :title => 'Edit Task' %>
 			<% unless task.comment.blank? %>
 					<br />
 					<%= truncate(task.comment, :length => 15) %>

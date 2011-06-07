@@ -1,4 +1,4 @@
-<% title "OpenVAS: Report Formats" %>
+<% title "Report Formats" %>
 <p><%#= link_to "new Report Format", new_report_format_path %></p>
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
@@ -11,13 +11,12 @@
   </tr>
   <% for report_format in @report_formats %>
     <tr>
-      <td><%= report_format.name %></td>
+      <td><%= button_link_to report_format.name, report_format_path(report_format.id), :title => 'view details' %></td>
       <td><%= report_format.extension %></td>
       <td><%= report_format.content_type %></td>
       <td><%= report_format.trust %></td>
       <td><%= report_format.active ? 'yes' : 'no' %></td>
       <td><%= report_format.summary %></td>
-      <td><%= link_to "details", report_format_path(report_format.id) %></td>
       <td><%#= link_to "edit", edit_report_format_path(report_format.id) %></td>
       <td><%#= link_to "delete", report_format.id, :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>

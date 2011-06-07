@@ -1,5 +1,5 @@
 <% title "Schedules" %>
-<p><%= link_to "new Schedule", new_schedule_path %></p>
+<p><%= add_button_link_to "new Schedule", new_schedule_path %></p>
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
     <th>Name</th>
@@ -24,7 +24,7 @@
 			<% if schedule.in_use > 0 %>
 					<td><%= image_tag("delete_inactive.png", :title => "can't delete when schedule is in use") %></td>
   		<% else %>
-	    		<td><%= link_to image_tag("delete.png"), schedule_path(schedule.id), :title => 'delete schedule', :confirm => 'Are you sure?', :method => :delete %></td>
+	    		<td><%= danger_remove_pill_button_link_to 'delete', schedule_path(schedule.id), :title => 'delete schedule', :confirm => 'Are you sure?', :method => :delete %></td>
 		  <% end %>
     </tr>
   <% end %>

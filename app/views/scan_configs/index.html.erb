@@ -1,5 +1,5 @@
 <% title "Scan Configs" %>
-<%= link_to 'new Scan config', new_scan_config_path %>
+<%= add_button_link_to 'new Scan config', new_scan_config_path %>
 <br />
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
@@ -24,7 +24,7 @@
 	    <td><%= scan_config.in_use %></td>
 			<% unless scan_config.in_use > 0 %>
 		    <td><%#= link_to 'edit', edit_scan_config_path(scan_config.id) %></td>
-		    <td><%= link_to image_tag("delete.png"), scan_config_path(scan_config.id), :title => 'delete scan config', :confirm => 'Are you sure?', :method => :delete %></td>
+		    <td><%= danger_remove_pill_button_link_to 'delete', scan_config_path(scan_config.id), :title => 'delete scan config', :confirm => 'Are you sure?', :method => :delete %></td>
 			<% end %>
 	  </tr>
 		<tr><td colspan="8"><hr /></td></tr>

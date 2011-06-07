@@ -24,13 +24,17 @@ body {
 
 .nav {
 	float: right;
-	text-align: right;
-  background-color: #F5F5DC;
+	text-align: left;
+/*  background-color: #F5F5DC;*/
 }
 
 .nav_text {
 	color: #c0c0c0;
 	padding-right: 2px;
+}
+
+.button.nav {
+	width: 110px;
 }
 
 a img {

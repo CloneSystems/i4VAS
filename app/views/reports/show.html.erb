@@ -35,8 +35,8 @@
 			<td><%= @report.result_count_total[:debug] %></td>
 			<td><%= @report.result_count_total[:total] %></td>
 			<% if @report.status.downcase == 'done' %>
-				<td><%= link_to 'HTML', view_report_path(@report.id),                :target=>'_blank' %></td>
-				<td><%= link_to 'PDF',  view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></td>
+				<td><%= pill_button_link_to 'HTML', view_report_path(@report.id),                :target=>'_blank' %></td>
+				<td><%= pill_button_link_to 'PDF',  view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></td>
 			<% end %>
 		</tr>
 	</table>

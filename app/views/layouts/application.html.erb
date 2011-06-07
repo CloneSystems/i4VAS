@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
   <title><%= content_for?(:title) ? yield(:title) : "OpenVAS" %></title>
+	<%= css3buttons_stylesheets :include_reset => false %>
   <%= stylesheet_link_tag "application" %>
   <%= javascript_include_tag 'jquery', 'jquery.min', 'jquery_ujs' %>
   <%= csrf_meta_tag %>
@@ -14,47 +15,51 @@
 		<% if user_signed_in? %>
 			<div class="logo"><h1>OpenVAS</h1></div>
 			<div class="nav">
-				<%= link_to 'Home', root_path %>
-				 | 
-				<%= link_to "Sign Out", destroy_user_session_path %>
-				&larr; <span class="nav_text">user:</span> <%= current_user.username %>
-				<hr />
-				<%= link_to 'Tasks', tasks_path %>
-				 | 
-				<%= link_to 'New Task', new_task_path %>
-				 | 
-				Notes
-				 | 
-				Overrides
-				 | 
-				<%= link_to 'System Reports', system_reports_path %>
-				&larr; <span class="nav_text">scan management</span>
-				<hr />
-				<%= link_to 'Scan Configs', scan_configs_path %>
-				 | 
-				<%= link_to 'Targets', scan_targets_path %>
-				 | 
-				Credentials
-				 | 
-				Agents
-				 | 
-				<%= link_to 'Escalators', escalators_path %>
-				 | 
-				<%= link_to "Schedules", schedules_path %>
-				 | 
-				<%= link_to "Report Formats", report_formats_path %>
-				 | 
-				Slaves
-				&larr; <span class="nav_text">configuration</span>
-				<hr />
+				<!-- <div class="actions button-container">
+				    <a href="#" class="button primary">Compose new</a>
+				    <div class="button-group">
+				        <a href="#" class="button primary pill">Archive</a>
+				        <a href="#" class="button pill">Report spam</a>
+				        <a href="#" class="button danger pill">Delete</a>
+				    </div>
+				    <div class="button-group minor-group">
+				        <a href="#" class="button">Move to</a>
+				        <a href="#" class="button">Labels</a>
+				    </div>
+				</div> -->
+				<%= button_group do %>
+					<%= disable_nav_pill_user_button_link_to current_user.username, root_path %>
+					<%= home_pill_button_link_to 'Home', root_path %>
+					<%= negative_pill_button_link_to 'Sign Out', destroy_user_session_path %>
+				<% end %>
+				<br />
+				<%= button_group do %>
+					<%= disable_nav_pill_clock_button_link_to 'scan management', root_path %>
+					<%= pill_button_link_to 'Tasks', tasks_path %>
+					<%= disable_pill_button_link_to 'Notes', root_path %>
+					<%= disable_pill_button_link_to 'Overrides', root_path %>
+					<%= pill_button_link_to 'System Reports', system_reports_path %>
+				<% end %>
+				<br />
+				<%= button_group do %>
+					<%= disable_nav_pill_settings_button_link_to 'configuration', root_path %>
+					<%= pill_button_link_to 'Scan Configs', scan_configs_path %>
+					<%= pill_button_link_to 'Targets', scan_targets_path %>
+					<%= disable_pill_button_link_to 'Credentials', root_path %>
+					<%= disable_pill_button_link_to 'Agents', root_path %>
+					<%= pill_button_link_to 'Escalators', escalators_path %>
+					<%= pill_button_link_to 'Schedules', schedules_path %>
+					<%= pill_button_link_to 'Report Formats', report_formats_path %>
+					<%= disable_pill_button_link_to 'Slaves', root_path %>
+				<% end %>
+				<br />
 				<% if current_user.openvas_admin? %>
-						Users
-						 | 
-						<%= link_to "NVT Feed", feeds_path %>
-						 | 
-						<%= link_to "Settings", settings_path %>
-						&larr; <span class="nav_text">administration</span>
-						<hr />
+						<%= button_group do %>
+							<%= disable_nav_settings_key_pill_button_link_to 'administration', root_path %>
+							<%= disable_user_pill_button_link_to 'Users', root_path %>
+							<%= rss_pill_button_link_to 'NVT Feed', feeds_path %>
+							<%= pill_button_link_to 'Settings', settings_path %>
+						<% end %>
 				<% end %>
 			</div>
 		<% end %>

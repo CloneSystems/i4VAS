@@ -8,6 +8,8 @@ gem 'devise', '1.3.4'
 
 gem 'nokogiri', '1.4.4'
 
+gem 'css3buttons'
+
 group :development, :test do
 	gem 'sqlite3-ruby', :require => 'sqlite3'
 	gem 'jquery-rails'
