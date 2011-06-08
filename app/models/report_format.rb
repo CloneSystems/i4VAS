@@ -7,6 +7,16 @@ class ReportFormat
   validates :name, :presence => true, :length => { :maximum => 80 }
   validates :comment, :length => { :maximum => 400 }
 
+  def self.selections(user)
+    rfs = []
+    rf = ReportFormat.new({:id=>'simple', :name=>'Simple Notice'})
+    rfs << rf
+    self.all(user).each do |rf|
+      rfs << rf
+    end
+    rfs
+  end
+
   def self.find_id_for_name(user, format_name)
     return '' if format_name.blank?
     req = Nokogiri::XML::Builder.new { |xml| xml.get_report_formats }

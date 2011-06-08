@@ -13,7 +13,7 @@ class ScanTargetsController < ApplicationController
 
   # GET /scan_targets/1
   def show
-    @scan_target = ScanTarget.find(params[:id])
+    @scan_target = ScanTarget.find(params[:id], current_user)
   end
 
   # GET /scan_targets/new

@@ -1,5 +1,5 @@
 <% title "Escalators" %>
-<%#= link_to "new Escalator", new_escalator_path %>
+<%= add_button_link_to "new Escalator", new_escalator_path %>
 <br />
 <table cellspacing="2" cellpadding="4">
   <tr style="text-align:left; vertical-align:bottom">
@@ -18,18 +18,30 @@
 				<br />
 				<%= escalator.event_data %>
 			</td>
-      <td><%= escalator.escalator_condition %></td>
+      <td>
+				<%= escalator.escalator_condition %>
+				<br />
+			  <% escalator.condition_datas.each do |dt| %>
+						<%# if (dt.name == 'notice' && dt.data == '0') || dt.name == 'submodule' || dt.name == 'from_address'
+								 next
+							 end %>
+							 <%= dt.name %>: <%= dt.data %><br />
+			  <% end %>
+			</td>
       <td>
 				<%= escalator.escalator_method %>
 				<br />
-			  <% for dt in escalator.method_datas %>
-						<%= dt.name %>: <%= dt.data %><br />
+			  <% escalator.method_datas.each do |dt| %>
+						<% if (dt.name == 'notice' && dt.data == '0') || dt.name == 'submodule' || dt.name == 'from_address'
+								 next
+							 end %>
+							 <%= dt.name %>: <%= dt.data %><br />
 			  <% end %>
 			</td>
       <td><%#= link_to "Show", escalator %></td>
       <td><%#= link_to "Edit", edit_escalator_path(escalator) %></td>
-      <td><%#= link_to "Destroy", escalator, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= danger_remove_pill_button_link_to "delete", escalator_path(escalator.id), :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
-<tr><td><%=debug escalator%></td></tr>
+		<tr><td colspan="8"><hr /></td></tr>
   <% end %>
 </table>

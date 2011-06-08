@@ -22,69 +22,38 @@
     <div class="left">Event</div>
 		<div class="right">
 			Task run status changed to
-			<%= collection_select(:escalator, :escalator_event, Escalator.event_selections(current_user), :id, :name) %>
-			<!-- <select>
-				<option value="Delete Requested">Delete Requested</option>
-				<option value="Done" selected>Done</option>
-				<option value="New">New</option>
-				<option value="Requested">Requested</option>
-				<option value="Running">Running</option>
-				<option value="Stop Requested">Stop Requested</option>
-				<option value="Stopped">Stopped</option>
-			</select> -->
+			<%= collection_select(:escalator, :escalator_event, Escalator.event_selections, :id, :name) %>
 		</div>
   </div>
 	<br /><br />
   <div class="field">
     <div class="left">Condition</div>
 		<div class="right">
-			<select name="escalator[threat]">
-				<option value="Always" selected>Always</option>
-				<option value="Threat level at least:high">Threat level at least High</option>
-				<option value="Threat level at least:medium">Threat level at least Medium</option>
-				<option value="Threat level at least:low">Threat level at least Low</option>
-				<option value="Threat level at least:log">Threat level at least Log</option>
-				<option value="Threat level:changed">Threat level changed</option>
-				<option value="Threat level:increased">Threat level increased</option>
-				<option value="Threat level:decreased">Threat level decreased</option>
-			</select>
+			<%= collection_select(:escalator, :escalator_condition, Escalator.condition_selections, :id, :name) %>
 		</div>
   </div>
 	<br /><br />
   <div class="field">
     <div class="left">Method</div>
 		<div class="right">
-			<select name="escalator[method]">
-				<option value="email" selected>Email</option>
-				<option value="syslog">System Logger (Syslog)</option>
-				<option value="snmp">SNMP</option>
-				<option value="httpget">HTTP Get</option>
-			</select>
+			<%= collection_select(:escalator, :escalator_method, Escalator.method_selections, :id, :name) %>
 			<br /><br />
 			<fieldset>
-				<legend>if Email selected:</legend>
+				<legend>if selected method is <em>Email</em>:</legend>
 				To Address
-				<input type="text" name="method_data:to_address" size="30" maxlength="301">
+				<%= f.text_field :email_to_address, :size=>30, :maxlength=>301 %>
 				<br />
 				From Address
-				<input type="text" name="method_data:from_address" size="30" maxlength="301">
+				<%= f.text_field :email_from_address, :size=>30, :maxlength=>301 %>
 				<br />
-			  Include report with email
-			  <select name="method_data:notice_report_format">
-					<option value="simple" selected>Simple notice</option>
-				<option value="a0704abb-2120-489f-959f-251c9f4ffebd">CPE report</option>
-				<option value="b993b6f5-f9fb-4e6e-9c94-dd46c00e058d">HTML report</option>
-				<option value="929884c6-c2c4-41e7-befb-2f6aa163b458">ITG report</option>
-				<option value="9f1ab17b-aaaa-411a-8c57-12df446f5588">LaTeX report</option>
-				<option value="f5c2a364-47d2-4700-b21d-0a7693daddab">NBE report</option>
-				<option value="19f6f1b3-7128-4433-888c-ccc764fe6ed5">TXT report</option>
-				<option value="d5da9f67-8551-4e51-807b-b6a873d70e34">XML report</option>
-				</select>
+			  Report format to include with email
+				<%= collection_select(:escalator, :email_report_format, ReportFormat.selections(current_user), :id, :name) %>
 			</fieldset>
 			<br />
 			<fieldset>
-				<legend>if HTTP Get selected:</legend>
-				URL <input type="text" name="method_data:URL" size="30" maxlength="301">
+				<legend>if selected method is <em>HTTP Get</em>:</legend>
+				URL
+				<%= f.text_field :http_get_url, :size=>30, :maxlength=>301 %>
 			</fieldset>
 			<br />
 		</div>
