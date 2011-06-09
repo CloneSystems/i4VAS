@@ -33,5 +33,8 @@ Greenbone::Application.routes.draw do
   resources :preferences
 
   resources :escalators
+  get 'test_escalator/:id' => 'escalators#test_escalator', :as => 'test_escalator'
+
+  resources :slaves
 
 end

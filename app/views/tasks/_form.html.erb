@@ -45,6 +45,10 @@
     <div class="left"><%= f.label "Schedule" %></div>
 		<div class="right"><%= collection_select(:task, :schedule_id, Schedule.selections(current_user), :id, :name) %></div>
   </div>
+  <div class="field">
+    <div class="left"><%= f.label "Slave" %></div>
+		<div class="right"><%= collection_select(:task, :slave_id, Slave.selections(current_user), :id, :name) %></div>
+  </div>
 	<br /><br />
   <div class="actions">
     <div class="left">&nbsp;</div>

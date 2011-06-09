@@ -50,7 +50,7 @@
 					<%= pill_button_link_to 'Escalators', escalators_path %>
 					<%= pill_button_link_to 'Schedules', schedules_path %>
 					<%= pill_button_link_to 'Report Formats', report_formats_path %>
-					<%= disable_pill_button_link_to 'Slaves', root_path %>
+					<%= pill_button_link_to 'Slaves', slaves_path %>
 				<% end %>
 				<br />
 				<% if current_user.openvas_admin? %>

@@ -6,6 +6,7 @@ class Task
                 :config_id, :config_name, :target_id, :target_name, :times_run,
                 :escalator_id, :escalator_name,
                 :schedule_id, :schedule_name,
+                :slave_id, :slave_name,
                 :first_report_id, :first_report_date,
                 :last_report_id, :last_report_date,
                 :last_report_debug, :last_report_high, :last_report_low, :last_report_log, :last_report_medium
@@ -47,6 +48,8 @@ class Task
     t.target_name         = extract_value_from("target/name", node)
     t.schedule_id         = extract_value_from("schedule/@id", node)
     t.schedule_name       = extract_value_from("schedule/name", node)
+    t.slave_id            = extract_value_from("slave/@id", node)
+    t.slave_name          = extract_value_from("slave/name", node)
     t.escalator_id        = extract_value_from("escalator/@id", node)
     t.escalator_name      = extract_value_from("escalator/name", node)
     # node.xpath("reports/report").each { |xr|
@@ -90,14 +93,15 @@ class Task
     if valid?
       vt = Task.find(self.id, user) # for update action
       vt = Task.new if vt.blank? # for create action
-      vt.name = self.name
-      vt.comment = self.comment
+      vt.name         = self.name
+      vt.comment      = self.comment
       vt.schedule_id  = self.schedule_id
-      vt.escalator_id  = self.escalator_id
+      vt.slave_id     = self.slave_id
+      vt.escalator_id = self.escalator_id
       # note: openvas doesn't allow updates to config_id and target_id, only name and comment:
       if vt.new_record?
-        vt.config_id    = self.config_id
-        vt.target_id    = self.target_id
+        vt.config_id  = self.config_id
+        vt.target_id  = self.target_id
       end
       vt.create_or_update(user)
       vt.errors.each do |attribute, msg|
@@ -132,6 +136,7 @@ class Task
           xml.name    { xml.text(@name) }
           xml.comment { xml.text(@comment) }
           xml.schedule(:id => @schedule_id) unless @schedule_id.blank? || @schedule_id == '0'
+          xml.slave(:id => @slave_id)
           xml.escalator(:id => @escalator_id)
         }
       else
@@ -141,6 +146,7 @@ class Task
           xml.config(:id => @config_id)
           xml.target(:id => @target_id)
           xml.schedule(:id => @schedule_id) unless @schedule_id.blank? || @schedule_id == '0'
+          xml.slave(:id => @slave_id) unless @slave_id.blank? || @slave_id == '0'
           xml.escalator(:id => @escalator_id) unless @escalator_id.blank? || @escalator_id == '0'
         }
       end

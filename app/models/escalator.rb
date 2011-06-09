@@ -77,7 +77,7 @@ class Escalator
     ret = []
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
-Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+      # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
       resp.xpath("/get_escalators_response/escalator").each { |xml|
         esc = Escalator.new
         esc.id                  = extract_value_from("@id", xml)
@@ -88,8 +88,6 @@ Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
         esc.event_data          = extract_value_from("event/data", xml)
         esc.event_data_name     = extract_value_from("event/data/name", xml)
         esc.escalator_condition = extract_value_from("condition", xml)
-        # esc.condition_data      = extract_value_from("condition/data", xml)
-        # esc.condition_data_name = extract_value_from("condition/data/name", xml)
         esc.condition_datas = []
         xml.search("condition > data").each do |data|
           dt = Datum.new
@@ -153,6 +151,11 @@ Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
 
   def create_or_update(user)
     # note modify(edit/update) is not implemented in OMP 2.0
+    #
+    # note: the C code in GSA shows how to handle the create_escalator command:
+    # *** from gsad_omp.c ... create_escalator_omp (line 2631):
+    # *** from gsad_omp.c ... send_escalator_data (line 2599):
+    #
     req = Nokogiri::XML::Builder.new { |xml|
       xml.create_escalator {
         xml.name    { xml.text(@name) }
@@ -181,7 +184,6 @@ Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
             }
           }
         elsif @escalator_method == 'Email'
-          # attr_accessor :email_to_address, :email_from_address, :email_report_format, :http_get_url
           if @email_to_address.blank?
             errors['Email'] << 'To Address is required when Email is selected'
           end
@@ -219,53 +221,6 @@ Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
         else
           xml.method_ { xml.text(@escalator_method) }
         end
-
-        # note: the following C code is how GSA handles the create_escalator command:
-        # *** from gsad_omp.c ... create_escalator_omp (line 2631):
-        # /* special case the syslog submethods, because HTTP only allows one value to vary per radio. */
-        # if (strncmp (method, "syslog ", strlen ("syslog ")) == 0) {
-        #     gchar *data;
-        #     data = g_strdup_printf ("submethod0%s", method + strlen ("syslog "));
-        #     data[strlen ("submethod")] = '\0';
-        #     if (method_data == NULL)
-        #       method_data = g_array_new (TRUE, FALSE, sizeof (gchar*));
-        #     g_array_append_val (method_data, data);
-        #     method = "syslog";
-        # }
-        # if (openvas_server_sendf (&session, "<create_escalator>" "<name>%s</name>" "%s%s%s", name,
-        #                           comment ? "<comment>" : "",
-        #                           comment ? comment : "",
-        #                           comment ? "</comment>" : "")
-        #     || openvas_server_sendf (&session, "<event>%s", event)
-        #     || send_escalator_data (&session, event_data)
-        #     || openvas_server_send (&session, "</event>")
-        #     || openvas_server_sendf (&session, "<method>%s", method)
-        #     || send_escalator_data (&session, method_data)
-        #     || openvas_server_send (&session, "</method>")
-        #     || openvas_server_sendf (&session, "<condition>%s", condition)
-        #     || send_escalator_data (&session, condition_data)
-        #     || openvas_server_send (&session,
-        #                             "</condition>"
-        #                             "</create_escalator>"))
-        #   {
-        #     g_string_free (xml, TRUE);
-        #     openvas_server_close (socket, session);
-
-        # *** from gsad_omp.c ... send_escalator_data (line 2599):
-        # static int
-        # send_escalator_data (gnutls_session_t *session, GArray *data) {
-        #   int index = 0;
-        #   gchar *element;
-        #   if (data)
-        #     while ((element = g_array_index (data, gchar*, index++)))
-        #       if (openvas_server_sendf_xml (session,
-        #                                     "<data><name>%s</name>%s</data>",
-        #                                     element,
-        #                                     element + strlen (element) + 1))
-        #         return -1;
-        #   return 0;
-        # }
-
         # event xml:
         escalator_text = 'Task run status changed' if ['done', 'delete requested', 'new', 'requested', 'running', 'stop requested', 'stopped'].include? @escalator_event.downcase
         xml.event {
@@ -320,6 +275,21 @@ Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
     rescue Exception => e
       errors[:command_failure] << e.message
       nil
+    end
+  end
+
+  def test_escalator(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.test_escalator(:escalator_id => @id) }
+    begin
+      resp = user.openvas_connection.sendrecv(req.doc)
+      status = Escalator.extract_value_from("//@status", resp)
+      unless status =~ /20\d/
+        msg = 'Error: (status ' + status + ') ' + Escalator.extract_value_from("//@status_text", resp)
+        return msg
+      end
+      return ''
+    rescue Exception => e
+      return e.message
     end
   end
 

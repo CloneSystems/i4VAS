@@ -30,24 +30,34 @@ class EscalatorsController < ApplicationController
   end
 
   def edit
-    @escalator = Escalator.find(params[:id], current_user)
-    @escalator.persisted = true
+    # @escalator = Escalator.find(params[:id], current_user)
+    # @escalator.persisted = true
   end
 
   def update
-    @escalator = Escalator.find(params[:id], current_user)
-    @escalator.persisted = true
-    if @escalator.update_attributes(current_user, params[:escalator])
-      redirect_to escalators_url, :notice  => "Successfully updated escalator."
-    else
-      render :action => 'edit'
-    end
+    # @escalator = Escalator.find(params[:id], current_user)
+    # @escalator.persisted = true
+    # if @escalator.update_attributes(current_user, params[:escalator])
+    #   redirect_to escalators_url, :notice  => "Successfully updated escalator."
+    # else
+    #   render :action => 'edit'
+    # end
   end
 
   def destroy
     @escalator = Escalator.find(params[:id], current_user)
     @escalator.delete_record(current_user)
     redirect_to escalators_url, :notice => "Successfully destroyed escalator."
+  end
+
+  def test_escalator
+    @escalator = Escalator.find(params[:id], current_user)
+    msg = @escalator.test_escalator(current_user)
+    if msg.blank?
+      redirect_to escalators_url, :notice => "Successfully tested escalator: #{@escalator.name}."
+    else
+      redirect_to escalators_url, :notice => msg
+    end
   end
 
 end

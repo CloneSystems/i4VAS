@@ -1,0 +1,31 @@
+<% title "Slaves" %>
+<%= add_button_link_to "new Slave", new_slafe_path %>
+<br />
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>Name</th>
+    <th>Comment</th>
+    <th>Host</th>
+    <th>Port</th>
+    <th>Login</th>
+    <th>In Use</th>
+  </tr>
+  <% for slave in @slaves %>
+    <tr>
+      <td><%= slave.name %></td>
+      <td><%= slave.comment %></td>
+      <td><%= slave.host %></td>
+      <td><%= slave.port %></td>
+      <td><%= slave.login %></td>
+      <td><%= slave.in_use %></td>
+      <td><%#= link_to "Show", slave %></td>
+      <td><%#= link_to "Edit", edit_slave_path(slave) %></td>
+			<% if slave.in_use > 0 %>
+					<td><%= image_tag("delete_inactive.png", :title => "can't delete when slave is in use") %></td>
+  		<% else %>
+      		<td><%= danger_remove_pill_button_link_to "delete", slafe_path(slave.id), :confirm => 'Are you sure?', :method => :delete %></td>
+		  <% end %>
+			<tr><td colspan="9"><hr /></td></tr>
+    </tr>
+  <% end %>
+</table>
