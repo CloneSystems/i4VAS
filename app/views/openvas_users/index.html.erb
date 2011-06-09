@@ -1,0 +1,24 @@
+<% title "Users" %>
+<%= add_button_link_to "new User", new_openvas_user_path %>
+<br />
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>Name</th>
+    <th>Role</th>
+    <th>Host Access</th>
+  </tr>
+  <% for openvas_user in @openvas_users %>
+    <tr>
+      <td><%= openvas_user.name %></td>
+      <td><%= openvas_user.role %></td>
+      <td>
+				<%= openvas_user.hosts_allow_humanized %>
+      	<%= openvas_user.hosts %>
+			</td>
+      <td><%#= link_to "Show", openvas_user %></td>
+      <td><%= pill_button_link_to "edit", edit_openvas_user_path(openvas_user.name) %></td>
+      <td><%= danger_remove_pill_button_link_to "delete", openvas_user_path(openvas_user.name), :confirm => 'Are you sure?', :method => :delete %></td>
+			<tr><td colspan="7"><hr /></td></tr>
+    </tr>
+  <% end %>
+</table>

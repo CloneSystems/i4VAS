@@ -38,26 +38,26 @@
 					<%= pill_button_link_to 'Tasks', tasks_path %>
 					<%= disable_pill_button_link_to 'Notes', root_path %>
 					<%= disable_pill_button_link_to 'Overrides', root_path %>
-					<%= pill_button_link_to 'System Reports', system_reports_path %>
+					<%= pill_button_link_to 'System', system_reports_path %>
 				<% end %>
 				<br />
 				<%= button_group do %>
 					<%= disable_nav_pill_settings_button_link_to 'configuration', root_path %>
-					<%= pill_button_link_to 'Scan Configs', scan_configs_path %>
+					<%= pill_button_link_to 'Configs', scan_configs_path %>
 					<%= pill_button_link_to 'Targets', scan_targets_path %>
 					<%= disable_pill_button_link_to 'Credentials', root_path %>
 					<%= disable_pill_button_link_to 'Agents', root_path %>
 					<%= pill_button_link_to 'Escalators', escalators_path %>
 					<%= pill_button_link_to 'Schedules', schedules_path %>
-					<%= pill_button_link_to 'Report Formats', report_formats_path %>
+					<%= pill_button_link_to 'Formats', report_formats_path %>
 					<%= pill_button_link_to 'Slaves', slaves_path %>
 				<% end %>
 				<br />
 				<% if current_user.openvas_admin? %>
 						<%= button_group do %>
 							<%= disable_nav_settings_key_pill_button_link_to 'administration', root_path %>
-							<%= disable_user_pill_button_link_to 'Users', root_path %>
-							<%= rss_pill_button_link_to 'NVT Feed', feeds_path %>
+							<%= pill_button_link_to 'Users', openvas_users_path %>
+							<%= rss_pill_button_link_to 'NVT', feeds_path %>
 							<%= pill_button_link_to 'Settings', settings_path %>
 						<% end %>
 				<% end %>

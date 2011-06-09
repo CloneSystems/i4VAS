@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     redirect_to(root_url)
   end
 
-  def openvas_connect_and_login(oap=false)
+  def openvas_connect_and_login(oap = false)
     redirect_to(destroy_user_session_url) if current_user.blank?
     password = Rails.cache.read(current_user.username)
     redirect_to(destroy_user_session_url) if password.blank?
@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     oc.login
     current_user.openvas_connection = oc.logged_in? ? oc : nil
     # note: checking to see if the current_user is an admin on every request just seems wrong, but 
-    #       openvas is missing the concept of a user's role, so we check and set:
+    #       openvas doesn't offer another choice, so we check and set:
     if Rails.env.production?
       current_user.openvas_admin = false
     else
@@ -64,6 +64,10 @@ class ApplicationController < ActionController::Base
       current_user.openvas_admin = oap.logged_in? ? true : false
       oap.logout if oap.logged_in?
     end
+  end
+
+  def oap_connect_and_login
+    openvas_connect_and_login(true)
   end
 
 end
