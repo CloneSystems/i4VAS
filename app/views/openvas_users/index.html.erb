@@ -18,7 +18,7 @@
       <td><%#= link_to "Show", openvas_user %></td>
       <td><%= pill_button_link_to "edit", edit_openvas_user_path(openvas_user.name) %></td>
       <td><%= danger_remove_pill_button_link_to "delete", openvas_user_path(openvas_user.name), :confirm => 'Are you sure?', :method => :delete %></td>
-			<tr><td colspan="7"><hr /></td></tr>
     </tr>
+		<tr><td colspan="7"><hr /></td></tr>
   <% end %>
 </table>

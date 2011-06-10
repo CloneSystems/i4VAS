@@ -39,4 +39,6 @@ Greenbone::Application.routes.draw do
 
   resources :slaves
 
+  resources :credentials
+
 end
