@@ -77,10 +77,8 @@ class OpenvasUser
 
   def save(user)
     if valid?
-Rails.logger.info "\n\n self=#{self.inspect}\n\n"
       u = OpenvasUser.find(self.name, user) # for update action
       u = OpenvasUser.new if u.blank? # for create action
-Rails.logger.info "\n\n u=#{u.inspect}\n\n"
       u.name        = self.name
       u.password    = self.password unless self.password.blank?
       u.role        = self.role
@@ -110,11 +108,15 @@ Rails.logger.info "\n\n u=#{u.inspect}\n\n"
         # xml.modify_user(:name => @name) {
         xml.modify_user {
           xml.name      { xml.text(@name) }
-          xml.password  { xml.text(@password) } unless self.password.blank?
+          if self.password.blank?
+            xml.password(:modify => '0')
+          else
+            xml.password(:modify => '1')  { xml.text(@password) }
+          end
           xml.role      { xml.text(@role) }
           # note: GSA defaults to Allow All if the hosts field is blank (seems odd, why not complain at the user?)
           if @hosts_allow == '2' # allow all
-            # do nothing
+            xml.hosts(:allow => @hosts_allow)
           elsif @hosts_allow == '1' && !@hosts.blank? # allow + host list
             xml.hosts(:allow => @hosts_allow) { xml.text(@hosts) }
           elsif @hosts_allow == '0' && !@hosts.blank? # deny + host list
@@ -128,7 +130,7 @@ Rails.logger.info "\n\n u=#{u.inspect}\n\n"
           xml.role        { xml.text(@role) }
           # note: GSA defaults to Allow All if the hosts field is blank (seems odd, why not complain at the user?)
           if @hosts_allow == '2' # allow all
-            # do nothing
+            xml.hosts(:allow => @hosts_allow)
           elsif @hosts_allow == '1' && !@hosts.blank? # allow + host list
             xml.hosts(:allow => @hosts_allow) { xml.text(@hosts) }
           elsif @hosts_allow == '0' && !@hosts.blank? # deny + host list
@@ -138,9 +140,9 @@ Rails.logger.info "\n\n u=#{u.inspect}\n\n"
       end
     }
     begin
-      # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
+      Rails.logger.info "\n req.doc=#{req.doc.to_xml.to_yaml}\n"
       resp = user.openvas_connection.sendrecv(req.doc)
-      # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+      Rails.logger.info "\n resp=#{resp.to_xml.to_yaml}\n"
       unless OpenvasUser.extract_value_from("//@status", resp) =~ /20\d/
         msg = OpenvasUser.extract_value_from("//@status_text", resp)
         errors[:command_failure] << msg
