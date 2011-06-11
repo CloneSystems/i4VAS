@@ -1,0 +1,30 @@
+http://greenbone.heroku.com/download_public_key/0eeed440-9ba2-4d74-ad5d-b711d32ba641
+
+GET /download_public_key/0eeed440-9ba2-4d74-ad5d-b711d32ba641 HTTP/1.1
+Host: greenbone.heroku.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.10) Gecko/20100914 Firefox/3.6.10 ( .NET CLR 3.5.30729)
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 115
+Connection: keep-alive
+Referer: http://greenbone.heroku.com/credentials
+Cookie: _greenbone_session=BAh7CUkiEF9jc3JmX3Rva2VuBjoGRUZJIjE4RHBYeHNOV0FWaFZteGpFd1M0Yyt6dStPQzRKdkdRSDRiVG44U2dzdHhZPQY7AEZJIhl3YXJkZW4udXNlci51c2VyLmtleQY7AFRbCEkiCVVzZXIGOwBGWwZpBiIiJDJhJDEwJEFLNFlrMm1VZzVKWVlJeEM5MEZFaC5JIh13YXJkZW4udXNlci51c2VyLnNlc3Npb24GOwBUewZJIhRsYXN0X3JlcXVlc3RfYXQGOwBGSXU6CVRpbWUNbdUbwP5lmdYJOgtAX3pvbmUiCFVUQzoNbmFub19udW1pAhwBOg1uYW5vX2RlbmkGOg1zdWJtaWNybyIHKEBJIg9zZXNzaW9uX2lkBjsARiIlNjVkZjkwMmM0MzI5Y2E5YjNlMjI2YjA3MzVkM2RiMTU%3D--c1312d2678fae232570df0c3b33c64e64bfe9a28
+
+HTTP/1.1 200 OK
+Server: nginx/0.7.67
+Date: Sat, 11 Jun 2011 13:53:56 GMT
+Content-Type: application/key
+Connection: keep-alive
+Content-Disposition: attachment
+Content-Transfer-Encoding: binary
+Cache-Control: private
+X-UA-Compatible: IE=Edge,chrome=1
+Set-Cookie: _greenbone_session=BAh7CUkiEF9jc3JmX3Rva2VuBjoGRUZJIjE4RHBYeHNOV0FWaFZteGpFd1M0Yyt6dStPQzRKdkdRSDRiVG44U2dzdHhZPQY7AEZJIhl3YXJkZW4udXNlci51c2VyLmtleQY7AFRbCEkiCVVzZXIGOwBGWwZpBiIiJDJhJDEwJEFLNFlrMm1VZzVKWVlJeEM5MEZFaC5JIh13YXJkZW4udXNlci51c2VyLnNlc3Npb24GOwBUewZJIhRsYXN0X3JlcXVlc3RfYXQGOwBGSXU6CVRpbWUNbdUbwPydg9cJOgtAX3pvbmUiCFVUQzoNbmFub19udW1pAmQCOg1uYW5vX2RlbmkGOg1zdWJtaWNybyIHYSBJIg9zZXNzaW9uX2lkBjsARiIlNjVkZjkwMmM0MzI5Y2E5YjNlMjI2YjA3MzVkM2RiMTU%3D--b5726aa9593e57028cd23ac1e3e2d3ea461572ea; path=/; HttpOnly
+X-Runtime: 0.240945
+Content-Length: 414
+X-Varnish: 1396659330
+Age: 0
+Via: 1.1 varnish
+----------------------------------------------------------

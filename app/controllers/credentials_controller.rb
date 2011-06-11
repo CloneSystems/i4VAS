@@ -8,7 +8,7 @@ class CredentialsController < ApplicationController
   def download_public_key
     cred = Credential.find(params[:id], current_user)
     public_key = Credential.find_public_key_for_id(params[:id], current_user)
-    send_data public_key, :type => 'application/key', :file_name => "openvas-lsc-#{cred.name}.pub", :disposition => 'attachment'
+    send_data public_key, :type => 'application/key', :filename => "openvas-lsc-#{cred.name}.pub", :disposition => 'attachment'
   end
 
   def index

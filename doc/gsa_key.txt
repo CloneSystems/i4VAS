@@ -1,0 +1,21 @@
+http://199.187.124.38:9392/omp?cmd=get_lsc_credentials&lsc_credential_id=0eeed440-9ba2-4d74-ad5d-b711d32ba641&package_format=key&token=f4b51892-038d-464e-b0a7-52e090cce587
+
+GET /omp?cmd=get_lsc_credentials&lsc_credential_id=0eeed440-9ba2-4d74-ad5d-b711d32ba641&package_format=key&token=f4b51892-038d-464e-b0a7-52e090cce587 HTTP/1.1
+Host: 199.187.124.38:9392
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.10) Gecko/20100914 Firefox/3.6.10 ( .NET CLR 3.5.30729)
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 115
+Connection: keep-alive
+Referer: http://199.187.124.38:9392/omp
+Cookie: SID=1dc9b821-89a5-4682-a095-e7b4808ddedc
+
+HTTP/1.1 200 OK
+Content-Length: 414
+Content-Disposition: attachment; filename=openvas-lsc-target-bob.pub
+Content-Type: application/key
+Set-Cookie: SID=1dc9b821-89a5-4682-a095-e7b4808ddedc; expires=Sat, 11-Jun-2011 14:11:36 GMT; path=/; HTTPonly
+Date: Sat, 11 Jun 2011 13:56:06 GMT
+----------------------------------------------------------

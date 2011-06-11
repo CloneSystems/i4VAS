@@ -26,7 +26,7 @@ class ReportsController < ApplicationController
     format_id = ReportFormat.find_id_for_name(current_user, fmt)
     report = Report.find_by_id_and_format(params[:id], format_id, current_user)
     if fmt.downcase == 'pdf'
-      send_data report, :type => 'application/pdf', :file_name => "report_#{params[:id]}.pdf", :disposition => 'inline'
+      send_data report, :type => 'application/pdf', :filename => "report_#{params[:id]}.pdf", :disposition => 'inline'
     elsif fmt.downcase == 'html'
       # chop off everything before the body tag (keep the body tag as it has styling):
       b = report.index('<body ', 0)
