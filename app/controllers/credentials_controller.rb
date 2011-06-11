@@ -8,7 +8,12 @@ class CredentialsController < ApplicationController
   def download_public_key
     cred = Credential.find(params[:id], current_user)
     public_key = Credential.find_public_key_for_id(params[:id], current_user)
-    send_data public_key, :type => 'application/key', :filename => "openvas-lsc-#{cred.name}.pub", :disposition => 'attachment'
+    if public_key.blank?
+      flash[:error] = "SSH Public Key is empty for credential #{cred.name}."
+      redirect_to credentials_url
+    else
+      send_data public_key, :type => 'application/key', :filename => "openvas-lsc-#{cred.name}.pub", :disposition => 'attachment'
+    end
   end
 
   # GET /download_format/1
@@ -16,7 +21,8 @@ class CredentialsController < ApplicationController
     cred = Credential.find(params[:id], current_user)
     package = Credential.find_format_for_id(params[:id], current_user, params[:credential_format])
     if package.blank?
-      redirect_to credentials_url, :notice => "#{params[:credential_format].upcase} package is empty for credential #{cred.name}."
+      flash[:error] = "#{params[:credential_format].upcase} package is empty for credential #{cred.name}."
+      redirect_to credentials_url
     else
       send_data package, :type => 'application/#{params[:credential_format].downcase}', :filename => "openvas-lsc-#{cred.name}.#{params[:credential_format].downcase}", :disposition => 'attachment'
     end

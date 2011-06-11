@@ -7,9 +7,9 @@ class Credential
   attr_accessor :name, :login, :comment, :password_type, :password, :in_use, :package_format
 
   validates :name,      :presence => true, :length => { :maximum => 80 }
-  validates :password,  :presence => true, :length => { :maximum => 40 }
-  validates :comment, :length => { :maximum => 400 }
-  validates :login,   :length => { :maximum => 80 }
+  validates :password,  :length => { :maximum => 40 }
+  validates :comment,   :length => { :maximum => 400 }
+  validates :login,     :length => { :maximum => 80 }
 
   def scan_targets
     @scan_targets ||= []
@@ -40,9 +40,7 @@ class Credential
     params[:lsc_credential_id] = id if id
     params[:format] = format
     req = Nokogiri::XML::Builder.new { |xml| xml.get_lsc_credentials(params) }
-    # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
     resp = user.openvas_connection.sendrecv(req.doc)
-    # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
     r = Base64.decode64(resp.xpath('//get_lsc_credentials_response/lsc_credential/package').text)
     r
   end
@@ -77,6 +75,77 @@ class Credential
       raise e
     end
     ret
+  end
+
+  def save(user)
+    if valid?
+      c = Credential.find(self.id, user) # for update action
+      c = Credential.new if c.blank? # for create action
+      c.name      = self.name
+      c.comment   = self.comment
+      c.login     = self.login
+      c.password  = self.password
+      c.create_or_update(user)
+      c.errors.each do |attribute, msg|
+        self.errors.add(:openvas, "<br />" + msg)
+      end
+      return false unless self.errors.blank?
+      return true
+    else
+      return false
+    end
+  end
+
+  def update_attributes(user, attrs={})
+    attrs.each { |key, value|
+      send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
+    }
+    save(user)
+  end
+
+  def create_or_update(user)
+    req = Nokogiri::XML::Builder.new { |xml|
+      if @id
+        xml.modify_lsc_credential(:lsc_credential_id => @id) {
+          xml.name      { xml.text(@name) }
+          xml.comment   { xml.text(@comment) }
+          xml.login     { xml.text(@login) }    unless @password_type.downcase == 'gen'
+          xml.password  { xml.text(@password) } unless @password_type.downcase == 'gen'
+        }
+      else
+        xml.create_lsc_credential {
+          xml.name      { xml.text(@name) }
+          xml.comment   { xml.text(@comment) }  unless @comment.blank?
+          xml.login     { xml.text(@login) }    unless @login.blank?
+          xml.password  { xml.text(@password) } unless @password.blank?
+        }
+      end
+    }
+    begin
+      Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
+      resp = user.openvas_connection.sendrecv(req.doc)
+      Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+      unless Credential.extract_value_from("//@status", resp) =~ /20\d/
+        msg = Credential.extract_value_from("//@status_text", resp)
+        errors[:command_failure] << msg
+        return nil
+      end
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
+  end
+
+  def delete_record(user)
+    req = Nokogiri::XML::Builder.new { |xml| xml.delete_lsc_credential(:lsc_credential_id => @id) }
+    begin
+      user.openvas_connection.sendrecv(req.doc)
+      true
+    rescue Exception => e
+      errors[:command_failure] << e.message
+      nil
+    end
   end
 
 end
