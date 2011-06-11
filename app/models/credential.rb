@@ -4,7 +4,7 @@ class Credential
 
   include OpenvasModel
 
-  attr_accessor :name, :login, :comment, :password_type, :password, :in_use
+  attr_accessor :name, :login, :comment, :password_type, :password, :in_use, :package_format
 
   validates :name,      :presence => true, :length => { :maximum => 80 }
   validates :password,  :presence => true, :length => { :maximum => 40 }
@@ -31,8 +31,19 @@ class Credential
     params[:format] = 'key'
     req = Nokogiri::XML::Builder.new { |xml| xml.get_lsc_credentials(params) }
     rep = user.openvas_connection.sendrecv(req.doc)
-    # r = Base64.decode64(rep.xpath('//get_lsc_credentials_response/lsc_credential/public_key').text)
     r = rep.xpath('//get_lsc_credentials_response/lsc_credential/public_key').text
+    r
+  end
+
+  def self.find_format_for_id(id, user, format='key')
+    params = {}
+    params[:lsc_credential_id] = id if id
+    params[:format] = format
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_lsc_credentials(params) }
+    # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
+    resp = user.openvas_connection.sendrecv(req.doc)
+    # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+    r = Base64.decode64(resp.xpath('//get_lsc_credentials_response/lsc_credential/package').text)
     r
   end
 
@@ -45,14 +56,15 @@ class Credential
       resp = user.openvas_connection.sendrecv(req.doc)
       # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
       resp.xpath("/get_lsc_credentials_response/lsc_credential").each { |xml|
-        crd               = Credential.new
-        crd.id            = extract_value_from("@id", xml)
-        crd.name          = extract_value_from("name", xml)
-        crd.login         = extract_value_from("login", xml)
-        crd.password_type = extract_value_from("type", xml)
+        crd = Credential.new
+        crd.id             = extract_value_from("@id", xml)
+        crd.name           = extract_value_from("name", xml)
+        crd.login          = extract_value_from("login", xml)
+        crd.password_type  = extract_value_from("type", xml)
         # crd.password      = extract_value_from("password", xml) # is not returned!
-        crd.comment       = extract_value_from("comment", xml)
-        crd.in_use        = extract_value_from("in_use", xml).to_i
+        crd.comment        = extract_value_from("comment", xml)
+        crd.in_use         = extract_value_from("in_use", xml).to_i
+        crd.package_format = extract_value_from("package/format", xml)
         xml.xpath("targets/target").each { |t|
           st      = ScanTarget.new
           st.id   = extract_value_from("@id", t)

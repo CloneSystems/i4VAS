@@ -11,6 +11,17 @@ class CredentialsController < ApplicationController
     send_data public_key, :type => 'application/key', :filename => "openvas-lsc-#{cred.name}.pub", :disposition => 'attachment'
   end
 
+  # GET /download_format/1
+  def download_format
+    cred = Credential.find(params[:id], current_user)
+    package = Credential.find_format_for_id(params[:id], current_user, params[:credential_format])
+    if package.blank?
+      redirect_to credentials_url, :notice => "#{params[:credential_format].upcase} package is empty for credential #{cred.name}."
+    else
+      send_data package, :type => 'application/#{params[:credential_format].downcase}', :filename => "openvas-lsc-#{cred.name}.#{params[:credential_format].downcase}", :disposition => 'attachment'
+    end
+  end
+
   def index
     @credentials = Credential.all(current_user)
   end

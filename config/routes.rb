@@ -41,5 +41,6 @@ Greenbone::Application.routes.draw do
 
   resources :credentials
   get 'download_public_key/:id' => 'credentials#download_public_key', :as => 'download_public_key'
+  get 'download_format/:id' => 'credentials#download_format', :as => 'download_format'
 
 end
