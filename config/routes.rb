@@ -40,5 +40,6 @@ Greenbone::Application.routes.draw do
   resources :slaves
 
   resources :credentials
+  get 'download_public_key/:id' => 'credentials#download_public_key', :as => 'download_public_key'
 
 end

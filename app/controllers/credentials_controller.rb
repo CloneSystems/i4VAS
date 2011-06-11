@@ -4,6 +4,13 @@ class CredentialsController < ApplicationController
 
   after_filter :openvas_logout
 
+  # GET /download_public_key/1
+  def download_public_key
+    cred = Credential.find(params[:id], current_user)
+    public_key = Credential.find_public_key_for_id(params[:id], current_user)
+    send_data public_key, :type => 'application/key', :file_name => "openvas-lsc-#{cred.name}.pub", :disposition => 'attachment'
+  end
+
   def index
     @credentials = Credential.all(current_user)
   end

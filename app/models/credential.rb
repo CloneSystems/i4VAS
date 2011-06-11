@@ -1,3 +1,5 @@
+require 'base64'
+
 class Credential
 
   include OpenvasModel
@@ -21,6 +23,17 @@ class Credential
       credentials << c
     end
     credentials
+  end
+
+  def self.find_public_key_for_id(id, user)
+    params = {}
+    params[:lsc_credential_id] = id if id
+    params[:format] = 'key'
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_lsc_credentials(params) }
+    rep = user.openvas_connection.sendrecv(req.doc)
+    # r = Base64.decode64(rep.xpath('//get_lsc_credentials_response/lsc_credential/public_key').text)
+    r = rep.xpath('//get_lsc_credentials_response/lsc_credential/public_key').text
+    r
   end
 
   def self.all(user, options = {})
