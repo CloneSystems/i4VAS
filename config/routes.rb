@@ -10,6 +10,7 @@ Greenbone::Application.routes.draw do
   get 'resume_paused_task/:id'  => 'tasks#resume_paused_task',  :as => 'resume_paused_task'
   get 'stop_task/:id'           => 'tasks#stop_task',           :as => 'stop_task'
   get 'resume_stopped_task/:id' => 'tasks#resume_stopped_task', :as => 'resume_stopped_task'
+  get 'tbd' => 'tasks#tbd', :as => 'tbd'
   root :to => 'tasks#index'
 
   resources :reports
@@ -42,5 +43,9 @@ Greenbone::Application.routes.draw do
   resources :credentials
   get 'download_public_key/:id' => 'credentials#download_public_key', :as => 'download_public_key'
   get 'download_format/:id' => 'credentials#download_format', :as => 'download_format'
+
+  resources :notes
+
+  resources :overrides
 
 end

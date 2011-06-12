@@ -6,10 +6,31 @@ class Credential
 
   attr_accessor :name, :login, :comment, :password_type, :password, :in_use, :package_format
 
+  define_attribute_methods [:name, :login, :comment, :password_type, :password, :in_use, :package_format]
+
   validates :name,      :presence => true, :length => { :maximum => 80 }
   validates :password,  :length => { :maximum => 40 }
   validates :comment,   :length => { :maximum => 400 }
   validates :login,     :length => { :maximum => 80 }
+
+  class OpenvasModelAttributes
+    attr_accessor :name, :value, :datatype
+
+    def initialize(attributes = {})
+      attributes.each do |n, v|
+        send("#{n}=", v)
+      end unless attributes.nil?
+    end
+  end
+
+  def attributes
+    a = Hash.new
+    a['name']     = OpenvasModelAttributes.new({:name=>'name', :value=>self.name, :datatype=>'string'})
+    a['comment']  = OpenvasModelAttributes.new({:name=>'comment', :value=>self.comment, :datatype=>'text'})
+    a['login']    = OpenvasModelAttributes.new({:name=>'login', :value=>self.login, :datatype=>'string'})
+    a['password'] = OpenvasModelAttributes.new({:name=>'password', :value=>self.password, :datatype=>'password'})
+    a
+  end
 
   def scan_targets
     @scan_targets ||= []
@@ -122,9 +143,9 @@ class Credential
       end
     }
     begin
-      Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
+      # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
       resp = user.openvas_connection.sendrecv(req.doc)
-      Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+      # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
       unless Credential.extract_value_from("//@status", resp) =~ /20\d/
         msg = Credential.extract_value_from("//@status_text", resp)
         errors[:command_failure] << msg

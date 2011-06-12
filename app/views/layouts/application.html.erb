@@ -36,8 +36,8 @@
 				<%= button_group do %>
 					<%= disable_nav_pill_clock_button_link_to 'scan management', root_path %>
 					<%= pill_button_link_to 'Tasks', tasks_path %>
-					<%= disable_pill_button_link_to 'Notes', root_path %>
-					<%= disable_pill_button_link_to 'Overrides', root_path %>
+					<%= pill_button_link_to 'Notes', notes_path %>
+					<%= pill_button_link_to 'Overrides', overrides_path %>
 					<%= pill_button_link_to 'System', system_reports_path %>
 				<% end %>
 				<br />
@@ -46,7 +46,7 @@
 					<%= pill_button_link_to 'Configs', scan_configs_path %>
 					<%= pill_button_link_to 'Targets', scan_targets_path %>
 					<%= pill_button_link_to 'Credentials', credentials_path %>
-					<%= disable_pill_button_link_to 'Agents', root_path %>
+					<%= disable_pill_button_link_to 'Agents', tbd_path %>
 					<%= pill_button_link_to 'Escalators', escalators_path %>
 					<%= pill_button_link_to 'Schedules', schedules_path %>
 					<%= pill_button_link_to 'Formats', report_formats_path %>

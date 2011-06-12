@@ -1,0 +1,21 @@
+<% title "Note" %>
+<p>
+  <strong>Hosts:</strong>
+  <%= @note.hosts %>
+</p>
+<p>
+  <strong>Port:</strong>
+  <%= @note.port %>
+</p>
+<p>
+  <strong>Threat:</strong>
+  <%= @note.threat %>
+</p>
+<p>
+  <strong>Text:</strong>
+  <%= @note.note_text %>
+</p>
+<hr />
+<%=debug @note%>
+<hr />
+<%=debug @overrides%>

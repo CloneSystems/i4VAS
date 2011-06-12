@@ -1,0 +1,19 @@
+<% title "Notes" %>
+<%#= add_button_link_to "new Note", new_note_path %>
+<br />
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>NVT</th>
+    <th>Text</th>
+  </tr>
+  <% for note in @notes %>
+    <tr>
+      <td><%= note.nvt_name %></td>
+      <td><%= note.note_text %></td>
+      <td><%= pill_button_link_to "details", note_path(note.id) %></td>
+      <td><%= pill_button_link_to "edit", edit_note_path(note.id) %></td>
+  		<td><%= danger_remove_pill_button_link_to "delete", note_path(note.id), :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+		<tr><td colspan="5"><hr /></td></tr>
+  <% end %>
+</table>

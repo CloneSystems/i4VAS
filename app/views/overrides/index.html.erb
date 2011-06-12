@@ -1,0 +1,19 @@
+<% title "Overrides" %>
+<%#= add_button_link_to "new Override", new_override_path %>
+<br />
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>NVT</th>
+    <th>Text</th>
+  </tr>
+  <% for override in @overrides %>
+    <tr>
+      <td><%= override.nvt_name %></td>
+      <td><%= override.override_text %></td>
+      <td><%= pill_button_link_to "details", override_path(override.id) %></td>
+      <td><%= pill_button_link_to "edit", edit_override_path(override.id) %></td>
+  		<td><%= danger_remove_pill_button_link_to "delete", override_path(override.id), :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+		<tr><td colspan="5"><hr /></td></tr>
+  <% end %>
+</table>

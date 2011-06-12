@@ -4,6 +4,11 @@ class TasksController < ApplicationController
 
   after_filter :openvas_logout
 
+  # GET /tbd/1
+  def tbd
+    redirect_to root_url, :notice => "*** under development ***"
+  end
+
   # GET /tasks
   def index
     @tasks = Task.all(current_user)

@@ -29,9 +29,10 @@ module OpenvasModel
   #     end
   #   end
 
-  extend  ActiveModel::Naming
-  include ActiveModel::Conversion
   include ActiveModel::Validations
+  include ActiveModel::Dirty
+  include ActiveModel::Conversion
+  extend ActiveModel::Naming
 
   attr_accessor :id, :persisted
 
@@ -80,6 +81,11 @@ module OpenvasModel
   end # module InstanceMethods
 
   module ClassMethods
+
+    # note: the following is from lib/active_record/attribute_methods/time_zone_conversion.rb:
+    # time = _read_attribute('#{attr_name}')
+    # @attributes_cache['#{attr_name}'] = time.acts_like?(:time) ? time.in_time_zone : time
+
     def find(id, user)
       return nil if id.blank? || user.blank?
       f = self.all(user, :id=>id).first
