@@ -22,6 +22,7 @@
 	    <th>Medium</th>
 	    <th>Low</th>
 	    <th>Log</th>
+	    <th>Debug</th>
 	    <th>False Pos</th>
 	    <th>Total</th>
 	    <th colspan="2">Reports</th>
@@ -33,10 +34,13 @@
 			<td><%= @report.result_count_total[:low] %></td>
 			<td><%= @report.result_count_total[:log] %></td>
 			<td><%= @report.result_count_total[:debug] %></td>
+			<td><%= @report.result_count_total[:false_positive] %></td>
 			<td><%= @report.result_count_total[:total] %></td>
 			<% if @report.status.downcase == 'done' %>
 				<td><%= pill_button_link_to 'HTML', view_report_path(@report.id),                :target=>'_blank' %></td>
 				<td><%= pill_button_link_to 'PDF',  view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></td>
+				<td><%= pill_button_link_to 'TXT',  view_report_path(@report.id, :fmt => 'txt'), :target=>'_blank' %></td>
+				<td><%= pill_button_link_to 'XML',  view_report_path(@report.id, :fmt => 'xml'), :target=>'_blank' %></td>
 			<% end %>
 		</tr>
 	</table>
@@ -45,3 +49,4 @@
 <p>
   <b>*** Note *** filtering and adding Notes/Overrides is under development</b>
 </p>
+<%=raw(@html_body)%>

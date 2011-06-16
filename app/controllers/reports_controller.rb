@@ -16,6 +16,13 @@ class ReportsController < ApplicationController
   # GET /reports/1
   def show
     @report = Report.find(params[:id], current_user)
+    format_id = ReportFormat.find_id_for_name(current_user, 'html')
+    report = Report.find_by_id_and_format(params[:id], 'html', format_id, current_user)
+    report.gsub!("This file was automatically generated.", '')
+    b = report.index('Port Summary for Host', 0)
+    e = report.index('</body>', 0)
+    @html_body = report[b-4..e-1] unless b.nil? || e.nil?
+    @html_body = report if b.nil?
   end
 
   # GET /view_report/1
@@ -24,17 +31,17 @@ class ReportsController < ApplicationController
     fmt = params[:fmt] unless params[:fmt].blank?
     @report = Report.find(params[:id], current_user)
     format_id = ReportFormat.find_id_for_name(current_user, fmt)
-    report = Report.find_by_id_and_format(params[:id], format_id, current_user)
-    if fmt.downcase == 'pdf'
-      send_data report, :type => 'application/pdf', :filename => "report_#{params[:id]}.pdf", :disposition => 'inline'
-    elsif fmt.downcase == 'html'
+    report = Report.find_by_id_and_format(params[:id], fmt.downcase, format_id, current_user)
+    if fmt.downcase == 'html'
       # chop off everything before the body tag (keep the body tag as it has styling):
       b = report.index('<body ', 0)
       @html_body = report[b..report.length] unless b.nil?
       @html_body = report if b.nil?
       render :layout => false
     else
-      render :text => report, :layout => false
+      ext = fmt.downcase
+      send_data report, :type => "application/#{ext}", :filename => "report_#{params[:id]}.#{ext}", :disposition => 'attachment'
+      # render :text => report, :layout => false
     end
   end
 

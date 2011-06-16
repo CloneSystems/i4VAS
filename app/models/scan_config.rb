@@ -53,6 +53,7 @@ class ScanConfig
     ret = []
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
+      # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
       resp.xpath("/get_configs_response/config").each { |xml|
         cfg               = ScanConfig.new
         cfg.id            = extract_value_from("@id", xml)
