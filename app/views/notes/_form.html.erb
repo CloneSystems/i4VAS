@@ -1,7 +1,7 @@
 <%= form_for @note do |f| %>
 	<% if @note.errors.any? %>
 	  <div id="error_explanation">
-	    <h2><%= pluralize(@credential.errors.count, "error") %> prohibited this note from being saved:</h2>
+	    <h2><%= pluralize(@note.errors.count, "error") %> prohibited this note from being saved:</h2>
 	    <ul>
 	      <% @note.errors.full_messages.each do |msg| %>
 	        <li><%= raw(msg) %></li>
@@ -9,28 +9,52 @@
 	    </ul>
 	  </div>
 	<% end %>
+  <%= f.hidden_field :nvt_oid %>
+  <%= f.hidden_field :report_id %>
 	<div class="field">
 	  <div class="left">NVT Name</div>
-	  <div class="right"><%= @note.nvt_name %></div>
+	  <div class="right"><%= @note.nvt_oid %></div>
 	</div>
+	<br /><br />
 	<div class="field">
 	  <div class="left">Hosts</div>
 	  <div class="right">
-			<%= f.text_field :hosts %>
+			<%= collection_select(:note, :hosts, Note.two_selections(@note.hosts, @note.hosts), :id, :name) %>
 		</div>
 	</div>
-  <p>
-    <%= f.label :port %><br />
-    <%= f.text_field :port %>
-  </p>
-  <p>
-    <%= f.label :threat %><br />
-    <%= f.text_field :threat %>
-  </p>
-  <p>
-    <%= f.label :note_text %><br />
-    <%= f.text_area :note_text %>
-  </p>
+	<br /><br />
+	<div class="field">
+	  <div class="left">Port</div>
+	  <div class="right">
+			<%= collection_select(:note, :port, Note.two_selections(@note.port, @note.port), :id, :name) %>
+		</div>
+	</div>
+	<br /><br />
+	<div class="field">
+	  <div class="left">Threat</div>
+	  <div class="right">
+			<%= collection_select(:note, :threat, Note.two_selections(@note.threat, @note.threat), :id, :name) %>
+		</div>
+	</div>
+	<br /><br />
+	<div class="field">
+	  <div class="left">Task</div>
+	  <div class="right">
+			<%= collection_select(:note, :task_id, Note.two_selections(@note.task_id, @note.task_name), :id, :name) %>
+		</div>
+	</div>
+	<br /><br />
+	<div class="field">
+	  <div class="left">Result</div>
+	  <div class="right">
+			<%= collection_select(:note, :result_id, Note.two_selections(@note.result_id, @note.result_description), :id, :name) %>
+		</div>
+	</div>
+	<br /><br />
+  <div class="field">
+    <div class="left">Text</div>
+    <div class="right"><%= f.text_area :note_text, :rows => 5, :cols => 80 %></div>
+  </div>
 	<br /><br />
   <div class="actions">
     <div class="left">&nbsp;</div>

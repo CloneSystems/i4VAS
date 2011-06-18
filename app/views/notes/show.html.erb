@@ -1,21 +1,25 @@
-<% title "Note" %>
+<% title "Note details" %>
 <p>
-  <strong>Hosts:</strong>
-  <%= @note.hosts %>
+	NVT Name: <%= @note.nvt_name %><br />
+	NVT OID: <%= @note.nvt_oid %><br />
+	Created: <%= @note.creation_time %><br />
+	Last modified: <%= @note.modification_time %>
 </p>
+
 <p>
-  <strong>Port:</strong>
-  <%= @note.port %>
+	Hosts: <%= @note.hosts %><br />
+	Port: <%= @note.port %><br />
+	Threat: <%= @note.threat %><br />
+	Task: <%= @note.task_name %><br />
+	Result: <%= @note.result_description %>
 </p>
-<p>
-  <strong>Threat:</strong>
-  <%= @note.threat %>
-</p>
-<p>
-  <strong>Text:</strong>
-  <%= @note.note_text %>
-</p>
+
+<div style="padding:4px; margin:3px; margin-bottom:0px; margin-top:0px; border: 1px solid #CCCCCC; border-top: 0px; background-color: #ffff90;">
+<b>Note</b>
+<pre><%= @note.note_text %></pre>
+Last modified: <%= @note.modification_time %>.
+</div>
 <hr />
 <%=debug @note%>
 <hr />
-<%=debug @overrides%>
+<%#=debug @overrides%>
