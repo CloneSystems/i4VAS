@@ -23,7 +23,7 @@ class NotesController < ApplicationController
     @note.result_description = params[:result_description]
     @note.nvt_oid = params[:nvt_oid]
     @note.hosts = params[:hosts]
-    @note.port = params[:port]
+    @note.port = params[:result_port]
     @note.threat = params[:threat]
     # https://192.168.1.4/omp?r=1&cmd=new_note
     # &result_hosts_only=1

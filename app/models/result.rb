@@ -1,17 +1,30 @@
-require 'base64'
-
-class Report
+class Result
 
   include OpenvasModel
 
-  attr_accessor :task_id, :task_name, :started_at, :ended_at, :status
+  attr_accessor :result_id, :name, :subnet, :host, :port, :nvt_id, :threat, :original_threat, :description
+  attr_accessor :overrides, :task_id
 
-  def task
-    @task ||= VasTask.get_by_id(@task_id)
+  def notes
+    @notes ||= []
   end
 
-  def results
-    @results ||= []
+  def self.parse_result_node(node, task_id = nil)
+    res = Result.new
+    res.id              = extract_value_from("@id", node)
+    res.nvt_id          = extract_value_from("nvt/@oid", node)
+    res.name            = extract_value_from("nvt/name", node)
+    res.port            = extract_value_from("port", node)
+    res.threat          = extract_value_from("threat", node)
+    res.original_threat = extract_value_from("original_threat", node)
+    res.subnet          = extract_value_from("subnet", node)
+    res.host            = extract_value_from("host", node)
+    res.description     = extract_value_from("description", node)
+    res.task_id         = task_id if task_id
+    node.xpath("notes/note").each { |note|
+      res.notes << Note.parse_result_node(note)
+    }
+    res
   end
 
   def self.find_by_id_and_format(id, format_name, format_id, user)
@@ -73,7 +86,8 @@ class Report
                 :result_hosts_only=>'1'
               }
     params[:report_id] = options[:id] if options[:id]
-    options[:levels] = [:high,:medium,:low,:log,:debug,:false_positive]
+    # options[:levels] = [:high,:medium,:low,:log,:debug,:false_positive]
+    options[:levels] = [:high,:medium]
     if options[:levels]
       params[:levels] = ''
       options[:levels].each { |f|
@@ -93,8 +107,14 @@ class Report
         end
       }
     end
-    # Rails.logger.info "\n\n get_reports >>> params=#{params.inspect}\n\n"
-    req = Nokogiri::XML::Builder.new { |xml| xml.get_reports(params) }
+    Rails.logger.info "\n\n get_reports >>> params=#{params.inspect}\n\n"
+    req = Nokogiri::XML::Builder.new { |xml|
+      if params.empty?
+        xml.get_reports
+      else
+        xml.get_reports(params)
+      end
+    }
     # Rails.logger.info "\n\n get_reports >>> req=#{req.to_xml.to_yaml}\n\n"
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
@@ -127,9 +147,9 @@ class Report
       rep.result_count_filtered[:log]     = extract_value_from("result_count/log/filtered", r).to_i
       rep.result_count_filtered[:medium]  = extract_value_from("result_count/warning/filtered", r).to_i
       rep.result_count_filtered[:false_positive]  = extract_value_from("result_count/false_positive/filtered", r).to_i
-      r.xpath("./results/result").each { |result|
-        rep.results << Result.parse_result_node(result)
-      }
+      # r.xpath("./results/result").each { |result|
+      #   rep.results << VasResult.parse_result_node(result)
+      # }
       ret << rep
     }
     options[:sort] = :started_at unless options[:sort]

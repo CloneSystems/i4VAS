@@ -12,6 +12,31 @@ class Note
 
   validates :note_text, :presence => true, :length => { :maximum => 600 }
 
+  def self.parse_result_node(xml)
+    nt = Note.new
+    nt.id                 = extract_value_from("@id", xml)
+    nt.nvt_oid            = extract_value_from("nvt/@oid", xml)
+    nt.nvt_name           = extract_value_from("nvt/name", xml)
+    nt.hosts              = extract_value_from("hosts", xml)
+    nt.hosts              = 'Any' if nt.hosts.blank?
+    nt.port               = extract_value_from("port", xml)
+    nt.port               = 'Any' if nt.port.blank?
+    nt.threat             = extract_value_from("threat", xml)
+    nt.threat             = 'Any' if nt.threat.blank?
+    nt.note_text          = extract_value_from("text", xml)
+    nt.text_excerpt       = extract_value_from("text/@excerpt", xml)
+    nt.orphan             = extract_value_from("orphan", xml)
+    nt.task_id            = extract_value_from("task/@id", xml)
+    nt.task_name          = extract_value_from("task/name", xml)
+    nt.task_name          = 'Any' if nt.task_id.blank?
+    nt.result_id          = extract_value_from("result/@id", xml)
+    nt.result_description = extract_value_from("result/description", xml)
+    nt.result_description = 'Any' if nt.result_id.blank?
+    nt.creation_time      = extract_value_from("creation_time", xml)
+    nt.modification_time  = extract_value_from("modification_time", xml)
+    nt
+  end
+
   class Selection
     attr_accessor :id, :name
     def initialize(attributes = {})
@@ -108,28 +133,7 @@ class Note
       resp = user.openvas_connection.sendrecv(req.doc)
       # Rails.logger.info "\n\n Note.all >>> resp=#{resp.to_xml.to_yaml}\n\n"
       resp.xpath("/get_notes_response/note").each { |xml|
-        nt = Note.new
-        nt.id                 = extract_value_from("@id", xml)
-        nt.nvt_oid            = extract_value_from("nvt/@oid", xml)
-        nt.nvt_name           = extract_value_from("nvt/name", xml)
-        nt.hosts              = extract_value_from("hosts", xml)
-        nt.hosts              = 'Any' if nt.hosts.blank?
-        nt.port               = extract_value_from("port", xml)
-        nt.port               = 'Any' if nt.port.blank?
-        nt.threat             = extract_value_from("threat", xml)
-        nt.threat             = 'Any' if nt.threat.blank?
-        nt.note_text          = extract_value_from("text", xml)
-        nt.text_excerpt       = extract_value_from("text/@excerpt", xml)
-        nt.orphan             = extract_value_from("orphan", xml)
-        nt.task_id            = extract_value_from("task/@id", xml)
-        nt.task_name          = extract_value_from("task/name", xml)
-        nt.task_name          = 'Any' if nt.task_id.blank?
-        nt.result_id          = extract_value_from("result/@id", xml)
-        nt.result_description = extract_value_from("result/description", xml)
-        nt.result_description = 'Any' if nt.result_id.blank?
-        nt.creation_time      = extract_value_from("creation_time", xml)
-        nt.modification_time  = extract_value_from("modification_time", xml)
-        ret << nt
+        ret << Note.parse_result_node(xml)
       }
     rescue Exception => e
       raise e
@@ -141,7 +145,14 @@ class Note
     if valid?
       n = Note.find(self.id, user) unless self.id.blank? # for update action
       n = Note.new if n.blank? # for create action
-      n.name      = self.name
+      n.note_text = self.note_text
+      # n.report_id = self.report_id
+      n.task_id = self.task_id
+      n.result_id = self.result_id
+      n.nvt_oid = self.nvt_oid
+      n.hosts = self.hosts
+      n.port = self.port
+      n.threat = self.threat
       n.create_or_update(user)
       n.errors.each do |attribute, msg|
         self.errors.add(:openvas, "<br />" + msg)
@@ -162,17 +173,18 @@ class Note
     req = Nokogiri::XML::Builder.new { |xml|
       if @id
         xml.modify_note(:note_id => @id) {
-          xml.name      { xml.text(@name) }
-          xml.comment   { xml.text(@comment) }
-          xml.login     { xml.text(@login) }    unless @password_type.downcase == 'gen'
-          xml.password  { xml.text(@password) } unless @password_type.downcase == 'gen'
+          xml.text_     { xml.text(@note_text) }
         }
       else
         xml.create_note {
-          xml.name      { xml.text(@name) }
-          xml.comment   { xml.text(@comment) }  unless @comment.blank?
-          xml.login     { xml.text(@login) }    unless @login.blank?
-          xml.password  { xml.text(@password) } unless @password.blank?
+          xml.text_   { xml.text(@note_text) }
+          xml.hosts   { xml.text(@hosts) }
+          xml.port    { xml.text(@port) }
+          xml.threat  { xml.text(@threat) }
+          xml.nvt(:oid => @nvt_oid)
+          xml.result(:id => @result_id)
+          # xml.report(:id => @report_id)
+          xml.task(:id => @task_id)
           # nvt_oid= (hidden)
           # hosts=
           # port=
@@ -184,9 +196,9 @@ class Note
       end
     }
     begin
-      # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
+      Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
       resp = user.openvas_connection.sendrecv(req.doc)
-      # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+      Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
       unless Credential.extract_value_from("//@status", resp) =~ /20\d/
         msg = Credential.extract_value_from("//@status_text", resp)
         errors[:command_failure] << msg
