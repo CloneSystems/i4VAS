@@ -56,17 +56,17 @@ class CredentialsController < ApplicationController
     @credential = Credential.find(params[:id], current_user)
     @credential.persisted = true
 # Rails.logger.info "class.methods=#{Credential.public_methods.sort.to_yaml}"
-@credential.attributes.each do |k, v|
-  Rails.logger.info "*name=#{k} | value=#{v.value} | datatype=#{v.datatype}"
-  # case v.datatype
-  # when "string"
-  #   f.text_field k
-  # when "text"
-  #   f.text_area k
-  # when "password"
-  #   f.password_field k
-  # end
-end
+# @credential.attributes.each do |k, v|
+#   Rails.logger.info "*name=#{k} | value=#{v.value} | datatype=#{v.datatype}"
+#   # case v.datatype
+#   # when "string"
+#   #   f.text_field k
+#   # when "text"
+#   #   f.text_area k
+#   # when "password"
+#   #   f.password_field k
+#   # end
+# end
   end
 
   def update

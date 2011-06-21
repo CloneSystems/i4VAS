@@ -110,7 +110,7 @@ class Result
         end
       }
     end
-    Rails.logger.info "\n\n get_reports >>> params=#{params.inspect}\n\n"
+    # Rails.logger.info "\n\n get_reports >>> params=#{params.inspect}\n\n"
     req = Nokogiri::XML::Builder.new { |xml|
       if params.empty?
         xml.get_reports

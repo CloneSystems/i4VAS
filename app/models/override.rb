@@ -140,9 +140,9 @@ class Override
       end
     }
     begin
-      Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}"
+      # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}"
       resp = user.openvas_connection.sendrecv(req.doc)
-      Rails.logger.info "resp=#{resp.to_xml.to_yaml}\n\n"
+      # Rails.logger.info "resp=#{resp.to_xml.to_yaml}\n\n"
       unless Override.extract_value_from("//@status", resp) =~ /20\d/
         msg = Override.extract_value_from("//@status_text", resp)
         errors[:command_failure] << msg
