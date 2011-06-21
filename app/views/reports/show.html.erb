@@ -1,41 +1,34 @@
 <p>
-  <b>Result of Task:</b>
-  <%= @report.task_name %>
-</p>
-<p>
-  <b>Started at:</b>
-  <%= @report.started_at %>
-</p>
-<p>
-  <b>Ended at:</b>
-  <%= @report.ended_at %>
-</p>
-<p>
-  <b>Status:</b>
-  <%= @report.status %>
+  <b>Result of Task:</b> <%= @report.task_name %>
+	<br />
+  <b>Started at:</b> <%= @report.started_at %>
+	<br />
+  <b>Ended at:</b> <%= @report.ended_at %>
+	<br />
+  <b>Status:</b> <%= @report.status %>
 </p>
 <p>
 	<table cellspacing="2" cellpadding="4">
-	  <tr style="text-align:left; vertical-align:bottom">
+	  <tr style="text-align:left; vertical-align:bottom; background:#000; color:#fff">
 	    <th>&nbsp;</th>
 	    <th>High</th>
 	    <th>Medium</th>
 	    <th>Low</th>
 	    <th>Log</th>
 	    <th>Debug</th>
-	    <th>False Pos</th>
+	    <th>False Positive</th>
 	    <th>Total</th>
-	    <th colspan="2">Reports</th>
+	    <th colspan="4">Reports</th>
 	  </tr>
 	  <tr>
 			<td>Full report:</td>
-			<td><%= @report.result_count_total[:high] %></td>
-			<td><%= @report.result_count_total[:medium] %></td>
-			<td><%= @report.result_count_total[:low] %></td>
-			<td><%= @report.result_count_total[:log] %></td>
-			<td><%= @report.result_count_total[:debug] %></td>
-			<td><%= @report.result_count_total[:false_positive] %></td>
-			<td><%= @report.result_count_total[:total] %></td>
+			<td align="right"><%= @report.result_count_total[:high] %></td>
+			<td align="right"><%= @report.result_count_total[:medium] %></td>
+			<td align="right"><%= @report.result_count_total[:low] %></td>
+			<td align="right"><%= @report.result_count_total[:log] %></td>
+			<td align="right"><%= @report.result_count_total[:debug] %></td>
+			<td align="right"><%= @report.result_count_total[:false_positive] %></td>
+			<td align="right"><%= @report.result_count_total[:total] %></td>
 			<% if @report.status.downcase == 'done' %>
 				<td><%= pill_button_link_to 'HTML', view_report_path(@report.id),                :target=>'_blank' %></td>
 				<td><%= pill_button_link_to 'PDF',  view_report_path(@report.id, :fmt => 'pdf'), :target=>'_blank' %></td>
@@ -46,8 +39,14 @@
 	</table>
 </p>
 <hr />
+<p><b>to-do:</b>
+	<br /> - code to handle threat selection, text search, and other search features.
+	<br /> - navigation back to here from add/edit/details/delete of Notes/Overrides.
+</p>
+<hr />
+<p><b>note:</b> the following is displaying all Threats, Notes, and Overrides:</p>
 <% @report.results.each do |r| %>
-<%=debug r%>
+		<%#=debug r%>
 		<%
 		c = 'd5d5d5' # Log and False Positive
 		c = '539dcb' if r.threat.downcase == 'low'
@@ -55,34 +54,48 @@
 		c = 'cb1d17' if r.threat.downcase == 'high'
 		%>
 		<div style="background:#<%=c%>; padding:4px; margin:3px; margin-bottom:0px; color: #FFFFFF; border: 1px solid #<%=c%>; border-bottom: 0px;">
-			<div style="float:right; text-align:right">
-				<%=r.port%>
-			</div>
+			<div style="float:right; text-align:right"><%=r.port%></div>
 			<b><%=r.threat%></b>
 			<%= "(Overridden from #{r.original_threat})" unless r.original_threat.blank? || r.original_threat == r.threat %>
-			<div style="width: 100%">
-				NVT: <%=r.name%> (OID: <%=r.nvt_id%>)
-			</div>
+			<div style="width: 100%">NVT: <%=r.name%> (OID: <%=r.nvt_id%>)</div>
 		</div>
 		<div style="padding:4px; margin:3px; margin-bottom:0px; margin-top:0px; border: 1px solid #<%=c%>; border-top: 0px;">
 			<div style="float:right; text-align:right">
+				<% threat = r.original_threat || r.threat %>
 	      <%= add_button_link_to 	"Note", 
-																new_note_path({:report_id=>@report.id, :task_id=>@report.task_id, :task_name=>@report.task_name, :result_id=>r.id, :result_description=>r.description, :nvt_oid=>r.nvt_id, :hosts=>r.host, :result_port=>r.port, :threat=>r.threat}), 
+																new_note_path({:report_id=>@report.id, :task_id=>@report.task_id, :task_name=>@report.task_name, :result_id=>r.id, :result_description=>r.description, :nvt_oid=>r.nvt_id, :hosts=>r.host, :result_port=>r.port, :threat=>threat}), 
 																:title => 'add new Note' %>
-	      <%= add_button_link_to "Override", new_note_path, :title => 'add new Override' %>
+	      <%= add_button_link_to 	"Override", 
+																new_override_path({:report_id=>@report.id, :task_id=>@report.task_id, :task_name=>@report.task_name, :result_id=>r.id, :result_description=>r.description, :nvt_oid=>r.nvt_id, :hosts=>r.host, :result_port=>r.port, :threat=>threat}), 
+																:title => 'add new Override' %>
 			</div>
 			<pre><%=r.description%></pre>
 			<br />
 		</div>
 		<% r.notes.each do |n| %>
+				<%#=debug n%>
 				<div style="padding:4px; margin:3px; margin-bottom:0px; margin-top:0px; border: 1px solid #<%=c%>; border-top: 0px; background-color: #ffff90;">
 					<div style="float:right; text-align:right">
 						<%= pill_button_link_to "details", note_path(n.id), :title => 'show Note details' %>
-						<%= pill_button_link_to "edit", edit_note_path(n.id), :title => 'edit Note' %>
+						<%= pill_button_link_to "edit", edit_note_path({:id=>n.id, :report_id=>@report.id, :task_id=>@report.task_id, :task_name=>@report.task_name, :result_id=>r.id, :result_description=>r.description, :nvt_oid=>r.nvt_id, :hosts=>r.host, :result_port=>r.port, :threat=>threat}), :title => 'edit Note' %>
 						<%= danger_remove_pill_button_link_to "delete", note_path(n.id), :confirm => 'Are you sure?', :method => :delete %>
 					</div>
 				<b>Note</b><pre><%=n.note_text%></pre>
 				Last modified: <%=n.modification_time%>
+				</div>
+		<% end %>
+		<% r.overrides.each do |o| %>
+				<%#=debug o%>
+				<div style="padding:4px; margin:3px; margin-bottom:0px; margin-top:0px; border: 1px solid #<%=c%>; border-top: 0px; background-color: #ffff90;">
+					<div style="float:right; text-align:right">
+						<%= pill_button_link_to "details", override_path(o.id), :title => 'show Override details' %>
+						<%= pill_button_link_to "edit", edit_override_path({:id=>o.id, :report_id=>@report.id, :task_id=>@report.task_id, :task_name=>@report.task_name, :result_id=>r.id, :result_description=>r.description, :nvt_oid=>r.nvt_id, :hosts=>r.host, :result_port=>r.port, :threat=>threat, :new_threat=>o.new_threat}), :title => 'edit Override' %>
+						<%= danger_remove_pill_button_link_to "delete", override_path(o.id), :confirm => 'Are you sure?', :method => :delete %>
+					</div>
+				<b>Override from <%=o.threat%> to <%=o.new_threat%></b>
+				<br />
+				<pre><%=o.override_text%></pre>
+				Last modified: <%=o.modification_time%>
 				</div>
 		<% end %>
 		<br />

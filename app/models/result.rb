@@ -3,10 +3,14 @@ class Result
   include OpenvasModel
 
   attr_accessor :result_id, :name, :subnet, :host, :port, :nvt_id, :threat, :original_threat, :description
-  attr_accessor :overrides, :task_id
+  attr_accessor :task_id
 
   def notes
     @notes ||= []
+  end
+
+  def overrides
+    @overrides ||= []
   end
 
   def self.parse_result_node(node, task_id = nil)
@@ -21,9 +25,8 @@ class Result
     res.host            = extract_value_from("host", node)
     res.description     = extract_value_from("description", node)
     res.task_id         = task_id if task_id
-    node.xpath("notes/note").each { |note|
-      res.notes << Note.parse_result_node(note)
-    }
+    node.xpath("notes/note").each { |note| res.notes << Note.parse_result_node(note) }
+    node.xpath("overrides/override").each { |override| res.overrides << Override.parse_result_node(override) }
     res
   end
 

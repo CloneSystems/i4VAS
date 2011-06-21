@@ -145,14 +145,13 @@ class Note
     if valid?
       n = Note.find(self.id, user) unless self.id.blank? # for update action
       n = Note.new if n.blank? # for create action
-      n.note_text = self.note_text
-      # n.report_id = self.report_id
-      n.task_id = self.task_id
-      n.result_id = self.result_id
-      n.nvt_oid = self.nvt_oid
-      n.hosts = self.hosts
-      n.port = self.port
-      n.threat = self.threat
+      n.note_text   = self.note_text
+      n.task_id     = self.task_id
+      n.result_id   = self.result_id
+      n.nvt_oid     = self.nvt_oid
+      n.hosts       = self.hosts
+      n.port        = self.port
+      n.threat      = self.threat
       n.create_or_update(user)
       n.errors.each do |attribute, msg|
         self.errors.add(:openvas, "<br />" + msg)
@@ -173,7 +172,12 @@ class Note
     req = Nokogiri::XML::Builder.new { |xml|
       if @id
         xml.modify_note(:note_id => @id) {
-          xml.text_     { xml.text(@note_text) }
+          xml.text_   { xml.text(@note_text) }
+          xml.hosts   { xml.text(@hosts) }
+          xml.port    { xml.text(@port) }
+          xml.threat  { xml.text(@threat) }
+          xml.result(:id => @result_id)
+          xml.task(:id => @task_id)
         }
       else
         xml.create_note {
@@ -183,24 +187,16 @@ class Note
           xml.threat  { xml.text(@threat) }
           xml.nvt(:oid => @nvt_oid)
           xml.result(:id => @result_id)
-          # xml.report(:id => @report_id)
           xml.task(:id => @task_id)
-          # nvt_oid= (hidden)
-          # hosts=
-          # port=
-          # threat=
-          # task_id=
-          # result_id=
-          # text=
         }
       end
     }
     begin
-      Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}\n\n"
+      # Rails.logger.info "\n\n req.doc=#{req.doc.to_xml.to_yaml}"
       resp = user.openvas_connection.sendrecv(req.doc)
-      Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
-      unless Credential.extract_value_from("//@status", resp) =~ /20\d/
-        msg = Credential.extract_value_from("//@status_text", resp)
+      # Rails.logger.info "resp=#{resp.to_xml.to_yaml}\n\n"
+      unless Note.extract_value_from("//@status", resp) =~ /20\d/
+        msg = Note.extract_value_from("//@status_text", resp)
         errors[:command_failure] << msg
         return nil
       end
