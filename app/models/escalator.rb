@@ -72,7 +72,7 @@ class Escalator
 
   def self.all(user, options = {})
     params = {}
-    params[:config_id] = options[:id] if options[:id]
+    params[:escalator_id] = options[:id] if options[:id]
     req = Nokogiri::XML::Builder.new { |xml| xml.get_escalators(params) }
     ret = []
     begin
