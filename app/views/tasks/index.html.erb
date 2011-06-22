@@ -63,7 +63,7 @@
 			</div>
 		</td>
     <td>
-			<%= edit_pill_button_link_to truncate(task.name, :length => 35), edit_task_path(task.id), :title => 'Edit Task' %>
+			<%= edit_pill_button_link_to truncate(task.name, :length => 25), edit_task_path(task.id), :title => 'Edit Task' %>
 			<% unless task.comment.blank? %>
 					<br />
 					<%= truncate(task.comment, :length => 15) %>
