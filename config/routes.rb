@@ -21,6 +21,7 @@ Greenbone::Application.routes.draw do
   resources :scan_targets
 
   resources :scan_configs
+  get 'export_config/:id' => 'scan_configs#export_config', :as => 'export_config'
 
   resources :schedules
 

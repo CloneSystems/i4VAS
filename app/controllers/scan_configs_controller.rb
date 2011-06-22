@@ -6,6 +6,12 @@ class ScanConfigsController < ApplicationController
 
   after_filter :openvas_logout
 
+  # GET /export_config/1
+  def export_config
+    export = ScanConfig.export(params[:id], current_user)
+    send_data export, :type => "application/xml", :filename => "config_#{params[:id]}.xml", :disposition => 'attachment'
+  end
+
   def index
     @scan_configs = ScanConfig.all(current_user)
   end

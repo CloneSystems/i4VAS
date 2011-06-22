@@ -77,7 +77,11 @@ class Escalator
     ret = []
     begin
       resp = user.openvas_connection.sendrecv(req.doc)
-      # Rails.logger.info "\n\n resp=#{resp.to_xml.to_yaml}\n\n"
+      Rails.logger.info "\n resp=#{resp.to_xml.to_yaml}\n"
+      # unless Escalator.extract_value_from("//@status", resp) =~ /20\d/
+      #   msg = Escalator.extract_value_from("//@status_text", resp)
+      #   return nil
+      # end
       resp.xpath("/get_escalators_response/escalator").each { |xml|
         esc = Escalator.new
         esc.id                  = extract_value_from("@id", xml)

@@ -43,6 +43,15 @@ class ScanConfig
     cfgs
   end
 
+  def self.export(id, user)
+    params = { :export=>'1' }
+    params[:config_id] = id if id
+    req = Nokogiri::XML::Builder.new { |xml| xml.get_configs(params) }
+    rep = user.openvas_connection.sendrecv(req.doc)
+    # r = rep.xpath('//get_configs_response/config')
+    rep
+  end
+
   def self.all(user, options = {})
     params = {:sort_field  => "name"}
     if options[:show_details] && options[:show_details] == true
