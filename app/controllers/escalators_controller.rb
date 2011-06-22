@@ -51,7 +51,6 @@ class EscalatorsController < ApplicationController
   end
 
   def test_escalator
-Rails.logger.info "\n test_escalator ... params=#{params.inspect}\n"
     @escalator = Escalator.find(params[:id], current_user)
     msg = @escalator.test_escalator(current_user)
     if msg.blank?
