@@ -47,7 +47,7 @@ class EscalatorsController < ApplicationController
   def destroy
     @escalator = Escalator.find(params[:id], current_user)
     @escalator.delete_record(current_user)
-    redirect_to escalators_url, :notice => "Successfully destroyed escalator."
+    redirect_to escalators_url, :notice => "Successfully deleted escalator."
   end
 
   def test_escalator
