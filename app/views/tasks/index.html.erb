@@ -49,6 +49,11 @@
 				    <%= link_to image_tag("pause.png"), pause_task_path(task.id), :title => 'Pause Task' %>
 				    <%= link_to image_tag("stop.png"), stop_task_path(task.id), :title => 'Stop Task' %>
 		    		<%= image_tag("delete_inactive.png") %>
+				<% elsif ['Internal Error'].include? task.status %>
+						<%= link_to image_tag("start.png"), start_task_path(task.id), :title => 'Start Task' %>
+				    <%= image_tag("resume_inactive.png") %>
+				    <%= image_tag("stop_inactive.png") %>
+				    <%= link_to image_tag("delete.png"), task_path(task.id), :title => 'Delete Task', :confirm => 'Are you sure?', :method => :delete %>
 				<% else %>
 		    		<%= image_tag("start_inactive.png") %>
 				    <%= image_tag("resume_inactive.png") %>
