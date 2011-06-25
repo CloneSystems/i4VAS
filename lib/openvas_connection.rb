@@ -173,13 +173,6 @@ module Openvas
       end
   	end
 
-  	# check if we're successful logged in
-  	# if successful returns true
-  	# if unsuccessful returns false
-  	# Usage:
-  	# if ov.logged_in? then
-  	# 	puts "logged in?"
-  	# end
   	def logged_in?
   		if @areq == '' || @areq.nil?
   			return false
@@ -190,10 +183,7 @@ module Openvas
 
   	# logout from OpenVAS server. 
   	# it actually just sets internal authentication XML to empty str
-  	# (as in OMP you have to send username/password each time)
-  	# (i.e. there is no session id)
-  	# Usage:
-  	# ov.logout()
+  	# (as in OMP you have to send username/password each time, i.e. there is no session id)
   	def logout
   		disconnect()
   		@areq = ''

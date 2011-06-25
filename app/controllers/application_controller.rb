@@ -31,9 +31,9 @@ class ApplicationController < ActionController::Base
     # note: checking to see if the current_user is an admin on every request just seems wrong, but 
     #       openvas doesn't offer another choice, so we check and set:
     # if Rails.env.production?
-      current_user.openvas_admin = false
+      # current_user.openvas_admin = false
     # else
-    #   set_openvas_admin_for_user
+      set_openvas_admin_for_user
     # end
     # FIXME perhaps we could store this in the Users table when they sign in, but there are 
     #       other openvas app's which may change the users role (such as Greenbone or openvas Client),
