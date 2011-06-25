@@ -49,4 +49,8 @@ Greenbone::Application.routes.draw do
 
   resources :overrides
 
+  resources :agents
+  get 'verify_agent/:id' => 'agents#verify_agent', :as => 'verify_agent'
+  get 'download_agent/:id' => 'agents#download_agent', :as => 'download_agent'
+
 end

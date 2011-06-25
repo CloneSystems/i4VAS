@@ -47,9 +47,8 @@ class ScanConfig
     params = { :export=>'1' }
     params[:config_id] = id if id
     req = Nokogiri::XML::Builder.new { |xml| xml.get_configs(params) }
-    rep = user.openvas_connection.sendrecv(req.doc)
-    # r = rep.xpath('//get_configs_response/config')
-    rep
+    config_as_xml = user.openvas_connection.sendrecv(req.doc)
+    config_as_xml
   end
 
   def self.all(user, options = {})
@@ -123,10 +122,7 @@ class ScanConfig
 
   def update_attributes(user, attrs={})
     # note modify(edit/update) is not implemented in OMP 2.0
-    # attrs.each { |key, value|
-    #   send("#{key}=".to_sym, value) if public_methods.include?("#{key}=".to_sym)
-    # }
-    # save(user)
+    false
   end
 
   def save(user)

@@ -1,4 +1,9 @@
 class FamiliesController < ApplicationController
+
+  before_filter :openvas_connect_and_login
+
+  after_filter :openvas_logout
+
   def index
     @families = Family.all
   end

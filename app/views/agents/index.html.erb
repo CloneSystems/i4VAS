@@ -1,0 +1,26 @@
+<% title "Agents" %>
+<%= add_button_link_to "new Agent", new_agent_path %>
+<br />
+<table cellspacing="2" cellpadding="4">
+  <tr style="text-align:left; vertical-align:bottom">
+    <th>Name</th>
+    <th>Comment</th>
+    <th>Trust</th>
+  </tr>
+  <% for agent in @agents %>
+    <tr>
+      <td><%= agent.name %></td>
+      <td><%= agent.comment %></td>
+      <td>
+				<%= agent.trust %>
+				<br />
+				(<%= agent.trusted_at.strftime("%b %d %Y") %>)
+			</td>
+      <td><%#= link_to "Show", agent %></td>
+      <td><%= danger_remove_pill_button_link_to "delete", agent_path(agent.id), :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= pill_button_link_to "verify agent", verify_agent_path(agent.id), :title => 'verify installer' %></td>
+			<td><%= arrowdown_pill_button_link_to "download", download_agent_path(agent.id, :agent_format => 'installer'), :title => 'download installer package' %></td>
+    </tr>
+		<tr><td colspan="8"><hr /></td></tr>
+  <% end %>
+</table>
